@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 export default function LabPage() {
   return (
     <main className="min-h-screen bg-background p-8 text-foreground">

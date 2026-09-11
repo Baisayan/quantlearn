@@ -49,7 +49,7 @@ export default function Home() {
           size="lg"
           className="h-auto rounded-full px-6 py-3 font-medium shadow-lg shadow-primary/25 sm:px-8"
         >
-          <Link href="/sign-up">
+          <Link href="/login?mode=register">
             Getting Started
             <ArrowRight className="size-4" />
           </Link>
@@ -86,7 +86,7 @@ export default function Home() {
               size="lg"
               className="h-auto rounded-full px-8 py-3.5 text-base font-medium shadow-xl shadow-primary/25 sm:px-9"
             >
-              <Link href="/sign-up">
+              <Link href="/login?mode=register">
                 Getting Started
                 <ArrowRight className="size-5" />
               </Link>

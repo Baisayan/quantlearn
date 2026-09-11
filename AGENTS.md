@@ -53,6 +53,6 @@ Qiskit Aer and Cirq expose Python-first SDKs, so simulation stays in FastAPI. Ne
 
 ## References
 
-- [Problem statement PDF](SIH26140.pdf)
+- [Problem statement](SIH26140.md)
 - [Qiskit Aer simulation](https://qiskit.github.io/qiskit-aer/tutorials/1_aersimulator.html)
 - [Cirq simulation](https://quantumai.google/cirq/simulate/simulation)
