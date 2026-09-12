@@ -26,28 +26,35 @@
   "modules": [
     {
       "id": "foundations",
-      "title": "Quantum Foundations"
+      "title": "Quantum Foundations",
+      "description": "Understand states, phase and measurement before building your first circuit."
     },
     {
       "id": "gates",
-      "title": "Gates and Circuits"
+      "title": "Gates and Circuits",
+      "description": "Learn how gates transform states and how to read multi-qubit circuits."
     },
     {
       "id": "entanglement",
-      "title": "Entanglement and Communication"
+      "title": "Entanglement and Communication",
+      "description": "Explore shared quantum states and the teleportation protocol."
     },
     {
       "id": "algorithms",
-      "title": "Quantum Algorithms"
+      "title": "Quantum Algorithms",
+      "description": "Follow small, worked examples of quantum search and optimization."
     },
     {
       "id": "execution",
-      "title": "Simulation and Frameworks"
+      "title": "Simulation and Frameworks",
+      "description": "Read simulation results and compare the same experiment in Aer and Cirq."
     }
   ],
   "chapters": [
     {
       "id": "qubits",
+      "summary": "Read state notation and turn complex amplitudes into probabilities.",
+      "difficulty": "Beginner",
       "title": "Quantum bits and state notation",
       "module": "foundations",
       "order": 1,
@@ -72,6 +79,8 @@
     },
     {
       "id": "superposition-and-phase",
+      "summary": "See how relative phase changes interference and measurement outcomes.",
+      "difficulty": "Beginner",
       "title": "Superposition, phase and interference",
       "module": "foundations",
       "order": 2,
@@ -97,6 +106,8 @@
     },
     {
       "id": "measurement",
+      "summary": "Distinguish a single outcome, repeated shots and measurement bases.",
+      "difficulty": "Beginner",
       "title": "Measurement and repeated shots",
       "module": "foundations",
       "order": 3,
@@ -123,6 +134,8 @@
     },
     {
       "id": "single-qubit-gates",
+      "summary": "Apply the basic gates and work out why their order matters.",
+      "difficulty": "Beginner",
       "title": "Single-qubit gates",
       "module": "gates",
       "order": 4,
@@ -148,6 +161,8 @@
     },
     {
       "id": "phase-and-rotation-gates",
+      "summary": "Connect phase shifts and rotation angles to measurable probabilities.",
+      "difficulty": "Intermediate",
       "title": "Phase and rotation gates",
       "module": "gates",
       "order": 5,
@@ -173,6 +188,8 @@
     },
     {
       "id": "multi-qubit-circuits",
+      "summary": "Combine states and read controlled gates with consistent bit ordering.",
+      "difficulty": "Intermediate",
       "title": "Multi-qubit states and circuit notation",
       "module": "gates",
       "order": 6,
@@ -199,6 +216,8 @@
     },
     {
       "id": "entanglement",
+      "summary": "Prepare a Bell pair and distinguish entanglement from classical correlation.",
+      "difficulty": "Intermediate",
       "title": "Entanglement and Bell states",
       "module": "entanglement",
       "order": 7,
@@ -224,6 +243,8 @@
     },
     {
       "id": "teleportation",
+      "summary": "Trace how entanglement and two classical bits transfer a quantum state.",
+      "difficulty": "Intermediate",
       "title": "Teleportation and classical control",
       "module": "entanglement",
       "order": 8,
@@ -249,6 +270,8 @@
     },
     {
       "id": "deutsch-jozsa",
+      "summary": "Use phase kickback to distinguish constant and balanced functions.",
+      "difficulty": "Intermediate",
       "title": "Deutsch-Jozsa and phase kickback",
       "module": "algorithms",
       "order": 9,
@@ -274,6 +297,8 @@
     },
     {
       "id": "grover",
+      "summary": "Follow a phase oracle and diffusion step to amplify a marked answer.",
+      "difficulty": "Intermediate",
       "title": "Grover search and amplitude amplification",
       "module": "algorithms",
       "order": 10,
@@ -299,6 +324,8 @@
     },
     {
       "id": "qaoa",
+      "summary": "Encode a small max-cut problem and trace a cost and mixer layer.",
+      "difficulty": "Advanced introduction",
       "title": "QAOA and combinatorial optimization",
       "module": "algorithms",
       "order": 11,
@@ -325,6 +352,8 @@
     },
     {
       "id": "vqe",
+      "summary": "Estimate an energy and check a variational ansatz against an exact minimum.",
+      "difficulty": "Advanced introduction",
       "title": "VQE and energy estimation",
       "module": "algorithms",
       "order": 12,
@@ -351,6 +380,8 @@
     },
     {
       "id": "simulation-and-noise",
+      "summary": "Compare representations, sampling uncertainty and physical noise.",
+      "difficulty": "Intermediate",
       "title": "Simulation, noise and result displays",
       "module": "execution",
       "order": 13,
@@ -377,6 +408,8 @@
     },
     {
       "id": "aer-and-cirq",
+      "summary": "Read equivalent Python circuits and align their output conventions.",
+      "difficulty": "Intermediate",
       "title": "The same circuit in Qiskit Aer and Cirq",
       "module": "execution",
       "order": 14,

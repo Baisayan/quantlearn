@@ -12,6 +12,7 @@ It has five navigation areas: **Home**, **Learn**, **Lab**, **Progress**, and **
 - **Learn:** five modules and fourteen chapters, lesson cards, completion state, Continue, study content and read-only figures. Each chapter ends with a ten-question multiple-choice quiz ordered by difficulty (3 easy, 4 medium, 3 hard). See `content/README.md` and `content/catalog.json`. Prerequisites guide the reading order rather than locking chapters in this demo.
 - **Lab:** lesson text and target on the left; Circuit and Code tabs in the center; Run/Reset above the result panels; tutor drawer on the right; quiz and assignment below.
 - **Progress:** completion tracking, scores, attempts, map to what have been completed and whats left, user progress, login info, etc, profile dashboard.
+- Learn and its chapter routes now render the static curriculum and ten-question quizzes. Progress shows saved Learn results. `supabase/schema.sql` defines learner-owned records and trusted transactional grading. Build-generated `.generated/learn-seed.sql` supplies the private answer keys; apply it when quiz versions change. Lab and AI remain future implementation.
 - **Login:** one combined email/password login and registration experience at `/login`, followed by redirect to Learn. Email confirmation is disabled for the demo.
 
 ## Architecture and stack

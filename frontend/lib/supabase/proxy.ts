@@ -56,6 +56,9 @@ export async function updateSession(request: NextRequest) {
   const authenticated = !error && Boolean(data?.claims?.sub);
 
   if (!authenticated && !publicPath) {
+    if (pathname.startsWith("/api/")) {
+      return copyAuthState(supabaseResponse, NextResponse.json({ error: "Please sign in again." }, { status: 401 }));
+    }
     return createLoginRedirect(request, supabaseResponse);
   }
 

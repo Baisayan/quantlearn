@@ -17,6 +17,7 @@ const unique = (values, label) => assert.equal(new Set(values).size, values.leng
 unique(sources.map((s) => s.id), "source IDs");
 unique(catalog.chapters.map((c) => c.id), "chapter IDs");
 unique(catalog.modules.map((m) => m.id), "module IDs");
+assert.ok(catalog.modules.every((m) => m.description), "Missing module description");
 unique(circuits.map((c) => c.id), "circuit IDs");
 assert.deepEqual(catalog.engines, ["aer", "cirq"]);
 assert.equal(catalog.chapters.length, 14);
@@ -48,6 +49,7 @@ const chapters = [];
 let questionCount = 0;
 
 for (const [index, chapter] of catalog.chapters.entries()) {
+  assert.ok(chapter.summary && chapter.difficulty, "Missing chapter navigation metadata");
   assert.match(chapter.id, /^[a-z0-9]+(?:-[a-z0-9]+)*$/);
   assert.equal(chapter.order, index + 1);
   assert.equal(chapter.lesson, "lessons/" + chapter.id + ".md");
@@ -118,7 +120,13 @@ if (checkOnly) {
   for (const [path, value] of outputs) await writeFile(resolve(visualDirectory, path), value);
   await mkdir(resolve(frontend, ".generated"), { recursive: true });
   await writeFile(resolve(frontend, ".generated/learn.json"), json({ ...catalog, chapters, sources, visuals: visualManifest }));
+  const sqlString = (value) => "'" + value.replaceAll("'", "''") + "'";
+  const quizRows = chapters.map(({ id, quiz }) => "(" + sqlString(id) + "," + quiz.version + "," + sqlString(JSON.stringify(Object.fromEntries(quiz.questions.map((q) => [q.id, q.correctOptionId])))) + "::jsonb)");
+  await writeFile(resolve(frontend, ".generated/learn-seed.sql"),
+    "-- Generated from content/quizzes; do not edit. Apply after supabase/schema.sql.\n" +
+    "insert into private.learn_quizzes (chapter_id,version,answers) values\n" + quizRows.join(",\n") +
+    "\non conflict (chapter_id) do update set version=excluded.version, answers=excluded.answers;\n");
 }
 console.log((checkOnly ? "Verified" : "Prepared") + ": " + chapters.length + " chapters; " + questionCount + " MCQs; " + figures.length + " SVGs; " + circuits.length + " circuit fixtures; " + sources.length + " sources.");
 console.log("Physics checks: fixture probabilities, Grover phase and overshoot, 7 VQE angles, 20 QAOA angle pairs, 16 teleportation branches, mixture/Bell comparisons and expanded assessment arithmetic.");
-console.log("Scope: read-only content is ready; lesson rendering, quiz interaction, persistence and simulator API execution are separate implementation work.");
+console.log("Scope: Learn content and figures; live simulator execution belongs in Lab.");

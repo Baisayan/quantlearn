@@ -10,7 +10,7 @@ The source of requirements is [SIH26140.md](../SIH26140.md), particularly its De
 
 | SIH item | Learn content prepared | Feature owner and remaining implementation |
 |---|---|---|
-| 1. Curriculum: qubits, gates and entanglement | Chapters 1–8 include state notation, probability, interference, measurement, gates, tensor products, Bell states and teleportation. | Learn overview and lesson reader must render the content. Guided interactive examples remain future work; fixed SVGs alone do not fulfill interaction. |
+| 1. Curriculum: qubits, gates and entanglement | Chapters 1–8 include state notation, probability, interference, measurement, gates, tensor products, Bell states and teleportation. | Learn overview and the shared chapter reader now render this content. Guided interactive examples remain future work; fixed SVGs alone do not fulfill interaction. |
 | 1. Curriculum: Deutsch-Jozsa, Grover, QAOA and VQE | Chapters 9–12 cover every explicitly named algorithm with a small worked model, equations, diagrams, limitations and quiz. | Learn displays the material; Lab later supplies runnable practical exercises. “Etc.” is not an exhaustive algorithm list, so Shor/QFT are future extensions. |
 | 2. Drag-and-drop circuit builder | Gate and circuit notation in chapters 4–8; reusable circuit fixtures. | Lab: actual editing, controls, validation and multi-qubit support. A diagram is not a circuit builder. |
 | 2. Code editor with syntax highlighting | Chapter 14 contains two read-only Python examples. | Learn can highlight code; Lab owns editable code and isolated execution. |
@@ -19,12 +19,12 @@ The source of requirements is [SIH26140.md](../SIH26140.md), particularly its De
 | 4. Statevector display | Chapters 1, 6, 7 and 13 show amplitudes, complex phase and ordering. | Lab should display returned amplitudes when a pure state is available. |
 | 4. Measurement histograms | Chapters 3, 7, 9, 11 and 13 compare distributions; synthetic counts are explicitly labeled. | Learn displays fixed figures; Lab generates charts from actual simulator results. |
 | 4. Circuit rendering | Bell, controlled gates, Deutsch-Jozsa, Grover, QAOA and teleportation diagrams are supplied. | Lab must render the current editable circuit. |
-| 5. Quizzes and automated grading | Ten MCQs per chapter, one correct option each, with explanations. | Learn needs submission, server scoring and saved attempts. Stored definitions do not themselves implement grading. |
+| 5. Quizzes and automated grading | Ten MCQs per chapter, one correct option each, with explanations. | Implemented: ten-question quizzes, trusted grading, saved attempts, explanations and retries. |
 | 5. Coding challenges | Conceptual prerequisites are provided. | Lab owns assignment specifications, execution tests and practical grading; no placeholder assignments are created. |
-| 5. Progress and analytics | Stable chapter/question IDs support reliable progress references. | Learn shows completion/Continue; Progress owns aggregate scores, attempts and analytics. No progress database migration is included in this pack. |
-| 6. Responsive web UI, authentication, deployment, APIs | Existing Next.js application and auth files are present; local content preparation is wired into dev/build. | Learn/Lab/Progress are still placeholder screens. New lesson UI and feature APIs need implementation and functional testing. |
+| 5. Progress and analytics | Stable chapter/question IDs support reliable progress references. | Implemented: completion, Continue, best and recent scores, attempt counts and an average score. Supabase stores learner-owned progress and attempts. |
+| 6. Responsive web UI, authentication, deployment, APIs | Existing Next.js application and auth files are present; local content preparation is wired into dev/build. | Learn and Progress are implemented with authenticated APIs. Lab remains a placeholder; deployment and simulator integration remain separate work. |
 
-The problem statement's objectives also request AI tutoring and instructor dashboards. They are outside this content phase, with AI deferred and an instructor view belonging to a later Progress extension. The current work should be described as **prepared Learn curriculum and assets**, not full SIH platform completion.
+The problem statement's objectives also request AI tutoring and instructor dashboards. They are outside this content phase, with AI deferred and an instructor view belonging to a later Progress extension. The current work should be described as **implemented Learn MVP with static teaching figures, quizzes and progress**, not full SIH platform completion.
 
 ## Chapter plan
 
@@ -82,11 +82,11 @@ npm run content:check
 
 Normal npm dev and build commands run content preparation first. If lesson material changes while a development server is already running, rerun content:build; no extra filesystem watcher is installed. A deployed start command uses the outputs of its preceding build.
 
-## Frontend access plan
+## Frontend access
 
-The preparation step reads all canonical files, checks references to /learn/visuals URLs and writes the combined JSON bundle inside frontend/.generated. It also regenerates the single public visual pack. The future Learn server code should statically import that bundle, look up a chapter by its catalog ID and render only the requested chapter.
+The preparation step reads all canonical files, checks references to /learn/visuals URLs and writes the combined JSON bundle inside frontend/.generated. It also regenerates the single public visual pack. The Learn server loader imports that bundle, looks up a chapter by its catalog ID and renders only the requested chapter.
 
-A minimal future loader would look like this; it is an integration recipe, not an unused runtime module added ahead of the screen:
+The loader in `frontend/lib/learn/content.ts` uses this server-only boundary and calls `notFound()` for unknown chapter IDs:
 
 ~~~ts
 import "server-only";
@@ -99,7 +99,7 @@ export function getChapter(slug: string) {
 
 The application route must handle an unknown slug with notFound(). Do not form filesystem paths from route parameters. Use a Server Component for lesson loading and rendering. Use a small Client Component for MCQ selections and submission. Pass that component only the quiz version, question IDs, difficulty labels, prompts and options; the answer key and explanation can be returned after server-side submission. The entire course bundle must never be imported into a Client Component. The [Next.js server/client documentation](https://nextjs.org/docs/app/getting-started/server-and-client-components) explains that boundary.
 
-When implementing the reader, install react-markdown, remark-gfm, remark-math, rehype-katex and katex; GFM is needed for the authored tables. Map headings, paragraphs, tables, code and images through a single lesson renderer with Tailwind classes. Import the supplied KaTeX stylesheet from the lesson layout. Use shadcn for cards, navigation, forms and quiz controls. No custom global.css class collection is needed.
+The reader uses react-markdown, remark-gfm, remark-math, rehype-katex and katex; GFM is needed for the authored tables. Map headings, paragraphs, tables, code and images through a single lesson renderer with Tailwind classes. The shared reader imports the supplied KaTeX stylesheet. Use shadcn for cards, navigation, forms and quiz controls. No custom global.css class collection is needed.
 
 Place the reader at /learn/[slug] while /learn remains the course overview. This is still one navigation area. Render the recap quiz after the study material and references, using its matching chapterId. Reuse the same template across all fourteen chapters.
 
@@ -113,7 +113,7 @@ Every chapter has exactly ten questions, four options per question and one corre
 
 For this demo, chapter completion means the learner finishes the reading and submits the chapter quiz. There is no arbitrary passing threshold. Completion and score are separate facts: a completed chapter can have a low score and remain available for review. Prerequisites are advisory. Use the combination of chapter ID, quiz version and question ID as the assessment reference. Titles are display text, not persistence keys.
 
-Eventually store the last opened chapter, completion state and quiz attempts per authenticated learner. Derive the user ID on the server and compute scores from the trusted answer key. Keep canonical educational content in Git. Supabase progress tables need intentional privileges and ownership policies; table access and row access are different checks. This is a future persistence design, not a claim that a progress schema was already created. See [Supabase Row Level Security](https://supabase.com/docs/guides/database/postgres/row-level-security).
+Store each opened chapter and its quiz attempts per authenticated learner. Completion is derived from a saved quiz attempt, so it cannot disagree with a quiz save. Derive the user ID on the server and compute scores from the trusted answer key. Keep canonical educational content in Git. Supabase progress tables need intentional privileges and ownership policies; table access and row access are different checks. The schema is versioned in `supabase/schema.sql` and applied to the connected QuantLearn project. See [Supabase Row Level Security](https://supabase.com/docs/guides/database/postgres/row-level-security).
 
 The expanded quizzes and catalog are version 2. Question IDs have been reassigned within that version to reflect the new order; do not interpret a version-1 answer against the version-2 key. Store and validate the submitted quiz version, and reject a stale version with a request to reload. Use chapter/quiz version numbers when assessment definitions change. A score should remain associated with the version answered. The Progress page will aggregate these attempts and later add Lab challenge results.
 
@@ -144,18 +144,18 @@ The existing small Next.js/FastAPI split is appropriate for this project. Next.j
 
 | Observed structure | Assessment and action |
 |---|---|
-| frontend/app with Home, login, learn, lab and progress | Correct navigation areas. Learn, Lab and Progress currently contain placeholder content. Add a nested lesson route when implementing the reader. |
+| frontend/app with Home, login, learn, lab and progress | Correct navigation areas. Learn includes the overview and /learn/[chapterId] reader; Progress shows saved results. Lab remains a placeholder. |
 | frontend/components/ui | Existing shadcn primitives are an appropriate shared base. Add only primitives the new screens use. |
 | frontend/lib/supabase/client.ts, server.ts and proxy.ts | The files have different runtime responsibilities; their separation is not redundant merely because the MVP is small. This report is not a new remote auth audit. |
-| frontend/app/auth/confirm/route.ts | An existing callback endpoint may live outside api/. Its location is valid in the App Router and does not justify a route migration during content work. |
+| /login | Combined email/password login and registration. Confirmation is disabled for this demo; there is no confirmation callback. |
 | frontend/proxy.ts | The existing route boundary can also cover nested Learn pages. Future API handlers still need appropriate authorization and error behavior. |
 | backend/ | Empty at review time; it is a target for future implementation, not an implemented simulation server. Do not create empty routers/adapters now. |
 | root content/ | Appropriate for shared educational assets. Previously empty; now populated and connected to the frontend build lifecycle. |
-| Root-level content outside frontend/ | Requires an intentional packaging decision. The generated import bundle and asset mirror provide it without runtime file reads outside the app directory. |
+| Root-level content outside frontend/ | Requires an intentional packaging decision. The generated import bundle and canonical public assets provide it without runtime file reads outside the app directory. |
 | API routes proposed in both Next.js and FastAPI | Valid if Next.js routes are thin forwarding/auth boundaries. Avoid two independent copies of grading or progress business logic. Learn MCQ grading may live in Next.js without depending on the simulator service. |
 | Proposed qasm.py | Add only if the chosen Lab interchange format requires QASM. The MVP can first use a validated gate-operation JSON model; unsupported operations must fail explicitly. |
 | Proposed adapters/base and registry | Two concrete adapters and a small engine selection function are sufficient initially. Add an abstract plugin system only if its real usage warrants it. |
-| Missing local progress schema/migrations | Expected because progress persistence is not implemented in this pack. Add version-controlled migrations and ownership checks with that feature; no placeholder schema.sql is needed now. |
+| supabase/schema.sql | Progress tables, ownership policies and transactional quiz grading. The build generates answer-key seed SQL from canonical quizzes. |
 | Original AGENTS architecture sketch | A target tree, not an inventory of finished implementation. It now records the actual /login route, Markdown statement, two-engine scope and content workflow. |
 
 The curriculum authoring scripts are development utilities, not production circuit execution. The independent reference calculation must not be exposed as a third simulator or a user-code executor. Keep full Python execution out of Learn.
@@ -168,7 +168,7 @@ The normal content check validates ten questions per chapter, the 3/4/3 difficul
 
 Numerical checks cover seventeen circuit predictions, the sign of the Grover output, seven VQE parameter values, twenty QAOA parameter pairs, sixteen teleportation branches across four inputs, and the classical-mixture/Bell comparison. Additional checks cover normalization, product-state probabilities, shot uncertainty, sampled energy/cut arithmetic, Grover overshoot and phase-flip endpoints. Independent SDK verification also passed for all seventeen fixtures, including state equivalence up to global phase, and for the exact two Python snippets presented in chapter 14. Tested versions are Qiskit 2.5.2, Qiskit Aer 0.17.2 and Cirq Core 1.7.0. The optional script pins these versions; run `uv run --script content/scripts/verify-frameworks.py` from the repository root to repeat that check without adding simulator dependencies to the frontend.
 
-The read-only visual pack and content preparation are ready for integration. Remaining work is the actual lesson reader, quiz interaction/scoring, per-user persistence, interactive examples, simulator endpoints and practical challenges. These are not silently counted as completed SIH deliverables.
+The read-only visual pack and content preparation are ready for integration. The reader, quizzes and per-user persistence are implemented. Remaining work includes interactive examples, simulator endpoints and practical challenges. These are not silently counted as completed SIH deliverables.
 
 ## Content review, 12 September 2026
 
@@ -194,21 +194,37 @@ A credible route toward expertise would add a linear-algebra and probability cou
 
 Content build/check passed with 14 chapters, 140 MCQs, 28 SVG figures and 17 circuit fixtures. All seven in-memory malformed-quiz tests were rejected: wrong count, wrong difficulty order, duplicate option text, missing correct option, duplicate prompt, stale quiz version and an em dash. The checks did not alter canonical quiz files. Frontend ESLint and the Next.js production build passed. Both pinned SDKs passed the 17 reference circuits and the two displayed 1024-shot Bell examples.
 
-These checks establish data consistency, the tested numerical examples and build compatibility. They do not constitute a student usability study, a full Markdown/KaTeX rendering test, or functional testing of a Learn interface that has not yet been built.
+These historical content checks establish data consistency, numerical examples and build compatibility. The Learn implementation adds browser tests; neither set of checks is a student usability study.
 
 ### Delivery-table conclusion
 
-Every explicitly named curriculum topic has a lesson, read-only figures and a ten-question quiz. Every named visualization category has educational coverage. Interactive examples and live visualizations still need implementation. The two-engine MVP intentionally omits PennyLane and qBraid. Circuit editing, simulation APIs, coding challenges, scoring UI, learner persistence, analytics, AI tutoring and instructor views are not completed by static content files. See the ownership table above for the page responsible for each item.
+Every explicitly named curriculum topic has a lesson, read-only figures and a ten-question quiz. Every named visualization category has educational coverage. Interactive examples and live visualizations still need implementation. The two-engine MVP intentionally omits PennyLane and qBraid. The Learn implementation adds scoring UI, learner persistence and basic analytics. Circuit editing, simulation APIs, coding challenges, AI tutoring and instructor views remain future work. See the ownership table above for the page responsible for each item.
 
 The canonical lesson and quiz Markdown/JSON files remain in content/. The SVG pack is stored once in frontend/public/learn/visuals. The existing authoring utilities are retained because the current build and numerical checks use them; this assessment revision does not add a Learn runtime simulator or new backend modules. No landing-page, login or global stylesheet changes are part of this work.
 
-## Recommended build sequence
+## Running the Learn MVP
 
-1. Build the /learn overview and /learn/[slug] reader against the prepared bundle, initially verifying chapter 1 and chapter 14 to cover math, figures and code.
-2. Add the reusable chapter quiz, server scoring and clear result/retry behavior.
-3. Implement per-user completion/attempt persistence and Continue Learning.
-4. Check all fourteen lessons on mobile and desktop, including formula overflow, table scrolling, full-size diagrams and keyboard navigation.
-5. Add the first guided interactive Learn examples, then begin Lab with the validated asymmetric and Bell fixtures on both engines.
+From `frontend/`, run `npm install` and `npm run dev`. The existing `.env.local` connects to QuantLearn. Sign in at `/login` and open `/learn`. The root layout supplies the shared fixed header and gradient; Learn adds no global styles.
+
+`/learn` groups fourteen chapters into five modules. `/learn/[chapterId]` renders the selected Markdown, KaTeX equations, GFM tables, read-only code and original figures. Two shared Learn components handle reading and quizzes; cards and navigation stay in the pages rather than separate one-use files. The chapter title, objectives and quiz introduction are supplied by the template, avoiding duplicated Markdown sections.
+
+The only public client quiz props are the version, question IDs, prompts, difficulties and options. `/api/grade` validates the session and submission, calls transactional database grading, then returns feedback. `/api/progress` records an opened chapter after the page mounts, so link prefetch does not mark unread chapters as started.
+
+`supabase/schema.sql` is the initial schema already applied to the connected project. It contains `lesson_progress`, `quiz_attempts`, ownership policies, and a restricted grading function. Learners can read only their own records and cannot write scores. The grading function reads private answer keys and derives identity from `auth.uid()`. It saves the attempt and reading record in one transaction. Repeating the same submission ID does not create duplicate attempts. Completion is derived from saved attempts; no passing score is required.
+
+`npm run content:build` also generates ignored `.generated/learn-seed.sql` from the canonical quizzes. For a new database, apply the schema once, then this seed. After editing question definitions or answers, increment the quiz version, regenerate and apply the seed before deploying the matching frontend. No manually maintained second answer-key file is needed. An out-of-date database quiz version is rejected rather than silently graded.
+
+`/progress` shows completion, best scores, total attempt counts, the mean across attempts and the ten most recent attempts. Detailed question-level analytics and Lab results are deferred.
+
+Run `npm run content:check`, `npm run lint` and `npm run build` for local verification. For browser checks, start the app, run `npx playwright install chromium`, then `npm run test:learn`. Set `PLAYWRIGHT_BASE_URL` if it is not served on port 3000. The integration test creates a clearly named temporary account with confirmation disabled, signs its session out at the end, and writes its ID to `.generated/test-user-<id>.json` for removal from Supabase Auth after the run. It does not use a service key. Run this on the demo project rather than a production dataset.
+
+Next: implement the Lab circuit model and Aer/Cirq execution for the asymmetric bit-order example and Bell pair. Add interactive state controls and coding assessments with those actual simulation features.
+
+### Learn implementation verification
+
+The content checks, ESLint and production build pass. The browser suite passes against both development and production servers: all fourteen chapters, 28 loaded figures, KaTeX rendering, mobile overflow, keyboard selection, full-size asset links, unknown routes, sign-in/sign-out, score persistence, failed-save recovery, retries, duplicate submissions and full-course completion. Initial lesson HTML does not contain quiz keys or explanations. Direct score changes are denied. Transactional SQL checks confirm that another learner cannot read progress or attempts; those fixtures are rolled back. Temporary browser accounts and their progress were removed after testing.
+
+Supabase's security advisor reports the intentionally inaccessible private answer table has no RLS policy, and the existing demo Auth setting has leaked-password protection disabled. The answer table has no client table privileges; its restricted grading function performs the private lookup. No auth settings were changed by the Learn implementation.
 
 ## Sources
 
