@@ -9,7 +9,7 @@ Source: [the supplied problem statement](SIH26140.md). This describes the full p
 It has five navigation areas: **Home**, **Learn**, **Lab**, **Progress**, and **Login**. Lesson detail routes remain within Learn.
 
 - **Home:** Landing Page, lists features, getting Started.
-- **Learn:** five modules and fourteen chapters, lesson cards, completion state, Continue, study content and read-only figures. Each chapter ends with a ten-question multiple-choice quiz ordered by difficulty (3 easy, 4 medium, 3 hard). See `content/README.md` and `content/catalog.json`. Prerequisites guide the reading order rather than locking chapters in this demo.
+- **Learn:** five modules and fourteen chapters, lesson cards, completion state, Continue, study content and read-only figures. Each chapter ends with a ten-question multiple-choice quiz ordered by difficulty (3 easy, 4 medium, 3 hard). See `README.md` and `content/catalog.json`. Prerequisites guide the reading order rather than locking chapters in this demo.
 - **Lab:** lesson text and target on the left; Circuit and Code tabs in the center; Run/Reset above the result panels; tutor drawer on the right; quiz and assignment below.
 - **Progress:** completion tracking, scores, attempts, map to what have been completed and whats left, user progress, login info, etc, profile dashboard.
 - Learn and its chapter routes now render the static curriculum and ten-question quizzes. Progress shows saved Learn results. `supabase/schema.sql` defines learner-owned records and trusted transactional grading. Build-generated `.generated/learn-seed.sql` supplies the private answer keys; apply it when quiz versions change. Lab and AI remain future implementation.
@@ -58,7 +58,7 @@ Lesson and quiz content is authored in root `content/`. The canonical teaching f
 
 Progress loading and chapter summaries live in `frontend/lib/learn/progress.ts`. Detail routes filter by chapter; full-course history is paginated rather than assumed to fit one Supabase response. Keep historical quiz versions in storage but fetch only UI-used fields. Quiz revisions accept positive integer versions; regenerate and apply the private seed when definitions change.
 
-Run `npm run content:build`, `npm run lint` and `npm run build` from `frontend/`. See `content/README.md` for content setup and feature boundaries.
+Run `npm run content:build`, `npm run lint` and `npm run build` from `frontend/`. See `README.md` for the concise setup guide and feature boundaries.
 
 ## References
 
