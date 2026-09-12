@@ -13,10 +13,8 @@ export default async function ChapterPage({
   params: Promise<{ chapterId: string }>;
 }) {
   const chapter = getChapter((await params).chapterId);
-  const { attempts } = await getProgress();
-  const chapterAttempts = attempts.filter(
-    (attempt) => attempt.chapter_id === chapter.id,
-  );
+  const { chapterProgress } = await getProgress(chapter.id);
+  const progress = chapterProgress[chapter.id];
   const chapterModule = course.modules.find(
     (item) => item.id === chapter.module,
   )!;
@@ -59,8 +57,8 @@ export default async function ChapterPage({
         </p>
         <div className="flex flex-wrap items-center gap-4 text-sm">
           <span className="rounded-full bg-secondary px-3 py-1 text-accent-foreground">
-            {chapterAttempts.length
-              ? `Completed · Best ${Math.max(...chapterAttempts.map((a) => a.score))}/10`
+            {progress.count
+              ? `Completed · Best ${progress.bestScore}/10`
               : "In progress"}
           </span>
           <a
@@ -104,7 +102,7 @@ export default async function ChapterPage({
         chapterId={chapter.id}
         version={chapter.quiz.version}
         questions={getQuizQuestions(chapter)}
-        previousScore={chapterAttempts[0]?.score}
+        previousScore={progress.lastScore}
       />
       <nav
         aria-label="Chapter navigation"

@@ -6,8 +6,8 @@ import { course } from "@/lib/learn/content";
 import { getProgress } from "@/lib/learn/progress";
 
 export default async function ProgressPage() {
-  const { email, lessons, attempts } = await getProgress();
-  const completed = new Set(attempts.map((attempt) => attempt.chapter_id));
+  const { email, chapterProgress, attempts } = await getProgress();
+  const completed = new Set(Object.keys(chapterProgress).filter((id) => chapterProgress[id].count));
   const next = course.chapters.find((chapter) => !completed.has(chapter.id));
   return (
     <main className="mx-auto w-full max-w-5xl space-y-8 px-5 py-10 sm:px-8 sm:py-14">
@@ -59,9 +59,7 @@ export default async function ProgressPage() {
         </p>
         <div className="divide-y rounded-xl border bg-white/80">
           {course.chapters.map((chapter) => {
-            const chapterAttempts = attempts.filter(
-              (attempt) => attempt.chapter_id === chapter.id,
-            );
+            const { count, bestScore, status } = chapterProgress[chapter.id];
             return (
               <Link
                 key={chapter.id}
@@ -72,11 +70,9 @@ export default async function ProgressPage() {
                   {chapter.order}. {chapter.title}
                 </span>
                 <span className="shrink-0 text-sm text-muted-foreground">
-                  {chapterAttempts.length
-                    ? `Best ${Math.max(...chapterAttempts.map((a) => a.score))}/10 · ${chapterAttempts.length} attempt${chapterAttempts.length === 1 ? "" : "s"}`
-                    : lessons.some((lesson) => lesson.chapter_id === chapter.id)
-                      ? "In progress"
-                      : "Not started"}
+                  {count
+                    ? `Best ${bestScore}/10 · ${count} attempt${count === 1 ? "" : "s"}`
+                    : status}
                 </span>
               </Link>
             );

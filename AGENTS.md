@@ -24,15 +24,15 @@ quantlearn/
 |-- frontend/                         Next.js App Router
 |   |-- app/
 |   |   |-- page.tsx                   Home
-|   |   |-- learn/page.tsx
+|   |   |-- learn/{page.tsx,[chapterId]/page.tsx}
 |   |   |-- lab/page.tsx
 |   |   |-- progress/page.tsx
 |   |   |-- login/page.tsx
-|   |   |-- api/{simulate,tutor,grade,progress}/route.ts
+|   |   |-- api/{grade,progress}/route.ts
 |   |   |-- layout.tsx
 |   |   `-- globals.css
-|   |-- components/{circuit,visualizations,lessons,tutor,progress}/
-|   |-- lib/{supabase.ts,api.ts}
+|   |-- components/{learn,ui}/
+|   |-- lib/{learn,supabase}/
 |   |-- public/learn/visuals/       Canonical public teaching figures
 |   `-- package.json
 |-- backend/                           FastAPI
@@ -43,7 +43,6 @@ quantlearn/
 |   |   |-- qasm.py
 |   |   |-- routes/{simulate,tutor,grade,progress}.py
 |   |   `-- adapters/{base,registry,aer,cirq}.py
-|   |-- tests/
 |   |-- requirements.txt
 |   `-- .env.example
 |-- content/{lessons,quizzes}/
@@ -55,7 +54,11 @@ Qiskit Aer and Cirq expose Python-first SDKs, so simulation stays in FastAPI. Ne
 
 The tree above is a target architecture, not a list of already implemented files. Add backend routes/adapters and Lab assignments only when their features are implemented; do not create empty placeholder modules. Keep Next.js forwarding routes thin and avoid duplicating grading/progress business logic in both servers. The actual Supabase clients currently live under `frontend/lib/supabase/`.
 
-Lesson and quiz content is authored in root `content/`. The canonical teaching figures live once in `frontend/public/learn/visuals/` because Next.js serves them directly from `public/`. `npm run content:build` from `frontend/` validates the content, regenerates the public figures and prepares an ignored `frontend/.generated/learn.json` bundle; it also runs automatically before dev/build. Keep the full bundle and quiz answer keys in server-only imports when the lesson reader is implemented. `npm run content:check` verifies authored content, numerical examples and public visuals. The authoring math utility is not the Lab simulator.
+Lesson and quiz content is authored in root `content/`. The canonical teaching figures live once in `frontend/public/learn/visuals/` because Next.js serves them directly from `public/`. `npm run content:build` from `frontend/` validates the content, regenerates the public figures and prepares an ignored `frontend/.generated/learn.json` bundle; it also runs automatically before dev/build. Keep the full bundle and quiz answer keys in server-only imports. The authoring math utility is not the Lab simulator.
+
+Progress loading and chapter summaries live in `frontend/lib/learn/progress.ts`. Detail routes filter by chapter; full-course history is paginated rather than assumed to fit one Supabase response. Keep historical quiz versions in storage but fetch only UI-used fields. Quiz revisions accept positive integer versions; regenerate and apply the private seed when definitions change.
+
+Run `npm run content:build`, `npm run lint` and `npm run build` from `frontend/`. See `content/README.md` for content setup and feature boundaries.
 
 ## References
 

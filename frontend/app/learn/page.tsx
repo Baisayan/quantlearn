@@ -7,8 +7,8 @@ import { course } from "@/lib/learn/content";
 import { getProgress } from "@/lib/learn/progress";
 
 export default async function LearnPage() {
-  const { lessons, attempts } = await getProgress();
-  const completed = new Set(attempts.map((attempt) => attempt.chapter_id));
+  const { lessons, chapterProgress } = await getProgress();
+  const completed = new Set(Object.keys(chapterProgress).filter((id) => chapterProgress[id].count));
   const started = new Set(lessons.map((lesson) => lesson.chapter_id));
   const next = course.chapters.find((chapter) => !completed.has(chapter.id));
   const totalMinutes = course.chapters.reduce(
@@ -127,14 +127,7 @@ export default async function LearnPage() {
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
               {chapters.map((chapter) => {
                 const done = completed.has(chapter.id);
-                const status = done
-                  ? "Completed"
-                  : started.has(chapter.id)
-                    ? "In progress"
-                    : "Not started";
-                const chapterAttempts = attempts.filter(
-                  (attempt) => attempt.chapter_id === chapter.id,
-                );
+                const { status, count, bestScore } = chapterProgress[chapter.id];
                 return (
                   <Link
                     key={chapter.id}
@@ -166,14 +159,10 @@ export default async function LearnPage() {
                             {chapter.minutes} min
                           </span>
                           <span>{chapter.difficulty}</span>
-                          {chapterAttempts.length > 0 && (
+                          {count > 0 && (
                             <span>
                               Best{" "}
-                              {Math.max(
-                                ...chapterAttempts.map(
-                                  (attempt) => attempt.score,
-                                ),
-                              )}
+                              {bestScore}
                               /10
                             </span>
                           )}

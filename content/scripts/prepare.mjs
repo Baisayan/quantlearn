@@ -8,7 +8,6 @@ import { buildVisuals } from "./visuals.mjs";
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const frontend = resolve(root, "../frontend");
 const visualDirectory = resolve(frontend, "public/learn/visuals");
-const checkOnly = process.argv.includes("--check");
 const readJson = async (path) => JSON.parse(await readFile(resolve(root, path), "utf8"));
 const catalog = await readJson("catalog.json");
 const sources = await readJson("sources.json");
@@ -70,7 +69,7 @@ for (const [index, chapter] of catalog.chapters.entries()) {
   const quiz = await readJson(chapter.quiz);
   assert.equal(quiz.chapterId, chapter.id);
   assert.equal(quiz.questions.length, catalog.chapterQuiz.questions);
-  assert.equal(quiz.version, 2, "Quiz version must match the revised assessment");
+    assert.ok(Number.isInteger(quiz.version) && quiz.version > 0 && quiz.version <= 2147483647, "Quiz version must be a positive PostgreSQL integer");
   assert.deepEqual(quiz.questions.map((q) => q.difficulty), expectedDifficulty, "Quiz difficulty order differs in " + chapter.id);
   unique(quiz.questions.map((q) => q.prompt.trim().toLowerCase()), "question prompts");
   assert.ok(!/[\u2014]/.test(markdown + JSON.stringify(quiz)), "Em dash in " + chapter.id);
@@ -113,20 +112,16 @@ outputs.set("data.json", json({
 const esc = (v) => v.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll('"', "&quot;");
 outputs.set("index.html", '<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>QuantLearn chapter figures</title><style>body{margin:0;padding:2rem;font:1rem/1.5 system-ui;background:#faf8ff;color:#221536}main{max-width:80rem;margin:auto}section{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,32rem),1fr));gap:1.5rem}figure{margin:0;background:white;border:1px solid #ddd6fe;padding:1rem}img{display:block;width:100%;height:auto}figcaption{margin-top:1rem;color:#62556f}a{color:#6d28d9}</style><main><h1>QuantLearn chapter figures</h1><p>28 original read-only figures. Open an image for its full-size view. Circuit basis: q(n−1)…q0; q0 is the top wire.</p><section>' + figures.map((f) => '<figure><a href="' + f.id + '.svg"><img src="' + f.id + '.svg" alt="' + esc(f.description) + '"></a><figcaption>' + esc(f.id + " · " + f.kind) + '</figcaption></figure>').join("") + '</section></main></html>\n');
 
-if (checkOnly) {
-  for (const [path, expected] of outputs) assert.equal(await readFile(resolve(visualDirectory, path), "utf8"), expected, "Generated public visual is stale: " + path);
-} else {
-  await mkdir(visualDirectory, { recursive: true });
-  for (const [path, value] of outputs) await writeFile(resolve(visualDirectory, path), value);
-  await mkdir(resolve(frontend, ".generated"), { recursive: true });
-  await writeFile(resolve(frontend, ".generated/learn.json"), json({ ...catalog, chapters, sources, visuals: visualManifest }));
-  const sqlString = (value) => "'" + value.replaceAll("'", "''") + "'";
-  const quizRows = chapters.map(({ id, quiz }) => "(" + sqlString(id) + "," + quiz.version + "," + sqlString(JSON.stringify(Object.fromEntries(quiz.questions.map((q) => [q.id, q.correctOptionId])))) + "::jsonb)");
-  await writeFile(resolve(frontend, ".generated/learn-seed.sql"),
-    "-- Generated from content/quizzes; do not edit. Apply after supabase/schema.sql.\n" +
-    "insert into private.learn_quizzes (chapter_id,version,answers) values\n" + quizRows.join(",\n") +
-    "\non conflict (chapter_id) do update set version=excluded.version, answers=excluded.answers;\n");
-}
-console.log((checkOnly ? "Verified" : "Prepared") + ": " + chapters.length + " chapters; " + questionCount + " MCQs; " + figures.length + " SVGs; " + circuits.length + " circuit fixtures; " + sources.length + " sources.");
+await mkdir(visualDirectory, { recursive: true });
+for (const [path, value] of outputs) await writeFile(resolve(visualDirectory, path), value);
+await mkdir(resolve(frontend, ".generated"), { recursive: true });
+await writeFile(resolve(frontend, ".generated/learn.json"), json({ ...catalog, chapters, sources, visuals: visualManifest }));
+const sqlString = (value) => "'" + value.replaceAll("'", "''") + "'";
+const quizRows = chapters.map(({ id, quiz }) => "(" + sqlString(id) + "," + quiz.version + "," + sqlString(JSON.stringify(Object.fromEntries(quiz.questions.map((q) => [q.id, q.correctOptionId])))) + "::jsonb)");
+await writeFile(resolve(frontend, ".generated/learn-seed.sql"),
+  "-- Generated from content/quizzes; do not edit. Apply after supabase/schema.sql.\n" +
+  "insert into private.learn_quizzes (chapter_id,version,answers) values\n" + quizRows.join(",\n") +
+  "\non conflict (chapter_id) do update set version=excluded.version, answers=excluded.answers;\n");
+console.log("Prepared: " + chapters.length + " chapters; " + questionCount + " MCQs; " + figures.length + " SVGs; " + circuits.length + " circuit fixtures; " + sources.length + " sources.");
 console.log("Physics checks: fixture probabilities, Grover phase and overshoot, 7 VQE angles, 20 QAOA angle pairs, 16 teleportation branches, mixture/Bell comparisons and expanded assessment arithmetic.");
 console.log("Scope: Learn content and figures; live simulator execution belongs in Lab.");

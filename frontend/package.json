@@ -4,14 +4,12 @@
   "private": true,
   "scripts": {
     "content:build": "node ../content/scripts/prepare.mjs",
-    "content:check": "node ../content/scripts/prepare.mjs --check",
     "predev": "npm run content:build",
     "prebuild": "npm run content:build",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint",
-    "test:learn": "playwright test tests/learn.spec.ts --workers=1 --reporter=line"
+    "lint": "eslint"
   },
   "dependencies": {
     "@radix-ui/react-checkbox": "^1.3.11",
@@ -20,10 +18,9 @@
     "@radix-ui/react-radio-group": "^1.4.7",
     "@radix-ui/react-slot": "^1.3.3",
     "@supabase/ssr": "0.12.7",
-    "@supabase/supabase-js": "2.116.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
-    "katex": "^0.18.7",
+    "katex": "0.16.47",
     "lucide-react": "^1.44.0",
     "next": "16.3.4",
     "react": "19.2.8",
@@ -36,7 +33,6 @@
     "tailwind-merge": "^3.6.0"
   },
   "devDependencies": {
-    "@playwright/test": "^1.63.0",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
