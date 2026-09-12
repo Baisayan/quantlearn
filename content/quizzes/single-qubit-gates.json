@@ -1,0 +1,256 @@
+{
+  "chapterId": "single-qubit-gates",
+  "version": 2,
+  "questions": [
+    {
+      "id": "single-qubit-gates-q1",
+      "difficulty": "easy",
+      "prompt": "What does X do to a vector [alpha, beta]?",
+      "options": [
+        {
+          "id": "a",
+          "text": "[alpha, -beta]"
+        },
+        {
+          "id": "b",
+          "text": "[beta, alpha]"
+        },
+        {
+          "id": "c",
+          "text": "[-alpha, beta]"
+        },
+        {
+          "id": "d",
+          "text": "[alpha, beta]"
+        }
+      ],
+      "correctOptionId": "b",
+      "explanation": "Matrix multiplication by X exchanges the two entries. It swaps computational-basis probabilities as well as their amplitudes."
+    },
+    {
+      "id": "single-qubit-gates-q2",
+      "difficulty": "easy",
+      "prompt": "Which gate leaves every input state unchanged?",
+      "options": [
+        {
+          "id": "a",
+          "text": "X"
+        },
+        {
+          "id": "b",
+          "text": "H"
+        },
+        {
+          "id": "c",
+          "text": "Z"
+        },
+        {
+          "id": "d",
+          "text": "I"
+        }
+      ],
+      "correctOptionId": "d",
+      "explanation": "I is the identity transformation. Other gates can leave particular states unchanged, but not every state."
+    },
+    {
+      "id": "single-qubit-gates-q3",
+      "difficulty": "easy",
+      "prompt": "Which relation defines an ideal unitary matrix U?",
+      "options": [
+        {
+          "id": "a",
+          "text": "U times U always equals zero"
+        },
+        {
+          "id": "b",
+          "text": "All matrix entries are positive"
+        },
+        {
+          "id": "c",
+          "text": "U dagger times U equals I"
+        },
+        {
+          "id": "d",
+          "text": "Every input is mapped to |0>"
+        }
+      ],
+      "correctOptionId": "c",
+      "explanation": "The dagger is conjugate transpose. This relation preserves vector length and makes U dagger the inverse."
+    },
+    {
+      "id": "single-qubit-gates-q4",
+      "difficulty": "medium",
+      "prompt": "What does Z do to |+>?",
+      "options": [
+        {
+          "id": "a",
+          "text": "It produces |-> without changing direct Z probabilities"
+        },
+        {
+          "id": "b",
+          "text": "It produces |0>"
+        },
+        {
+          "id": "c",
+          "text": "It produces |1>"
+        },
+        {
+          "id": "d",
+          "text": "It changes both amplitudes by the same sign"
+        }
+      ],
+      "correctOptionId": "a",
+      "explanation": "Z negates the |1> amplitude only. The relative sign changes, while both squared magnitudes remain 1/2."
+    },
+    {
+      "id": "single-qubit-gates-q5",
+      "difficulty": "medium",
+      "prompt": "Apply X to [sqrt(3)/2, i/2]. What are the resulting Z probabilities in order 0,1?",
+      "options": [
+        {
+          "id": "a",
+          "text": "[1/4, 3/4]"
+        },
+        {
+          "id": "b",
+          "text": "[3/4, 1/4]"
+        },
+        {
+          "id": "c",
+          "text": "[1/2, 1/2]"
+        },
+        {
+          "id": "d",
+          "text": "[-1/4, 3/4]"
+        }
+      ],
+      "correctOptionId": "a",
+      "explanation": "X exchanges the amplitudes, giving [i/2, sqrt(3)/2]. Squared magnitudes are nonnegative, including for the imaginary entry."
+    },
+    {
+      "id": "single-qubit-gates-q6",
+      "difficulty": "medium",
+      "prompt": "Using the displayed matrix for Y, what is Y|0>?",
+      "options": [
+        {
+          "id": "a",
+          "text": "-i|1>"
+        },
+        {
+          "id": "b",
+          "text": "|0>"
+        },
+        {
+          "id": "c",
+          "text": "i|1>"
+        },
+        {
+          "id": "d",
+          "text": "-|0>"
+        }
+      ],
+      "correctOptionId": "c",
+      "explanation": "Multiply Y by [1,0]: the result is [0,i]. The sign of i follows from the first column of Y."
+    },
+    {
+      "id": "single-qubit-gates-q7",
+      "difficulty": "medium",
+      "prompt": "Starting from |0>, what state follows X and then H?",
+      "options": [
+        {
+          "id": "a",
+          "text": "|+>"
+        },
+        {
+          "id": "b",
+          "text": "|0>"
+        },
+        {
+          "id": "c",
+          "text": "i|0>"
+        },
+        {
+          "id": "d",
+          "text": "|->"
+        }
+      ],
+      "correctOptionId": "d",
+      "explanation": "X first gives |1>; H then gives |->. Operator notation writes this as HX|0>, with the rightmost gate acting first."
+    },
+    {
+      "id": "single-qubit-gates-q8",
+      "difficulty": "hard",
+      "prompt": "Two paths prepare X then H, or H then X, from |0>. How does a final H and Z measurement distinguish them?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Both paths yield 0"
+        },
+        {
+          "id": "b",
+          "text": "The first path yields 1 and the second yields 0"
+        },
+        {
+          "id": "c",
+          "text": "The first path yields 0 and the second yields 1"
+        },
+        {
+          "id": "d",
+          "text": "Both paths remain 50/50"
+        }
+      ],
+      "correctOptionId": "b",
+      "explanation": "Before the analyzer the states are |-> and |+>. Applying H converts their phase difference into opposite computational-basis outcomes."
+    },
+    {
+      "id": "single-qubit-gates-q9",
+      "difficulty": "hard",
+      "prompt": "Why can an ideal unitary gate not reset both |0> and |1> to |0>?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Unitary gates only act on |0>"
+        },
+        {
+          "id": "b",
+          "text": "Normalization forbids the state |0>"
+        },
+        {
+          "id": "c",
+          "text": "That map loses input distinctions and cannot have a unitary inverse"
+        },
+        {
+          "id": "d",
+          "text": "All unitary matrices must exchange the basis states"
+        }
+      ],
+      "correctOptionId": "c",
+      "explanation": "Unitary transformations preserve inner products and are reversible. Mapping two orthogonal inputs to one output violates those properties."
+    },
+    {
+      "id": "single-qubit-gates-q10",
+      "difficulty": "hard",
+      "prompt": "What can be concluded from two adjacent Y gates in an ideal circuit, and what changes on hardware?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Y squared is X, so the bit always flips"
+        },
+        {
+          "id": "b",
+          "text": "Y squared destroys the relative phase permanently"
+        },
+        {
+          "id": "c",
+          "text": "The two physical operations are guaranteed to be noiseless"
+        },
+        {
+          "id": "d",
+          "text": "Y squared is I ideally, but physical execution may still add noise"
+        }
+      ],
+      "correctOptionId": "d",
+      "explanation": "Multiplying the full matrices gives I for every input, including superpositions. Algebraic cancellation does not guarantee perfect physical gate implementations."
+    }
+  ]
+}

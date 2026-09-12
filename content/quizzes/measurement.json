@@ -1,0 +1,256 @@
+{
+  "chapterId": "measurement",
+  "version": 2,
+  "questions": [
+    {
+      "id": "measurement-q1",
+      "difficulty": "easy",
+      "prompt": "What is a shot in the experiments used here?",
+      "options": [
+        {
+          "id": "a",
+          "text": "A fresh prepare-operate-measure repetition"
+        },
+        {
+          "id": "b",
+          "text": "A complete reconstruction of an unknown state"
+        },
+        {
+          "id": "c",
+          "text": "A single amplitude in a vector"
+        },
+        {
+          "id": "d",
+          "text": "An extra gate applied after a histogram is drawn"
+        }
+      ],
+      "correctOptionId": "a",
+      "explanation": "Each shot repeats the specified preparation and circuit before recording an outcome. Many shots estimate the circuit's distribution."
+    },
+    {
+      "id": "measurement-q2",
+      "difficulty": "easy",
+      "prompt": "An ideal Z measurement returns 1. What does an immediate second Z measurement return if nothing intervenes?",
+      "options": [
+        {
+          "id": "a",
+          "text": "0 with certainty"
+        },
+        {
+          "id": "b",
+          "text": "0 or 1 with the original probabilities"
+        },
+        {
+          "id": "c",
+          "text": "1 with certainty"
+        },
+        {
+          "id": "d",
+          "text": "The original complex amplitudes"
+        }
+      ],
+      "correctOptionId": "c",
+      "explanation": "Conditioning on outcome 1 leaves the state |1>. Repeating the same projective measurement cannot recover the pre-measurement superposition."
+    },
+    {
+      "id": "measurement-q3",
+      "difficulty": "easy",
+      "prompt": "What operation before a Z detector measures the original qubit in the X basis?",
+      "options": [
+        {
+          "id": "a",
+          "text": "X"
+        },
+        {
+          "id": "b",
+          "text": "H"
+        },
+        {
+          "id": "c",
+          "text": "Z"
+        },
+        {
+          "id": "d",
+          "text": "I"
+        }
+      ],
+      "correctOptionId": "b",
+      "explanation": "H maps the X-basis states |+> and |-> to computational basis states. The detector can then distinguish them."
+    },
+    {
+      "id": "measurement-q4",
+      "difficulty": "medium",
+      "prompt": "With P(0)=3/4, what is the expected number of zeros in 16 independent shots?",
+      "options": [
+        {
+          "id": "a",
+          "text": "4"
+        },
+        {
+          "id": "b",
+          "text": "8"
+        },
+        {
+          "id": "c",
+          "text": "16"
+        },
+        {
+          "id": "d",
+          "text": "12"
+        }
+      ],
+      "correctOptionId": "d",
+      "explanation": "Multiply the number of shots by the outcome probability: 16 times 3/4 equals 12. An actual sample can differ."
+    },
+    {
+      "id": "measurement-q5",
+      "difficulty": "medium",
+      "prompt": "A histogram contains 70 zeros and 30 ones. What is the estimated probability of 0?",
+      "options": [
+        {
+          "id": "a",
+          "text": "0.4"
+        },
+        {
+          "id": "b",
+          "text": "0.3"
+        },
+        {
+          "id": "c",
+          "text": "70"
+        },
+        {
+          "id": "d",
+          "text": "0.7"
+        }
+      ],
+      "correctOptionId": "d",
+      "explanation": "Divide the count of zeros by all 100 shots. This frequency is an estimate, not an exact state description."
+    },
+    {
+      "id": "measurement-q6",
+      "difficulty": "medium",
+      "prompt": "For 70 zeros and 30 ones, what is the estimated Pauli expectation when bits 0 and 1 mean +1 and -1?",
+      "options": [
+        {
+          "id": "a",
+          "text": "0.7"
+        },
+        {
+          "id": "b",
+          "text": "0.4"
+        },
+        {
+          "id": "c",
+          "text": "0.3"
+        },
+        {
+          "id": "d",
+          "text": "1"
+        }
+      ],
+      "correctOptionId": "b",
+      "explanation": "The signed average is (70-30)/100=0.4. An expectation of a Pauli observable is different from the probability of outcome 0."
+    },
+    {
+      "id": "measurement-q7",
+      "difficulty": "medium",
+      "prompt": "Keeping the state fixed, how does the sampling standard deviation change when shots increase from 100 to 400?",
+      "options": [
+        {
+          "id": "a",
+          "text": "It is quartered"
+        },
+        {
+          "id": "b",
+          "text": "It is unchanged"
+        },
+        {
+          "id": "c",
+          "text": "It is halved"
+        },
+        {
+          "id": "d",
+          "text": "It doubles"
+        }
+      ],
+      "correctOptionId": "c",
+      "explanation": "The standard deviation is proportional to 1/sqrt(N). Four times as many shots give half the uncertainty, not one quarter."
+    },
+    {
+      "id": "measurement-q8",
+      "difficulty": "hard",
+      "prompt": "A student measures one prepared qubit in Z 100 times without re-preparing it. Why is this not 100 independent samples of the original state?",
+      "options": [
+        {
+          "id": "a",
+          "text": "The first measurement changes the state used for later measurements"
+        },
+        {
+          "id": "b",
+          "text": "Z measurements cannot be repeated"
+        },
+        {
+          "id": "c",
+          "text": "A histogram requires exactly 1024 shots"
+        },
+        {
+          "id": "d",
+          "text": "The original statevector is stored in the first outcome"
+        }
+      ],
+      "correctOptionId": "a",
+      "explanation": "Later outcomes are conditioned on the first result. Estimating the original preparation requires fresh copies, not repeated interrogation of a collapsed copy."
+    },
+    {
+      "id": "measurement-q9",
+      "difficulty": "hard",
+      "prompt": "An X-basis measurement of |-> is implemented using H and a Z detector. Which bit and eigenvalue should be recorded?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Bit 0, representing +1"
+        },
+        {
+          "id": "b",
+          "text": "Bit 1, representing -1"
+        },
+        {
+          "id": "c",
+          "text": "Bit 1, representing +1"
+        },
+        {
+          "id": "d",
+          "text": "Bit 0, representing -1"
+        }
+      ],
+      "correctOptionId": "b",
+      "explanation": "H sends |-> to |1>. In this measurement setting the detector bit 1 labels the X eigenvalue -1."
+    },
+    {
+      "id": "measurement-q10",
+      "difficulty": "hard",
+      "prompt": "A device systematically shifts a target probability from 0.5 to 0.6. What does increasing the shot count achieve by itself?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Automatic recovery of the target probability 0.5"
+        },
+        {
+          "id": "b",
+          "text": "Restoration of the original coherent state"
+        },
+        {
+          "id": "c",
+          "text": "A more precise estimate near 0.6, without removing the bias"
+        },
+        {
+          "id": "d",
+          "text": "A guarantee of equal counts"
+        }
+      ],
+      "correctOptionId": "c",
+      "explanation": "More samples reduce random uncertainty around the distribution actually being measured. They do not correct a systematic preparation or measurement error."
+    }
+  ]
+}

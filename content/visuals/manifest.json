@@ -1,0 +1,338 @@
+[
+  {
+    "id": "qubit-state",
+    "title": "A single pure qubit",
+    "description": "One original complex-amplitude example, shown on a projected Bloch sphere.",
+    "kind": "bloch",
+    "file": "qubit-state.svg",
+    "url": "/learn/visuals/qubit-state.svg",
+    "author": "Original QuantLearn teaching figure",
+    "chapterIds": [
+      "qubits"
+    ]
+  },
+  {
+    "id": "statevector",
+    "title": "Statevector → measurement probabilities",
+    "description": "Basis order and complex phase are explicit; amplitudes are not probabilities.",
+    "kind": "table",
+    "file": "statevector.svg",
+    "url": "/learn/visuals/statevector.svg",
+    "author": "Original QuantLearn teaching figure",
+    "chapterIds": [
+      "qubits"
+    ]
+  },
+  {
+    "id": "phase-comparison",
+    "title": "Same probabilities, different phase",
+    "description": "All entries refer to the Z basis before any analyzing gate.",
+    "kind": "table",
+    "file": "phase-comparison.svg",
+    "url": "/learn/visuals/phase-comparison.svg",
+    "author": "Original QuantLearn teaching figure",
+    "chapterIds": [
+      "superposition-and-phase"
+    ]
+  },
+  {
+    "id": "interference",
+    "title": "Interference paths",
+    "description": "Time runs left to right. The final Hadamard reveals a relative-phase difference.",
+    "kind": "table",
+    "file": "interference.svg",
+    "url": "/learn/visuals/interference.svg",
+    "author": "Original QuantLearn teaching figure",
+    "chapterIds": [
+      "superposition-and-phase"
+    ]
+  },
+  {
+    "id": "measurement",
+    "title": "Exact probabilities and finite samples",
+    "description": "Fixed-seed synthetic samples illustrate sampling variation, not device noise.",
+    "kind": "histogram",
+    "file": "measurement.svg",
+    "url": "/learn/visuals/measurement.svg",
+    "author": "Original QuantLearn teaching figure",
+    "chapterIds": [
+      "measurement"
+    ]
+  },
+  {
+    "id": "measurement-bases",
+    "title": "The analyzer selects the basis",
+    "description": "M denotes a Z-basis detector. A fresh state is prepared for each shot.",
+    "kind": "table",
+    "file": "measurement-bases.svg",
+    "url": "/learn/visuals/measurement-bases.svg",
+    "author": "Original QuantLearn teaching figure",
+    "chapterIds": [
+      "measurement"
+    ]
+  },
+  {
+    "id": "gate-reference",
+    "title": "Single-qubit gate reference",
+    "description": "Images of basis vectors define each linear operation, including its phases.",
+    "kind": "table",
+    "file": "gate-reference.svg",
+    "url": "/learn/visuals/gate-reference.svg",
+    "author": "Original QuantLearn teaching figure",
+    "chapterIds": [
+      "single-qubit-gates"
+    ]
+  },
+  {
+    "id": "gate-order",
+    "title": "Gate order can change the answer",
+    "description": "The last H is an X-basis analyzer for the state produced by the first two gates.",
+    "kind": "table",
+    "file": "gate-order.svg",
+    "url": "/learn/visuals/gate-order.svg",
+    "author": "Original QuantLearn teaching figure",
+    "chapterIds": [
+      "single-qubit-gates"
+    ]
+  },
+  {
+    "id": "rotation-curve",
+    "title": "Ry rotation changes probabilities",
+    "description": "Exact calculation: Ry(θ)|0> gives P(1) = sin²(θ/2).",
+    "kind": "curve",
+    "file": "rotation-curve.svg",
+    "url": "/learn/visuals/rotation-curve.svg",
+    "author": "Original QuantLearn teaching figure",
+    "chapterIds": [
+      "phase-and-rotation-gates"
+    ]
+  },
+  {
+    "id": "phase-gates",
+    "title": "Phase becomes visible through interference",
+    "description": "The initial and final H gates turn phase-gate differences into Z probabilities.",
+    "kind": "table",
+    "file": "phase-gates.svg",
+    "url": "/learn/visuals/phase-gates.svg",
+    "author": "Original QuantLearn teaching figure",
+    "chapterIds": [
+      "phase-and-rotation-gates"
+    ]
+  },
+  {
+    "id": "multi-qubit",
+    "title": "A controlled X on a basis state",
+    "description": "q0 is the top wire. Bitstrings are written q1q0.",
+    "kind": "circuit",
+    "file": "multi-qubit.svg",
+    "url": "/learn/visuals/multi-qubit.svg",
+    "author": "Original QuantLearn teaching figure",
+    "chapterIds": [
+      "multi-qubit-circuits"
+    ]
+  },
+  {
+    "id": "bit-order",
+    "title": "Top wire does not mean leftmost bit",
+    "description": "An asymmetric example exposes accidental bit reversal.",
+    "kind": "circuit",
+    "file": "bit-order.svg",
+    "url": "/learn/visuals/bit-order.svg",
+    "author": "Original QuantLearn teaching figure",
+    "chapterIds": [
+      "multi-qubit-circuits"
+    ]
+  },
+  {
+    "id": "bell-circuit",
+    "title": "Preparing a Bell pair",
+    "description": "H creates two branches; CX correlates the target with the control.",
+    "kind": "circuit",
+    "file": "bell-circuit.svg",
+    "url": "/learn/visuals/bell-circuit.svg",
+    "author": "Original QuantLearn teaching figure",
+    "chapterIds": [
+      "entanglement"
+    ]
+  },
+  {
+    "id": "bell-correlations",
+    "title": "Bell coherence versus a classical mixture",
+    "description": "ZZ alone cannot distinguish these two states. XX uses H on both wires before measurement.",
+    "kind": "histogram",
+    "file": "bell-correlations.svg",
+    "url": "/learn/visuals/bell-correlations.svg",
+    "author": "Original QuantLearn teaching figure",
+    "chapterIds": [
+      "entanglement"
+    ]
+  },
+  {
+    "id": "teleportation",
+    "title": "Teleportation with classical corrections",
+    "description": "Prepare q1/q2 as a Bell pair. q0 is the input and q2 is Bob's output.",
+    "kind": "circuit",
+    "file": "teleportation.svg",
+    "url": "/learn/visuals/teleportation.svg",
+    "author": "Original QuantLearn teaching figure",
+    "chapterIds": [
+      "teleportation"
+    ]
+  },
+  {
+    "id": "teleportation-corrections",
+    "title": "Teleportation branch table",
+    "description": "The column heading defines outcome order m0m1; each ideal branch has probability 1/4.",
+    "kind": "table",
+    "file": "teleportation-corrections.svg",
+    "url": "/learn/visuals/teleportation-corrections.svg",
+    "author": "Original QuantLearn teaching figure",
+    "chapterIds": [
+      "teleportation"
+    ]
+  },
+  {
+    "id": "dj-circuit",
+    "title": "Deutsch-Jozsa: balanced XOR oracle",
+    "description": "The two CX gates together implement one oracle call for f(q1,q0)=q1 XOR q0.",
+    "kind": "circuit",
+    "file": "dj-circuit.svg",
+    "url": "/learn/visuals/dj-circuit.svg",
+    "author": "Original QuantLearn teaching figure",
+    "chapterIds": [
+      "deutsch-jozsa"
+    ]
+  },
+  {
+    "id": "dj-results",
+    "title": "Deutsch-Jozsa input-register results",
+    "description": "Exact distributions after the final H gates. The helper qubit is marginalized out.",
+    "kind": "histogram",
+    "file": "dj-results.svg",
+    "url": "/learn/visuals/dj-results.svg",
+    "author": "Original QuantLearn teaching figure",
+    "chapterIds": [
+      "deutsch-jozsa"
+    ]
+  },
+  {
+    "id": "grover-circuit",
+    "title": "Grover search with two qubits",
+    "description": "The first CZ marks 11. The remaining H-X-CZ-X-H block implements −D.",
+    "kind": "circuit",
+    "file": "grover-circuit.svg",
+    "url": "/learn/visuals/grover-circuit.svg",
+    "author": "Original QuantLearn teaching figure",
+    "chapterIds": [
+      "grover"
+    ]
+  },
+  {
+    "id": "grover-amplitudes",
+    "title": "One mathematical Grover iteration",
+    "description": "Signed real amplitudes are shown, not probabilities. D reflects about the mean.",
+    "kind": "amplitudes",
+    "file": "grover-amplitudes.svg",
+    "url": "/learn/visuals/grover-amplitudes.svg",
+    "author": "Original QuantLearn teaching figure",
+    "chapterIds": [
+      "grover"
+    ]
+  },
+  {
+    "id": "qaoa-circuit",
+    "title": "QAOA: one edge, one layer",
+    "description": "Maximize C=(I−Z0Z1)/2 with γ=π/2 and β=π/8. Rotation labels are radians.",
+    "kind": "circuit",
+    "file": "qaoa-circuit.svg",
+    "url": "/learn/visuals/qaoa-circuit.svg",
+    "author": "Original QuantLearn teaching figure",
+    "chapterIds": [
+      "qaoa"
+    ]
+  },
+  {
+    "id": "qaoa-cost",
+    "title": "Sampling cuts in the one-edge model",
+    "description": "Cut scores for [00,01,10,11] are [0,1,1,0]. Both figures are exact predictions.",
+    "kind": "histogram",
+    "file": "qaoa-cost.svg",
+    "url": "/learn/visuals/qaoa-cost.svg",
+    "author": "Original QuantLearn teaching figure",
+    "chapterIds": [
+      "qaoa"
+    ]
+  },
+  {
+    "id": "vqe-measurements",
+    "title": "Two measurement settings for one energy",
+    "description": "Prepare a fresh Ry(θ)|0> for each shot in each setting. M is a Z detector.",
+    "kind": "table",
+    "file": "vqe-measurements.svg",
+    "url": "/learn/visuals/vqe-measurements.svg",
+    "author": "Original QuantLearn teaching figure",
+    "chapterIds": [
+      "vqe"
+    ]
+  },
+  {
+    "id": "vqe-energy",
+    "title": "A VQE energy with a known answer",
+    "description": "Exact parameter sweep for H=Z+0.5X and |ψ(θ)>=Ry(θ)|0>; not optimizer history.",
+    "kind": "curve",
+    "file": "vqe-energy.svg",
+    "url": "/learn/visuals/vqe-energy.svg",
+    "author": "Original QuantLearn teaching figure",
+    "chapterIds": [
+      "vqe"
+    ]
+  },
+  {
+    "id": "noise-comparison",
+    "title": "Noise changes the underlying distribution",
+    "description": "Prepare plus, apply a random Z with probability p, then H and Z measurement.",
+    "kind": "histogram",
+    "file": "noise-comparison.svg",
+    "url": "/learn/visuals/noise-comparison.svg",
+    "author": "Original QuantLearn teaching figure",
+    "chapterIds": [
+      "simulation-and-noise"
+    ]
+  },
+  {
+    "id": "result-panels",
+    "title": "Four views of the Bell experiment",
+    "description": "Each panel answers a different question. A local view cannot replace the joint state.",
+    "kind": "table",
+    "file": "result-panels.svg",
+    "url": "/learn/visuals/result-panels.svg",
+    "author": "Original QuantLearn teaching figure",
+    "chapterIds": [
+      "simulation-and-noise"
+    ]
+  },
+  {
+    "id": "framework-order",
+    "title": "One basis convention across both engines",
+    "description": "Use the asymmetric X(q0) example to verify the adapter, not only a symmetric Bell pair.",
+    "kind": "table",
+    "file": "framework-order.svg",
+    "url": "/learn/visuals/framework-order.svg",
+    "author": "Original QuantLearn teaching figure",
+    "chapterIds": [
+      "aer-and-cirq"
+    ]
+  },
+  {
+    "id": "framework-flow",
+    "title": "Choose the simulation result you need",
+    "description": "Aer and Cirq offer different views of the same experiment. Name the representation explicitly.",
+    "kind": "table",
+    "file": "framework-flow.svg",
+    "url": "/learn/visuals/framework-flow.svg",
+    "author": "Original QuantLearn teaching figure",
+    "chapterIds": [
+      "aer-and-cirq"
+    ]
+  }
+]

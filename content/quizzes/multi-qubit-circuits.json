@@ -1,0 +1,256 @@
+{
+  "chapterId": "multi-qubit-circuits",
+  "version": 2,
+  "questions": [
+    {
+      "id": "multi-qubit-circuits-q1",
+      "difficulty": "easy",
+      "prompt": "In this course, what is the displayed two-qubit bitstring order?",
+      "options": [
+        {
+          "id": "a",
+          "text": "q0q1"
+        },
+        {
+          "id": "b",
+          "text": "Always alphabetical order of the gate names"
+        },
+        {
+          "id": "c",
+          "text": "Measurement time order regardless of register labels"
+        },
+        {
+          "id": "d",
+          "text": "q1q0"
+        }
+      ],
+      "correctOptionId": "d",
+      "explanation": "q0 is the least significant bit and is written on the right. Wire position and printed significance must be kept separate."
+    },
+    {
+      "id": "multi-qubit-circuits-q2",
+      "difficulty": "easy",
+      "prompt": "How many complex amplitudes describe a general pure three-qubit state?",
+      "options": [
+        {
+          "id": "a",
+          "text": "3"
+        },
+        {
+          "id": "b",
+          "text": "8"
+        },
+        {
+          "id": "c",
+          "text": "6"
+        },
+        {
+          "id": "d",
+          "text": "9"
+        }
+      ],
+      "correctOptionId": "b",
+      "explanation": "There are 2 cubed computational-basis strings. Each basis string has one amplitude."
+    },
+    {
+      "id": "multi-qubit-circuits-q3",
+      "difficulty": "easy",
+      "prompt": "In CX(q0,q1), which qubit is flipped when the control is 1?",
+      "options": [
+        {
+          "id": "a",
+          "text": "q1"
+        },
+        {
+          "id": "b",
+          "text": "q0"
+        },
+        {
+          "id": "c",
+          "text": "Both qubits"
+        },
+        {
+          "id": "d",
+          "text": "Neither; CX only changes phase"
+        }
+      ],
+      "correctOptionId": "a",
+      "explanation": "q0 is the control and q1 is the target. The target is flipped conditional on the control's computational-basis value."
+    },
+    {
+      "id": "multi-qubit-circuits-q4",
+      "difficulty": "medium",
+      "prompt": "Starting from 00, which state does X(q0) prepare?",
+      "options": [
+        {
+          "id": "a",
+          "text": "10"
+        },
+        {
+          "id": "b",
+          "text": "11"
+        },
+        {
+          "id": "c",
+          "text": "01"
+        },
+        {
+          "id": "d",
+          "text": "00"
+        }
+      ],
+      "correctOptionId": "c",
+      "explanation": "The rightmost bit is q0 under the declared convention. Flipping it changes 00 to 01."
+    },
+    {
+      "id": "multi-qubit-circuits-q5",
+      "difficulty": "medium",
+      "prompt": "What does CX(q0,q1) do to input 11?",
+      "options": [
+        {
+          "id": "a",
+          "text": "10"
+        },
+        {
+          "id": "b",
+          "text": "11"
+        },
+        {
+          "id": "c",
+          "text": "01"
+        },
+        {
+          "id": "d",
+          "text": "00"
+        }
+      ],
+      "correctOptionId": "c",
+      "explanation": "The control q0 is 1, so q1 flips from 1 to 0. The control itself remains 1."
+    },
+    {
+      "id": "multi-qubit-circuits-q6",
+      "difficulty": "medium",
+      "prompt": "If q1 is |0> and q0 is |+>, what is the ordered joint vector?",
+      "options": [
+        {
+          "id": "a",
+          "text": "[1/sqrt(2), 1/sqrt(2), 0, 0]"
+        },
+        {
+          "id": "b",
+          "text": "[1/sqrt(2), 0, 1/sqrt(2), 0]"
+        },
+        {
+          "id": "c",
+          "text": "[1/2, 1/2, 1/2, 1/2]"
+        },
+        {
+          "id": "d",
+          "text": "[0, 0, 1/sqrt(2), 1/sqrt(2)]"
+        }
+      ],
+      "correctOptionId": "a",
+      "explanation": "Only 00 and 01 occur because q1 remains zero. The tensor factors follow q1 then q0."
+    },
+    {
+      "id": "multi-qubit-circuits-q7",
+      "difficulty": "medium",
+      "prompt": "What are the logical gate count and minimum depth of H(q0), H(q1), then CX(q0,q1), allowing disjoint gates in parallel?",
+      "options": [
+        {
+          "id": "a",
+          "text": "3 gates and 3 layers necessarily"
+        },
+        {
+          "id": "b",
+          "text": "3 gates and 2 layers"
+        },
+        {
+          "id": "c",
+          "text": "2 gates and 2 layers"
+        },
+        {
+          "id": "d",
+          "text": "3 gates and 1 layer"
+        }
+      ],
+      "correctOptionId": "b",
+      "explanation": "The two H gates occupy one layer because their targets are disjoint. CX uses both qubits and occupies a second layer."
+    },
+    {
+      "id": "multi-qubit-circuits-q8",
+      "difficulty": "hard",
+      "prompt": "For q1 vector [sqrt(3)/2,1/2] and q0 vector [1/sqrt(2),1/sqrt(2)], what is P(10)?",
+      "options": [
+        {
+          "id": "a",
+          "text": "3/8"
+        },
+        {
+          "id": "b",
+          "text": "1/4"
+        },
+        {
+          "id": "c",
+          "text": "1/2"
+        },
+        {
+          "id": "d",
+          "text": "1/8"
+        }
+      ],
+      "correctOptionId": "d",
+      "explanation": "The amplitude of 10 is (1/2)(1/sqrt(2)). Its squared magnitude is 1/8; using q1=0 would instead give 3/8."
+    },
+    {
+      "id": "multi-qubit-circuits-q9",
+      "difficulty": "hard",
+      "prompt": "Does applying CX(q0,q1) to 01 create entanglement?",
+      "options": [
+        {
+          "id": "a",
+          "text": "No; the output 11 remains a product state"
+        },
+        {
+          "id": "b",
+          "text": "Yes; every two-qubit gate creates entanglement"
+        },
+        {
+          "id": "c",
+          "text": "Yes; any flipped target is entangled"
+        },
+        {
+          "id": "d",
+          "text": "No; CX can never create entanglement"
+        }
+      ],
+      "correctOptionId": "a",
+      "explanation": "This input produces a single basis state, |1> tensor |1>. Entangling ability depends on the input, not only the gate name."
+    },
+    {
+      "id": "multi-qubit-circuits-q10",
+      "difficulty": "hard",
+      "prompt": "Why is 01 a better bit-order test than the Bell outcomes 00 and 11?",
+      "options": [
+        {
+          "id": "a",
+          "text": "01 needs fewer statevector entries"
+        },
+        {
+          "id": "b",
+          "text": "Reversing 01 changes it to 10, while 00 and 11 are unchanged"
+        },
+        {
+          "id": "c",
+          "text": "Bell states cannot be measured"
+        },
+        {
+          "id": "d",
+          "text": "Reversing a Bell histogram always changes its probabilities"
+        }
+      ],
+      "correctOptionId": "b",
+      "explanation": "An asymmetric input exposes a reversed convention. Agreement on symmetric outputs alone can hide an ordering bug."
+    }
+  ]
+}

@@ -20,6 +20,10 @@
 # production
 /build
 
+# Generated from the repository's content/ source files.
+/.generated/
+/public/learn/visuals/
+
 # misc
 .DS_Store
 *.pem

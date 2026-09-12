@@ -2,17 +2,17 @@
 
 QuantLearn is an interactive web-based platform that enables users to learn, design, simulate, and visualize quantum algorithms. It offers structured learning modules covering quantum computing fundamentals, circuit design, and standard quantum algorithms. Users will be able to construct quantum circuits through a drag-and-drop interface or by writing code, execute them on multiple quantum simulators, and visualize quantum states and measurement outcomes.
 
-Source: [the supplied problem statement](SIH26140.pdf). The PDF describes the full platform; this prototype demonstrates every required area with deliberately narrow breadth.
+Source: [the supplied problem statement](SIH26140.md). This describes the full platform. The current MVP implements deliberately narrow examples and supports **Qiskit Aer and Cirq only**; PennyLane and qBraid integrations are deferred. AI is deferred until Learn and Lab are established. Keep the original problem statement unchanged as the requirements reference.
 
 ## Screens and interaction
 
-It has five pages: **Home**, **Learn**, **Lab**, **Progress**, and **Sign-in**.
+It has five navigation areas: **Home**, **Learn**, **Lab**, **Progress**, and **Login**. Lesson detail routes remain within Learn.
 
 - **Home:** Landing Page, lists features, getting Started.
-- **Learn:** lesson cards, completion state, Continue, contains the content for study.
+- **Learn:** five modules and fourteen chapters, lesson cards, completion state, Continue, study content and read-only figures. Each chapter ends with a ten-question multiple-choice quiz ordered by difficulty (3 easy, 4 medium, 3 hard). See `content/README.md` and `content/catalog.json`. Prerequisites guide the reading order rather than locking chapters in this demo.
 - **Lab:** lesson text and target on the left; Circuit and Code tabs in the center; Run/Reset above the result panels; tutor drawer on the right; quiz and assignment below.
 - **Progress:** completion tracking, scores, attempts, map to what have been completed and whats left, user progress, login info, etc, profile dashboard.
-- **Sign-in:** sign-in form, followed by redirect to Learn Page.
+- **Login:** one combined login/registration experience at `/login`, followed by redirect to Learn. The existing `/auth/confirm` endpoint is an authentication callback.
 
 ## Architecture and stack
 
@@ -26,7 +26,7 @@ quantlearn/
 |   |   |-- learn/page.tsx
 |   |   |-- lab/page.tsx
 |   |   |-- progress/page.tsx
-|   |   |-- sign-in/page.tsx
+|   |   |-- login/page.tsx
 |   |   |-- api/{simulate,tutor,grade,progress}/route.ts
 |   |   |-- layout.tsx
 |   |   `-- globals.css
@@ -44,12 +44,16 @@ quantlearn/
 |   |-- tests/
 |   |-- requirements.txt
 |   `-- .env.example
-|-- content/{lessons,quizzes,assignments}/
+|-- content/{lessons,quizzes,visuals}/
 |-- supabase/schema.sql
-`-- SIH26140.pdf
+`-- SIH26140.md
 ~~~
 
 Qiskit Aer and Cirq expose Python-first SDKs, so simulation stays in FastAPI. Next.js calls the backend through normalized JSON endpoints; the browser does not import either simulator directly.
+
+The tree above is a target architecture, not a list of already implemented files. Add backend routes/adapters and Lab assignments only when their features are implemented; do not create empty placeholder modules. Keep Next.js forwarding routes thin and avoid duplicating grading/progress business logic in both servers. The actual Supabase clients currently live under `frontend/lib/supabase/`.
+
+Learn content is authored once in root `content/`. `npm run content:build` from `frontend/` validates it and prepares an ignored `frontend/.generated/learn.json` bundle plus public SVG assets; it also runs automatically before dev/build. Keep the full bundle and quiz answer keys in server-only imports when the lesson reader is implemented. `npm run content:check` verifies authored content, numerical examples and generated visuals. The authoring math utility is not the Lab simulator.
 
 ## References
 

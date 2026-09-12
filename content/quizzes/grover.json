@@ -1,0 +1,256 @@
+{
+  "chapterId": "grover",
+  "version": 2,
+  "questions": [
+    {
+      "id": "grover-q1",
+      "difficulty": "easy",
+      "prompt": "What does the phase oracle change immediately?",
+      "options": [
+        {
+          "id": "a",
+          "text": "The sign of each marked probability"
+        },
+        {
+          "id": "b",
+          "text": "The number of qubits"
+        },
+        {
+          "id": "c",
+          "text": "Every unmarked amplitude to zero"
+        },
+        {
+          "id": "d",
+          "text": "The sign of each marked amplitude"
+        }
+      ],
+      "correctOptionId": "d",
+      "explanation": "A phase oracle marks through phase, not immediate probability amplification. Probabilities stay nonnegative and initially unchanged."
+    },
+    {
+      "id": "grover-q2",
+      "difficulty": "easy",
+      "prompt": "What is the initial amplitude of each of four candidates after H on both qubits?",
+      "options": [
+        {
+          "id": "a",
+          "text": "1/4"
+        },
+        {
+          "id": "b",
+          "text": "1/2"
+        },
+        {
+          "id": "c",
+          "text": "1"
+        },
+        {
+          "id": "d",
+          "text": "1/sqrt(2)"
+        }
+      ],
+      "correctOptionId": "b",
+      "explanation": "Four equal squared magnitudes must sum to one. Each amplitude is 1/2 and each probability is 1/4."
+    },
+    {
+      "id": "grover-q3",
+      "difficulty": "easy",
+      "prompt": "Which gate marks 11 in the chapter's two-qubit example?",
+      "options": [
+        {
+          "id": "a",
+          "text": "CZ"
+        },
+        {
+          "id": "b",
+          "text": "SWAP"
+        },
+        {
+          "id": "c",
+          "text": "H on q0"
+        },
+        {
+          "id": "d",
+          "text": "X on both qubits"
+        }
+      ],
+      "correctOptionId": "a",
+      "explanation": "CZ negates the 11 amplitude while leaving the other computational-basis amplitudes unchanged. This implements the selected phase oracle."
+    },
+    {
+      "id": "grover-q4",
+      "difficulty": "medium",
+      "prompt": "What is the mean of [1/2,1/2,1/2,-1/2]?",
+      "options": [
+        {
+          "id": "a",
+          "text": "1/2"
+        },
+        {
+          "id": "b",
+          "text": "0"
+        },
+        {
+          "id": "c",
+          "text": "1/4"
+        },
+        {
+          "id": "d",
+          "text": "-1/4"
+        }
+      ],
+      "correctOptionId": "c",
+      "explanation": "The entries sum to 1, and there are four entries. The mean is therefore 1/4."
+    },
+    {
+      "id": "grover-q5",
+      "difficulty": "medium",
+      "prompt": "With mean amplitude 1/4, what does mathematical diffusion do to an unmarked amplitude 1/2?",
+      "options": [
+        {
+          "id": "a",
+          "text": "It becomes 1/4"
+        },
+        {
+          "id": "b",
+          "text": "It becomes 1"
+        },
+        {
+          "id": "c",
+          "text": "It becomes 0"
+        },
+        {
+          "id": "d",
+          "text": "It becomes -1/2"
+        }
+      ],
+      "correctOptionId": "c",
+      "explanation": "Reflection about the mean maps a to 2 times the mean minus a. Here 2(1/4)-1/2=0."
+    },
+    {
+      "id": "grover-q6",
+      "difficulty": "medium",
+      "prompt": "With the same mean, what does diffusion do to the marked amplitude -1/2?",
+      "options": [
+        {
+          "id": "a",
+          "text": "It becomes 1"
+        },
+        {
+          "id": "b",
+          "text": "It becomes 0"
+        },
+        {
+          "id": "c",
+          "text": "It becomes -1"
+        },
+        {
+          "id": "d",
+          "text": "It becomes 1/4"
+        }
+      ],
+      "correctOptionId": "a",
+      "explanation": "The reflected amplitude is 2(1/4)-(-1/2)=1. The squared magnitude then gives certainty for the marked outcome."
+    },
+    {
+      "id": "grover-q7",
+      "difficulty": "medium",
+      "prompt": "For one marked item among four, what is success after one ideal Grover iteration?",
+      "options": [
+        {
+          "id": "a",
+          "text": "1/4"
+        },
+        {
+          "id": "b",
+          "text": "1"
+        },
+        {
+          "id": "c",
+          "text": "1/2"
+        },
+        {
+          "id": "d",
+          "text": "3/4"
+        }
+      ],
+      "correctOptionId": "b",
+      "explanation": "The phase oracle followed by diffusion leaves only the marked amplitude nonzero. This exact success is special to this marked fraction and iteration count."
+    },
+    {
+      "id": "grover-q8",
+      "difficulty": "hard",
+      "prompt": "The shown diffusion circuit implements -D rather than D. What changes in this complete example?",
+      "options": [
+        {
+          "id": "a",
+          "text": "The marked probability becomes -1"
+        },
+        {
+          "id": "b",
+          "text": "The answer changes to 00"
+        },
+        {
+          "id": "c",
+          "text": "The circuit becomes nonunitary"
+        },
+        {
+          "id": "d",
+          "text": "The final state is -|11>, with the same measured success"
+        }
+      ],
+      "correctOptionId": "d",
+      "explanation": "The extra sign multiplies the entire final state. Global phase does not change measurement probabilities."
+    },
+    {
+      "id": "grover-q9",
+      "difficulty": "hard",
+      "prompt": "For N=4 and M=1, what is success after two mathematical Grover iterations?",
+      "options": [
+        {
+          "id": "a",
+          "text": "1/4"
+        },
+        {
+          "id": "b",
+          "text": "1"
+        },
+        {
+          "id": "c",
+          "text": "0"
+        },
+        {
+          "id": "d",
+          "text": "3/4"
+        }
+      ],
+      "correctOptionId": "a",
+      "explanation": "sin squared(theta)=1/4 gives theta=pi/6. At r=2, sin squared(5 pi/6)=1/4, demonstrating overshoot."
+    },
+    {
+      "id": "grover-q10",
+      "difficulty": "hard",
+      "prompt": "What does the O(sqrt(N/M)) claim count under the standard search assumptions?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Seconds for every possible database"
+        },
+        {
+          "id": "b",
+          "text": "Oracle queries, not all data-loading and implementation costs"
+        },
+        {
+          "id": "c",
+          "text": "The total memory needed by any classical simulator"
+        },
+        {
+          "id": "d",
+          "text": "A guaranteed hardware speedup for this four-item example"
+        }
+      ],
+      "correctOptionId": "b",
+      "explanation": "Query complexity treats the checking oracle as a resource. Its construction, input preparation and physical execution still have costs."
+    }
+  ]
+}

@@ -1,0 +1,272 @@
+[
+  {
+    "id": "ibm-single",
+    "title": "Quantum information: single systems",
+    "publisher": "IBM Quantum Learning / John Watrous",
+    "url": "https://quantum.cloud.ibm.com/learning/en/courses/basics-of-quantum-information/single-systems/quantum-information",
+    "published": null,
+    "accessed": "2026-09-11",
+    "supports": "State normalization, complex amplitudes, Born rule and unitary operations.",
+    "reuse": "Reference only; no third-party prose, diagrams or photographs are reproduced."
+  },
+  {
+    "id": "ibm-multiple",
+    "title": "Quantum information: multiple systems",
+    "publisher": "IBM Quantum Learning / John Watrous",
+    "url": "https://quantum.cloud.ibm.com/learning/en/courses/basics-of-quantum-information/multiple-systems/quantum-information",
+    "published": null,
+    "accessed": "2026-09-11",
+    "supports": "Tensor products, composite states and subsystem measurements.",
+    "reuse": "Reference only; no third-party prose, diagrams or photographs are reproduced."
+  },
+  {
+    "id": "ibm-circuits",
+    "title": "Quantum circuits",
+    "publisher": "IBM Quantum Learning / John Watrous",
+    "url": "https://quantum.cloud.ibm.com/learning/en/courses/basics-of-quantum-information/quantum-circuits",
+    "published": null,
+    "accessed": "2026-09-11",
+    "supports": "Circuit notation, gates and classical control.",
+    "reuse": "Reference only; no third-party prose, diagrams or photographs are reproduced."
+  },
+  {
+    "id": "ibm-teleport",
+    "title": "Quantum teleportation",
+    "publisher": "IBM Quantum Learning / John Watrous",
+    "url": "https://quantum.cloud.ibm.com/learning/en/courses/basics-of-quantum-information/entanglement-in-action/quantum-teleportation",
+    "published": null,
+    "accessed": "2026-09-11",
+    "supports": "Entanglement resource, two classical bits, conditional corrections and no cloning.",
+    "reuse": "Reference only; no third-party prose, diagrams or photographs are reproduced."
+  },
+  {
+    "id": "ibm-dj",
+    "title": "The Deutsch-Jozsa algorithm",
+    "publisher": "IBM Quantum Learning / John Watrous",
+    "url": "https://quantum.cloud.ibm.com/learning/en/courses/fundamentals-of-quantum-algorithms/quantum-query-algorithms/deutsch-jozsa-algorithm",
+    "published": null,
+    "accessed": "2026-09-11",
+    "supports": "Promise problem, phase kickback and query complexity.",
+    "reuse": "Reference only; no third-party prose, diagrams or photographs are reproduced."
+  },
+  {
+    "id": "ibm-grover",
+    "title": "Grover's algorithm",
+    "publisher": "IBM Quantum Documentation",
+    "url": "https://quantum.cloud.ibm.com/docs/en/tutorials/grovers-algorithm",
+    "published": null,
+    "accessed": "2026-09-11",
+    "supports": "Phase oracle, diffusion and small circuit construction.",
+    "reuse": "Reference only; no third-party prose, diagrams or photographs are reproduced."
+  },
+  {
+    "id": "grover-paper",
+    "title": "A fast quantum mechanical algorithm for database search",
+    "publisher": "Lov K. Grover",
+    "url": "https://arxiv.org/abs/quant-ph/9605043",
+    "published": "1996",
+    "accessed": "2026-09-11",
+    "supports": "Original search result and oracle-query advantage.",
+    "reuse": "Reference only; no third-party prose, diagrams or photographs are reproduced."
+  },
+  {
+    "id": "qaoa-paper",
+    "title": "A Quantum Approximate Optimization Algorithm",
+    "publisher": "Edward Farhi, Jeffrey Goldstone and Sam Gutmann",
+    "url": "https://arxiv.org/abs/1411.4028",
+    "published": "2014-11-14",
+    "accessed": "2026-09-11",
+    "supports": "Alternating cost and mixer evolution, approximation and depth parameter.",
+    "reuse": "Reference only; no third-party prose, diagrams or photographs are reproduced."
+  },
+  {
+    "id": "ibm-qaoa",
+    "title": "Quantum approximate optimization algorithm",
+    "publisher": "IBM Quantum Documentation",
+    "url": "https://quantum.cloud.ibm.com/docs/en/tutorials/quantum-approximate-optimization-algorithm",
+    "published": null,
+    "accessed": "2026-09-11",
+    "supports": "Max-cut mapping and classical optimization workflow; our chapter uses an explicitly different maximize-cut sign convention.",
+    "reuse": "Reference only; no third-party prose, diagrams or photographs are reproduced."
+  },
+  {
+    "id": "vqe-paper",
+    "title": "A variational eigenvalue solver on a quantum processor",
+    "publisher": "Alberto Peruzzo et al.",
+    "url": "https://arxiv.org/abs/1304.3061",
+    "published": "2013-04-10",
+    "accessed": "2026-09-11",
+    "supports": "Variational energy estimation and hybrid optimization.",
+    "reuse": "Reference only; no third-party prose, diagrams or photographs are reproduced."
+  },
+  {
+    "id": "ibm-vqe",
+    "title": "Ground-state energy estimation of the Heisenberg chain with VQE",
+    "publisher": "IBM Quantum Documentation",
+    "url": "https://quantum.cloud.ibm.com/docs/en/tutorials/spin-chain-vqe",
+    "published": null,
+    "accessed": "2026-09-11",
+    "supports": "Ansatz, observable, energy minimization and scaling limitations.",
+    "reuse": "Reference only; no third-party prose, diagrams or photographs are reproduced."
+  },
+  {
+    "id": "ibm-bit-order",
+    "title": "Bit-ordering in the Qiskit SDK",
+    "publisher": "IBM Quantum Documentation",
+    "url": "https://quantum.cloud.ibm.com/docs/en/guides/bit-ordering",
+    "published": null,
+    "accessed": "2026-09-11",
+    "supports": "q0 is the least significant bit; statevector and displayed bitstring ordering.",
+    "reuse": "Reference only; no third-party prose, diagrams or photographs are reproduced."
+  },
+  {
+    "id": "ibm-visualization",
+    "title": "visualization API",
+    "publisher": "IBM Quantum Documentation",
+    "url": "https://quantum.cloud.ibm.com/docs/en/api/qiskit/visualization",
+    "published": null,
+    "accessed": "2026-09-11",
+    "supports": "Bloch, statevector, histogram and circuit display concepts.",
+    "reuse": "Reference only; no third-party prose, diagrams or photographs are reproduced."
+  },
+  {
+    "id": "ibm-quantum-info",
+    "title": "quantum_info API",
+    "publisher": "IBM Quantum Documentation",
+    "url": "https://quantum.cloud.ibm.com/docs/en/api/qiskit/quantum_info",
+    "published": null,
+    "accessed": "2026-09-11",
+    "supports": "Statevector, density matrix, partial trace and state fidelity references.",
+    "reuse": "Reference only; no third-party prose, diagrams or photographs are reproduced."
+  },
+  {
+    "id": "aer-sim",
+    "title": "Simulators",
+    "publisher": "Qiskit Aer Documentation",
+    "url": "https://qiskit.github.io/qiskit-aer/tutorials/1_aersimulator.html",
+    "published": null,
+    "accessed": "2026-09-11",
+    "supports": "AerSimulator imports, transpilation, shots and statevector/density-matrix methods.",
+    "reuse": "Reference only; no third-party prose, diagrams or photographs are reproduced."
+  },
+  {
+    "id": "cirq-sim",
+    "title": "Simulation",
+    "publisher": "Google Quantum AI",
+    "url": "https://quantumai.google/cirq/simulate/simulation",
+    "published": null,
+    "accessed": "2026-09-11",
+    "supports": "Simulator.run versus simulate, explicit qubit_order and density matrices.",
+    "reuse": "Reference only. Google page footer generally licenses prose CC BY 4.0 and code Apache 2.0; check page-specific exceptions before direct reuse."
+  },
+  {
+    "id": "cirq-gates",
+    "title": "Gates and operations",
+    "publisher": "Google Quantum AI",
+    "url": "https://quantumai.google/cirq/build/gates",
+    "published": null,
+    "accessed": "2026-09-11",
+    "supports": "Gate versus operation, Pauli gates, rotations and controlled operations.",
+    "reuse": "Reference only. Google page footer generally licenses prose CC BY 4.0 and code Apache 2.0; check page-specific exceptions before direct reuse."
+  },
+  {
+    "id": "cirq-circuits",
+    "title": "Circuits",
+    "publisher": "Google Quantum AI",
+    "url": "https://quantumai.google/cirq/build/circuits",
+    "published": null,
+    "accessed": "2026-09-11",
+    "supports": "Circuit moments, qubits, measurement and circuit construction.",
+    "reuse": "Reference only. Google page footer generally licenses prose CC BY 4.0 and code Apache 2.0; check page-specific exceptions before direct reuse."
+  },
+  {
+    "id": "cirq-noise",
+    "title": "Representing noise",
+    "publisher": "Google Quantum AI",
+    "url": "https://quantumai.google/cirq/noise/representing_noise",
+    "published": null,
+    "accessed": "2026-09-11",
+    "supports": "Noise channels, stochastic processes and density matrices.",
+    "reuse": "Reference only. Google page footer generally licenses prose CC BY 4.0 and code Apache 2.0; check page-specific exceptions before direct reuse."
+  },
+  {
+    "id": "cirq-observables",
+    "title": "cirq.SimulatesExpectationValues",
+    "publisher": "Google Quantum AI",
+    "url": "https://quantumai.google/reference/python/cirq/SimulatesExpectationValues",
+    "published": null,
+    "accessed": "2026-09-11",
+    "supports": "Exact simulator expectation values versus estimates from hardware measurements.",
+    "reuse": "Reference only. Google page footer generally licenses prose CC BY 4.0 and code Apache 2.0; check page-specific exceptions before direct reuse."
+  },
+  {
+    "id": "q12",
+    "title": "Computer Science + QISE Key Concepts K-12 Framework",
+    "publisher": "Q-12 Education Partnership",
+    "url": "https://q12education.org/learning-materials/learning-materials-framework/computer-science-qise-key-concepts",
+    "published": null,
+    "accessed": "2026-09-11",
+    "supports": "Foundational learning outcomes and prerequisite scaffolding; algorithm depth adapted for undergraduate beginners.",
+    "reuse": "Reference only; no third-party prose, diagrams or photographs are reproduced."
+  },
+  {
+    "id": "next-mdx",
+    "title": "Guides: MDX",
+    "publisher": "Next.js Documentation",
+    "url": "https://nextjs.org/docs/app/guides/mdx",
+    "published": null,
+    "accessed": "2026-09-11",
+    "supports": "Alternative for lessons that later require embedded React components.",
+    "reuse": "Reference only; no third-party prose, diagrams or photographs are reproduced."
+  },
+  {
+    "id": "next-output",
+    "title": "next.config.js: output",
+    "publisher": "Next.js Documentation",
+    "url": "https://nextjs.org/docs/app/api-reference/config/next-config-js/output",
+    "published": null,
+    "accessed": "2026-09-11",
+    "supports": "Runtime file-tracing boundary for files outside frontend/.",
+    "reuse": "Reference only; no third-party prose, diagrams or photographs are reproduced."
+  },
+  {
+    "id": "react-markdown",
+    "title": "react-markdown",
+    "publisher": "remark / unified maintainers",
+    "url": "https://github.com/remarkjs/react-markdown",
+    "published": null,
+    "accessed": "2026-09-11",
+    "supports": "Markdown rendering, component overrides and GFM plugin integration.",
+    "reuse": "Reference only. Use the packages under their own licenses when the lesson renderer is implemented."
+  },
+  {
+    "id": "remark-math",
+    "title": "remark-math",
+    "publisher": "remark / unified maintainers",
+    "url": "https://github.com/remarkjs/remark-math",
+    "published": null,
+    "accessed": "2026-09-11",
+    "supports": "Markdown mathematics and rehype-katex rendering.",
+    "reuse": "Reference only. Use the packages under their own licenses when the lesson renderer is implemented."
+  },
+  {
+    "id": "next-components",
+    "title": "Server and Client Components",
+    "publisher": "Next.js Documentation",
+    "url": "https://nextjs.org/docs/app/getting-started/server-and-client-components",
+    "published": null,
+    "accessed": "2026-09-11",
+    "supports": "Server rendering, serializable props and the server-only import boundary.",
+    "reuse": "Reference only. Use the packages under their own licenses when the lesson renderer is implemented."
+  },
+  {
+    "id": "supabase-rls",
+    "title": "Row Level Security",
+    "publisher": "Supabase Documentation",
+    "url": "https://supabase.com/docs/guides/database/postgres/row-level-security",
+    "published": null,
+    "accessed": "2026-09-12",
+    "supports": "Future learner-owned progress rows and the distinction between table grants and row policies.",
+    "reuse": "Reference only; no database changes made."
+  }
+]

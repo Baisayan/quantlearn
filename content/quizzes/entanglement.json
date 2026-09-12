@@ -1,0 +1,256 @@
+{
+  "chapterId": "entanglement",
+  "version": 2,
+  "questions": [
+    {
+      "id": "entanglement-q1",
+      "difficulty": "easy",
+      "prompt": "Which sequence prepares Phi-plus from 00?",
+      "options": [
+        {
+          "id": "a",
+          "text": "H(q0), then CX(q0,q1)"
+        },
+        {
+          "id": "b",
+          "text": "CX(q0,q1), then H(q0)"
+        },
+        {
+          "id": "c",
+          "text": "X(q0), then X(q1)"
+        },
+        {
+          "id": "d",
+          "text": "H(q0), then H(q1)"
+        }
+      ],
+      "correctOptionId": "a",
+      "explanation": "H creates the two control branches, and CX correlates the target with them. The final state is (|00>+|11>)/sqrt(2)."
+    },
+    {
+      "id": "entanglement-q2",
+      "difficulty": "easy",
+      "prompt": "What defines entanglement for the pure two-qubit states in this chapter?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Both local measurements always return 1"
+        },
+        {
+          "id": "b",
+          "text": "Both qubits must have their own pure Bloch arrows"
+        },
+        {
+          "id": "c",
+          "text": "The joint vector cannot be written as a product of two single-qubit vectors"
+        },
+        {
+          "id": "d",
+          "text": "The circuit contains any two gates"
+        }
+      ],
+      "correctOptionId": "c",
+      "explanation": "A pure entangled state has no single-qubit product factorization. Correlation in one measurement basis alone is not this definition."
+    },
+    {
+      "id": "entanglement-q3",
+      "difficulty": "easy",
+      "prompt": "Where is either local Bloch vector of Phi-plus?",
+      "options": [
+        {
+          "id": "a",
+          "text": "At the north pole"
+        },
+        {
+          "id": "b",
+          "text": "At the center"
+        },
+        {
+          "id": "c",
+          "text": "At the south pole"
+        },
+        {
+          "id": "d",
+          "text": "At an equatorial surface point"
+        }
+      ],
+      "correctOptionId": "b",
+      "explanation": "Each reduced state is I/2, which is maximally mixed. A pure joint state need not have pure individual subsystems."
+    },
+    {
+      "id": "entanglement-q4",
+      "difficulty": "medium",
+      "prompt": "What are the ideal Z-basis probabilities of Phi-plus?",
+      "options": [
+        {
+          "id": "a",
+          "text": "All four outcomes have probability 1/4"
+        },
+        {
+          "id": "b",
+          "text": "P(01)=P(10)=1/2, with the others zero"
+        },
+        {
+          "id": "c",
+          "text": "P(00)=1"
+        },
+        {
+          "id": "d",
+          "text": "P(00)=P(11)=1/2, with the others zero"
+        }
+      ],
+      "correctOptionId": "d",
+      "explanation": "The only nonzero amplitudes are those of 00 and 11. Their squared magnitudes are each 1/2."
+    },
+    {
+      "id": "entanglement-q5",
+      "difficulty": "medium",
+      "prompt": "Can that Z histogram alone distinguish Phi-plus from an equal classical mixture of 00 and 11?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Yes; the mixture must give all four outputs"
+        },
+        {
+          "id": "b",
+          "text": "Yes; Phi-plus must give unequal counts in every sample"
+        },
+        {
+          "id": "c",
+          "text": "No; these preparations are identical in every basis"
+        },
+        {
+          "id": "d",
+          "text": "No; both preparations give the same Z distribution"
+        }
+      ],
+      "correctOptionId": "d",
+      "explanation": "The preparations agree for this setting but differ in coherence. Measurements in another basis can distinguish the specific examples."
+    },
+    {
+      "id": "entanglement-q6",
+      "difficulty": "medium",
+      "prompt": "What happens when both qubits of Phi-plus are measured in X?",
+      "options": [
+        {
+          "id": "a",
+          "text": "The two bits always differ"
+        },
+        {
+          "id": "b",
+          "text": "The two recorded bits match, with 00 and 11 equally likely"
+        },
+        {
+          "id": "c",
+          "text": "All four outcomes are equally likely"
+        },
+        {
+          "id": "d",
+          "text": "Both bits are always zero"
+        }
+      ],
+      "correctOptionId": "b",
+      "explanation": "Applying H to both qubits leaves Phi-plus unchanged. Subsequent Z measurement therefore produces matching outcomes."
+    },
+    {
+      "id": "entanglement-q7",
+      "difficulty": "medium",
+      "prompt": "What XX distribution comes from the equal classical mixture of 00 and 11?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Only 00 and 11, each with probability 1/2"
+        },
+        {
+          "id": "b",
+          "text": "Only 01 and 10, each with probability 1/2"
+        },
+        {
+          "id": "c",
+          "text": "All four outcomes have probability 1/4"
+        },
+        {
+          "id": "d",
+          "text": "Only 00"
+        }
+      ],
+      "correctOptionId": "c",
+      "explanation": "Either computational-basis product preparation gives independent equal X probabilities. Averaging those preparations leaves a uniform XX distribution."
+    },
+    {
+      "id": "entanglement-q8",
+      "difficulty": "hard",
+      "prompt": "For the pure vector [1/2,1/2,1/2,1/2], does the chapter's product test indicate entanglement?",
+      "options": [
+        {
+          "id": "a",
+          "text": "No; both products equal 1/4 and the state is |+> tensor |+>"
+        },
+        {
+          "id": "b",
+          "text": "Yes; all four amplitudes are nonzero"
+        },
+        {
+          "id": "c",
+          "text": "Yes; equal probabilities always mean entanglement"
+        },
+        {
+          "id": "d",
+          "text": "No; the vector is unnormalized"
+        }
+      ],
+      "correctOptionId": "a",
+      "explanation": "The condition a00*a11=a01*a10 holds. In this pure two-qubit case it admits a product factorization."
+    },
+    {
+      "id": "entanglement-q9",
+      "difficulty": "hard",
+      "prompt": "Why do the separate local density matrices I/2 not distinguish Phi-plus from the equal 00/11 mixture?",
+      "options": [
+        {
+          "id": "a",
+          "text": "I/2 is not a valid state"
+        },
+        {
+          "id": "b",
+          "text": "They omit the joint coherence and correlations needed to distinguish these preparations"
+        },
+        {
+          "id": "c",
+          "text": "Every state with these local matrices must be entangled"
+        },
+        {
+          "id": "d",
+          "text": "The joint density matrices must also be identical"
+        }
+      ],
+      "correctOptionId": "b",
+      "explanation": "Both preparations have the same local statistics. Their joint density matrices differ in the 00-to-11 coherence terms."
+    },
+    {
+      "id": "entanglement-q10",
+      "difficulty": "hard",
+      "prompt": "Can Alice send a chosen bit to Bob immediately by measuring her half of Phi-plus?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Yes; she can choose which random outcome occurs"
+        },
+        {
+          "id": "b",
+          "text": "Yes; changing her measurement basis directly reveals a chosen bit to Bob"
+        },
+        {
+          "id": "c",
+          "text": "No; Bob's unconditioned local outcomes remain random"
+        },
+        {
+          "id": "d",
+          "text": "No; entangled qubits never show correlations"
+        }
+      ],
+      "correctOptionId": "c",
+      "explanation": "Alice cannot control her random result to encode a received message. Comparing correlations requires ordinary communication."
+    }
+  ]
+}

@@ -1,0 +1,256 @@
+{
+  "chapterId": "aer-and-cirq",
+  "version": 2,
+  "questions": [
+    {
+      "id": "aer-and-cirq-q1",
+      "difficulty": "easy",
+      "prompt": "Where do the two code examples execute their quantum circuits?",
+      "options": [
+        {
+          "id": "a",
+          "text": "On a quantum processor automatically"
+        },
+        {
+          "id": "b",
+          "text": "Inside a remote AI model"
+        },
+        {
+          "id": "c",
+          "text": "On an unspecified paid cloud device"
+        },
+        {
+          "id": "d",
+          "text": "On local classical simulators"
+        }
+      ],
+      "correctOptionId": "d",
+      "explanation": "AerSimulator and cirq.Simulator are local simulation objects in these snippets. They do not submit QPU jobs."
+    },
+    {
+      "id": "aer-and-cirq-q2",
+      "difficulty": "easy",
+      "prompt": "Which Cirq call produces repeated classical measurement results?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Reading final_state_vector without a run"
+        },
+        {
+          "id": "b",
+          "text": "simulator.run with a repetitions count"
+        },
+        {
+          "id": "c",
+          "text": "Constructing LineQubit objects only"
+        },
+        {
+          "id": "d",
+          "text": "Printing the circuit diagram"
+        }
+      ],
+      "correctOptionId": "b",
+      "explanation": "run samples measurement outcomes for repeated executions. Exact-state inspection is a separate use of simulate."
+    },
+    {
+      "id": "aer-and-cirq-q3",
+      "difficulty": "easy",
+      "prompt": "What does shots=1024 mean in the Aer example?",
+      "options": [
+        {
+          "id": "a",
+          "text": "1024 circuit repetitions with measurement"
+        },
+        {
+          "id": "b",
+          "text": "1024 qubits"
+        },
+        {
+          "id": "c",
+          "text": "1024 gates per wire"
+        },
+        {
+          "id": "d",
+          "text": "1024 exact statevectors returned to hardware"
+        }
+      ],
+      "correctOptionId": "a",
+      "explanation": "Shots count repetitions of the experiment. The recorded counts should sum to that total."
+    },
+    {
+      "id": "aer-and-cirq-q4",
+      "difficulty": "medium",
+      "prompt": "What ideal outcomes does the Bell experiment produce?",
+      "options": [
+        {
+          "id": "a",
+          "text": "01 and 10, each with probability 1/2"
+        },
+        {
+          "id": "b",
+          "text": "All four strings with probability 1/4"
+        },
+        {
+          "id": "c",
+          "text": "00 and 11, each with probability 1/2"
+        },
+        {
+          "id": "d",
+          "text": "00 with probability 1"
+        }
+      ],
+      "correctOptionId": "c",
+      "explanation": "H followed by CX prepares Phi-plus. Sampling varies the counts but does not introduce forbidden ideal outcomes."
+    },
+    {
+      "id": "aer-and-cirq-q5",
+      "difficulty": "medium",
+      "prompt": "Which Cirq order matches the chapter's two-qubit statevector convention?",
+      "options": [
+        {
+          "id": "a",
+          "text": "[q0,q1]"
+        },
+        {
+          "id": "b",
+          "text": "The order of gate names"
+        },
+        {
+          "id": "c",
+          "text": "[q1,q0]"
+        },
+        {
+          "id": "d",
+          "text": "An order chosen separately for each amplitude"
+        }
+      ],
+      "correctOptionId": "c",
+      "explanation": "The array basis is |q1q0>. Explicit qubit_order makes the most significant tensor factor q1, matching this convention."
+    },
+    {
+      "id": "aer-and-cirq-q6",
+      "difficulty": "medium",
+      "prompt": "Why does the Cirq example measure(q1,q0,key='bits')?",
+      "options": [
+        {
+          "id": "a",
+          "text": "To make printed two-bit results follow q1q0"
+        },
+        {
+          "id": "b",
+          "text": "To reverse the physical roles of control and target"
+        },
+        {
+          "id": "c",
+          "text": "To apply a SWAP before measurement"
+        },
+        {
+          "id": "d",
+          "text": "To measure each qubit twice"
+        }
+      ],
+      "correctOptionId": "a",
+      "explanation": "Measurement-key bit order controls how histogram integers are interpreted. It does not add a quantum SWAP."
+    },
+    {
+      "id": "aer-and-cirq-q7",
+      "difficulty": "medium",
+      "prompt": "What is the expected ordered statevector after X(q0) with q1 idle?",
+      "options": [
+        {
+          "id": "a",
+          "text": "[0,0,1,0]"
+        },
+        {
+          "id": "b",
+          "text": "[0,1,0,0]"
+        },
+        {
+          "id": "c",
+          "text": "[1,0,0,0]"
+        },
+        {
+          "id": "d",
+          "text": "[0,0,0,1]"
+        }
+      ],
+      "correctOptionId": "b",
+      "explanation": "The prepared bitstring is 01, which is basis index 1. Index 2 would represent 10 under this order."
+    },
+    {
+      "id": "aer-and-cirq-q8",
+      "difficulty": "hard",
+      "prompt": "Why should q1 appear in Cirq's explicit qubit_order even when no gate acts on it?",
+      "options": [
+        {
+          "id": "a",
+          "text": "To make Cirq apply H to q1"
+        },
+        {
+          "id": "b",
+          "text": "To remove q0 from the statevector"
+        },
+        {
+          "id": "c",
+          "text": "To guarantee exactly equal sampled counts"
+        },
+        {
+          "id": "d",
+          "text": "To retain the intended two-qubit state space in the comparison"
+        }
+      ],
+      "correctOptionId": "d",
+      "explanation": "An idle qubit can otherwise be absent from the circuit's active qubit set. Explicitly including it preserves the requested array dimension and ordering."
+    },
+    {
+      "id": "aer-and-cirq-q9",
+      "difficulty": "hard",
+      "prompt": "Why inspect a separate unmeasured circuit when comparing Bell statevectors?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Measurement can collapse the state, so a later snapshot may describe a branch rather than the Bell superposition"
+        },
+        {
+          "id": "b",
+          "text": "Statevector simulation cannot represent entanglement"
+        },
+        {
+          "id": "c",
+          "text": "A measured bitstring contains every original complex amplitude"
+        },
+        {
+          "id": "d",
+          "text": "Snapshots after measurement always reconstruct the earlier state"
+        }
+      ],
+      "correctOptionId": "a",
+      "explanation": "Snapshot location is part of the experiment. Compare equivalent pre-measurement states, with aligned order and tolerance for global phase."
+    },
+    {
+      "id": "aer-and-cirq-q10",
+      "difficulty": "hard",
+      "prompt": "If Aer and Cirq use the same seed, must their sampled counts match exactly?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Yes; a seed specifies a universal sequence for all libraries"
+        },
+        {
+          "id": "b",
+          "text": "No; compare ideal distributions and statistical consistency, not cross-library sample identity"
+        },
+        {
+          "id": "c",
+          "text": "Yes; otherwise the Bell preparation is necessarily wrong"
+        },
+        {
+          "id": "d",
+          "text": "No; their ideal Bell probabilities must also differ"
+        }
+      ],
+      "correctOptionId": "b",
+      "explanation": "Libraries can use different random-number generators and sampling procedures. A seed aids repeatability within a setup, not guaranteed identical samples across implementations."
+    }
+  ]
+}

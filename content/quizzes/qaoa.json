@@ -1,0 +1,256 @@
+{
+  "chapterId": "qaoa",
+  "version": 2,
+  "questions": [
+    {
+      "id": "qaoa-q1",
+      "difficulty": "easy",
+      "prompt": "Which strings score 1 for the chapter's single-edge max-cut problem?",
+      "options": [
+        {
+          "id": "a",
+          "text": "01 and 10"
+        },
+        {
+          "id": "b",
+          "text": "00 and 11"
+        },
+        {
+          "id": "c",
+          "text": "00 and 01"
+        },
+        {
+          "id": "d",
+          "text": "All four strings"
+        }
+      ],
+      "correctOptionId": "a",
+      "explanation": "A cut separates the endpoints into different groups. Different assigned bits cut this edge; matching bits do not."
+    },
+    {
+      "id": "qaoa-q2",
+      "difficulty": "easy",
+      "prompt": "What does one p=1 QAOA layer contain in this chapter?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Measurement followed by teleportation"
+        },
+        {
+          "id": "b",
+          "text": "Only a cost measurement"
+        },
+        {
+          "id": "c",
+          "text": "Cost evolution followed by mixer evolution"
+        },
+        {
+          "id": "d",
+          "text": "A fixed classical truth-table lookup with no circuit"
+        }
+      ],
+      "correctOptionId": "c",
+      "explanation": "Cost evolution changes phases according to the objective. The mixer then combines amplitudes so those phases can affect sampling."
+    },
+    {
+      "id": "qaoa-q3",
+      "difficulty": "easy",
+      "prompt": "Who proposes new angles in the hybrid optimization loop?",
+      "options": [
+        {
+          "id": "a",
+          "text": "The measurement detector alone"
+        },
+        {
+          "id": "b",
+          "text": "A classical optimizer"
+        },
+        {
+          "id": "c",
+          "text": "The final histogram automatically, without a rule"
+        },
+        {
+          "id": "d",
+          "text": "The oracle of Deutsch-Jozsa"
+        }
+      ],
+      "correctOptionId": "b",
+      "explanation": "The optimizer uses evaluated objective values to choose another parameter pair. State preparation and measurement supply those evaluations."
+    },
+    {
+      "id": "qaoa-q4",
+      "difficulty": "medium",
+      "prompt": "For C=(I-Z0Z1)/2, what is the score of 11?",
+      "options": [
+        {
+          "id": "a",
+          "text": "1"
+        },
+        {
+          "id": "b",
+          "text": "-1"
+        },
+        {
+          "id": "c",
+          "text": "1/2"
+        },
+        {
+          "id": "d",
+          "text": "0"
+        }
+      ],
+      "correctOptionId": "d",
+      "explanation": "Both Z eigenvalues are -1, so their product is +1. The cost is (1-1)/2=0."
+    },
+    {
+      "id": "qaoa-q5",
+      "difficulty": "medium",
+      "prompt": "What are the probabilities after cost evolution alone when beta=0 and the input is |++>?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Only 01 and 10 occur"
+        },
+        {
+          "id": "b",
+          "text": "Only 00 and 11 occur"
+        },
+        {
+          "id": "c",
+          "text": "The probabilities become negative on cut strings"
+        },
+        {
+          "id": "d",
+          "text": "All four remain 1/4"
+        }
+      ],
+      "correctOptionId": "d",
+      "explanation": "The cost block changes phase without mixing the basis states. Squared magnitudes therefore remain uniform."
+    },
+    {
+      "id": "qaoa-q6",
+      "difficulty": "medium",
+      "prompt": "Using the stated maximize-cut convention, which gates implement the cost and mixer blocks?",
+      "options": [
+        {
+          "id": "a",
+          "text": "RZZ(gamma), then Rx(beta) on each qubit with no convention change"
+        },
+        {
+          "id": "b",
+          "text": "RZZ(-gamma), then Rx(2 beta) on each qubit, up to cost global phase"
+        },
+        {
+          "id": "c",
+          "text": "Ry(gamma), then CZ only"
+        },
+        {
+          "id": "d",
+          "text": "Measurement in Z, then X on every result bit"
+        }
+      ],
+      "correctOptionId": "b",
+      "explanation": "The negative cost angle follows from C=(I-Z0Z1)/2. The factor of two in Rx follows from its half-angle definition."
+    },
+    {
+      "id": "qaoa-q7",
+      "difficulty": "medium",
+      "prompt": "For gamma=pi/2 and beta=pi/8, what is the exact expected cut score?",
+      "options": [
+        {
+          "id": "a",
+          "text": "0"
+        },
+        {
+          "id": "b",
+          "text": "1/2"
+        },
+        {
+          "id": "c",
+          "text": "1"
+        },
+        {
+          "id": "d",
+          "text": "-1"
+        }
+      ],
+      "correctOptionId": "c",
+      "explanation": "In 1/2+(1/2)sin(4 beta)sin(gamma), both sine factors equal one. All ideal samples are cut strings."
+    },
+    {
+      "id": "qaoa-q8",
+      "difficulty": "hard",
+      "prompt": "A run yields counts 00:10, 01:35, 10:45, 11:10. What is the estimated cut expectation?",
+      "options": [
+        {
+          "id": "a",
+          "text": "0.8"
+        },
+        {
+          "id": "b",
+          "text": "0.2"
+        },
+        {
+          "id": "c",
+          "text": "0.45"
+        },
+        {
+          "id": "d",
+          "text": "1"
+        }
+      ],
+      "correctOptionId": "a",
+      "explanation": "Eighty of the 100 samples score one and twenty score zero. The objective average is 80/100; it is not just the frequency of the most common string."
+    },
+    {
+      "id": "qaoa-q9",
+      "difficulty": "hard",
+      "prompt": "Keep beta=pi/8 but change gamma from pi/2 to -pi/2. What does the exact formula predict?",
+      "options": [
+        {
+          "id": "a",
+          "text": "The score stays 1 because signs never matter"
+        },
+        {
+          "id": "b",
+          "text": "The expected cut score falls from 1 to 0"
+        },
+        {
+          "id": "c",
+          "text": "The score becomes -1"
+        },
+        {
+          "id": "d",
+          "text": "The score stays 1/2 for every gamma"
+        }
+      ],
+      "correctOptionId": "b",
+      "explanation": "sin(gamma) changes from +1 to -1. With sin(4 beta)=1, the formula changes from 1/2+1/2 to 1/2-1/2."
+    },
+    {
+      "id": "qaoa-q10",
+      "difficulty": "hard",
+      "prompt": "Why does success on this one-edge problem not establish practical quantum advantage?",
+      "options": [
+        {
+          "id": "a",
+          "text": "QAOA never uses quantum gates"
+        },
+        {
+          "id": "b",
+          "text": "A score of one is mathematically impossible"
+        },
+        {
+          "id": "c",
+          "text": "The instance is easy classically, and larger runs add optimization, sampling and noise costs"
+        },
+        {
+          "id": "d",
+          "text": "Cirq and Aer cannot represent its gates"
+        }
+      ],
+      "correctOptionId": "c",
+      "explanation": "The example explains the mechanics and gives an exact reference. A useful advantage would require an appropriate larger benchmark and a fair comparison of resources."
+    }
+  ]
+}

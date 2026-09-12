@@ -1,0 +1,256 @@
+{
+  "chapterId": "qubits",
+  "version": 2,
+  "questions": [
+    {
+      "id": "qubits-q1",
+      "difficulty": "easy",
+      "prompt": "What does the symbol |0> name?",
+      "options": [
+        {
+          "id": "a",
+          "text": "The probability of every possible outcome"
+        },
+        {
+          "id": "b",
+          "text": "A pair of classical bits"
+        },
+        {
+          "id": "c",
+          "text": "One of the qubit's two computational basis states"
+        },
+        {
+          "id": "d",
+          "text": "The physical position of an electron"
+        }
+      ],
+      "correctOptionId": "c",
+      "explanation": "A ket labels a quantum state. The computational basis contains |0> and |1>; the notation does not specify a particle's position."
+    },
+    {
+      "id": "qubits-q2",
+      "difficulty": "easy",
+      "prompt": "What is returned by one Z-basis measurement of a qubit?",
+      "options": [
+        {
+          "id": "a",
+          "text": "One classical outcome, 0 or 1"
+        },
+        {
+          "id": "b",
+          "text": "Both complex amplitudes"
+        },
+        {
+          "id": "c",
+          "text": "A complete Bloch vector"
+        },
+        {
+          "id": "d",
+          "text": "The relative phase as a decimal"
+        }
+      ],
+      "correctOptionId": "a",
+      "explanation": "The amplitudes determine the outcome probabilities, but a shot records only one bit. Recovering information about an unknown preparation requires repeated experiments."
+    },
+    {
+      "id": "qubits-q3",
+      "difficulty": "easy",
+      "prompt": "What does a point on the surface of the Bloch sphere describe?",
+      "options": [
+        {
+          "id": "a",
+          "text": "A physical orbit around an atom"
+        },
+        {
+          "id": "b",
+          "text": "Every possible joint two-qubit state"
+        },
+        {
+          "id": "c",
+          "text": "A histogram of earlier shots"
+        },
+        {
+          "id": "d",
+          "text": "A pure single-qubit state, ignoring global phase"
+        }
+      ],
+      "correctOptionId": "d",
+      "explanation": "The sphere represents single-qubit states. Its surface describes pure states, while strictly mixed states are inside."
+    },
+    {
+      "id": "qubits-q4",
+      "difficulty": "medium",
+      "prompt": "The amplitude of |1> is i/2. What is P(1)?",
+      "options": [
+        {
+          "id": "a",
+          "text": "-1/4"
+        },
+        {
+          "id": "b",
+          "text": "1/4"
+        },
+        {
+          "id": "c",
+          "text": "1/2"
+        },
+        {
+          "id": "d",
+          "text": "3/4"
+        }
+      ],
+      "correctOptionId": "b",
+      "explanation": "Use squared magnitude, not the ordinary square of a complex number. The magnitude of i/2 is 1/2, so its probability is 1/4."
+    },
+    {
+      "id": "qubits-q5",
+      "difficulty": "medium",
+      "prompt": "Which vector is normalized?",
+      "options": [
+        {
+          "id": "a",
+          "text": "[1, 1]"
+        },
+        {
+          "id": "b",
+          "text": "[1/sqrt(2), i/sqrt(2)]"
+        },
+        {
+          "id": "c",
+          "text": "[1/2, 1/2]"
+        },
+        {
+          "id": "d",
+          "text": "[2, 0]"
+        }
+      ],
+      "correctOptionId": "b",
+      "explanation": "The two squared magnitudes are 1/2 and 1/2. The other vectors have total squared magnitudes of 2, 1/2 and 4."
+    },
+    {
+      "id": "qubits-q6",
+      "difficulty": "medium",
+      "prompt": "A qubit has amplitudes 3/5 and 4/5. What is P(0)?",
+      "options": [
+        {
+          "id": "a",
+          "text": "3/5"
+        },
+        {
+          "id": "b",
+          "text": "16/25"
+        },
+        {
+          "id": "c",
+          "text": "7/25"
+        },
+        {
+          "id": "d",
+          "text": "9/25"
+        }
+      ],
+      "correctOptionId": "d",
+      "explanation": "The first entry belongs to |0>. Squaring 3/5 gives 9/25; the remaining probability is 16/25."
+    },
+    {
+      "id": "qubits-q7",
+      "difficulty": "medium",
+      "prompt": "An equal-weight state has amplitudes 1/2 and 1/2 before normalization. Which positive factor normalizes it?",
+      "options": [
+        {
+          "id": "a",
+          "text": "sqrt(2)"
+        },
+        {
+          "id": "b",
+          "text": "2"
+        },
+        {
+          "id": "c",
+          "text": "1/2"
+        },
+        {
+          "id": "d",
+          "text": "1/sqrt(2)"
+        }
+      ],
+      "correctOptionId": "a",
+      "explanation": "Its total squared magnitude is 1/2. Multiplication by sqrt(2) doubles that total, giving unit normalization."
+    },
+    {
+      "id": "qubits-q8",
+      "difficulty": "hard",
+      "prompt": "For the chapter's Bloch formula, theta=pi and phi=0 give which Z outcome?",
+      "options": [
+        {
+          "id": "a",
+          "text": "0 with certainty"
+        },
+        {
+          "id": "b",
+          "text": "0 and 1 with equal probabilities"
+        },
+        {
+          "id": "c",
+          "text": "1 with certainty"
+        },
+        {
+          "id": "d",
+          "text": "An outcome determined by phi rather than theta"
+        }
+      ],
+      "correctOptionId": "c",
+      "explanation": "The amplitudes are cos(pi/2)=0 and sin(pi/2)=1. This is the south pole, corresponding to |1>."
+    },
+    {
+      "id": "qubits-q9",
+      "difficulty": "hard",
+      "prompt": "Two pure states have the same Bloch latitude but different longitudes. What can their direct Z histograms establish?",
+      "options": [
+        {
+          "id": "a",
+          "text": "They must be the same state"
+        },
+        {
+          "id": "b",
+          "text": "Their Z probabilities must differ"
+        },
+        {
+          "id": "c",
+          "text": "One of the states is necessarily mixed"
+        },
+        {
+          "id": "d",
+          "text": "They have the same Z probabilities, but may have different relative phases"
+        }
+      ],
+      "correctOptionId": "d",
+      "explanation": "Latitude fixes theta and therefore the squared magnitudes. Longitude changes phi, which direct Z measurement does not determine."
+    },
+    {
+      "id": "qubits-q10",
+      "difficulty": "hard",
+      "prompt": "A preparation with P(0)=3/4 is measured four times on fresh copies. Must exactly three outcomes be 0?",
+      "options": [
+        {
+          "id": "a",
+          "text": "No; three is the expected count, not a guaranteed count"
+        },
+        {
+          "id": "b",
+          "text": "Yes; normalization fixes the count in every group of four"
+        },
+        {
+          "id": "c",
+          "text": "No; every group must instead contain two zeros"
+        },
+        {
+          "id": "d",
+          "text": "Yes; the imaginary amplitude removes randomness"
+        }
+      ],
+      "correctOptionId": "a",
+      "explanation": "Probability predicts a distribution over many experiments. A particular four-shot sample can contain anywhere from zero to four zeros."
+    }
+  ]
+}

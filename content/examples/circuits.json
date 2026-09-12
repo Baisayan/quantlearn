@@ -1,0 +1,580 @@
+{
+  "basisOrder": "q(n-1)...q0",
+  "note": "Original deterministic authoring fixtures. Terminal measurement is omitted so the pre-measurement state remains available. These are not a user-code execution engine.",
+  "circuits": [
+    {
+      "id": "h",
+      "qubits": 1,
+      "operations": [
+        {
+          "gate": "h",
+          "targets": [
+            0
+          ]
+        }
+      ],
+      "probabilities": [
+        0.5,
+        0.5
+      ]
+    },
+    {
+      "id": "hh",
+      "qubits": 1,
+      "operations": [
+        {
+          "gate": "h",
+          "targets": [
+            0
+          ]
+        },
+        {
+          "gate": "h",
+          "targets": [
+            0
+          ]
+        }
+      ],
+      "probabilities": [
+        1,
+        0
+      ]
+    },
+    {
+      "id": "hzh",
+      "qubits": 1,
+      "operations": [
+        {
+          "gate": "h",
+          "targets": [
+            0
+          ]
+        },
+        {
+          "gate": "z",
+          "targets": [
+            0
+          ]
+        },
+        {
+          "gate": "h",
+          "targets": [
+            0
+          ]
+        }
+      ],
+      "probabilities": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "xh-analyzed",
+      "qubits": 1,
+      "operations": [
+        {
+          "gate": "x",
+          "targets": [
+            0
+          ]
+        },
+        {
+          "gate": "h",
+          "targets": [
+            0
+          ]
+        },
+        {
+          "gate": "h",
+          "targets": [
+            0
+          ]
+        }
+      ],
+      "probabilities": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": "hx-analyzed",
+      "qubits": 1,
+      "operations": [
+        {
+          "gate": "h",
+          "targets": [
+            0
+          ]
+        },
+        {
+          "gate": "x",
+          "targets": [
+            0
+          ]
+        },
+        {
+          "gate": "h",
+          "targets": [
+            0
+          ]
+        }
+      ],
+      "probabilities": [
+        1,
+        0
+      ]
+    },
+    {
+      "id": "hsh",
+      "qubits": 1,
+      "operations": [
+        {
+          "gate": "h",
+          "targets": [
+            0
+          ]
+        },
+        {
+          "gate": "s",
+          "targets": [
+            0
+          ]
+        },
+        {
+          "gate": "h",
+          "targets": [
+            0
+          ]
+        }
+      ],
+      "probabilities": [
+        0.5,
+        0.5
+      ]
+    },
+    {
+      "id": "hth",
+      "qubits": 1,
+      "operations": [
+        {
+          "gate": "h",
+          "targets": [
+            0
+          ]
+        },
+        {
+          "gate": "t",
+          "targets": [
+            0
+          ]
+        },
+        {
+          "gate": "h",
+          "targets": [
+            0
+          ]
+        }
+      ],
+      "probabilities": [
+        0.8535533905932737,
+        0.1464466094067262
+      ]
+    },
+    {
+      "id": "asymmetric",
+      "qubits": 2,
+      "operations": [
+        {
+          "gate": "x",
+          "targets": [
+            0
+          ]
+        }
+      ],
+      "probabilities": [
+        0,
+        1,
+        0,
+        0
+      ]
+    },
+    {
+      "id": "basis-cx",
+      "qubits": 2,
+      "operations": [
+        {
+          "gate": "x",
+          "targets": [
+            0
+          ]
+        },
+        {
+          "gate": "cx",
+          "targets": [
+            0,
+            1
+          ]
+        }
+      ],
+      "probabilities": [
+        0,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "bell",
+      "qubits": 2,
+      "operations": [
+        {
+          "gate": "h",
+          "targets": [
+            0
+          ]
+        },
+        {
+          "gate": "cx",
+          "targets": [
+            0,
+            1
+          ]
+        }
+      ],
+      "probabilities": [
+        0.5,
+        0,
+        0,
+        0.5
+      ]
+    },
+    {
+      "id": "bell-xx",
+      "qubits": 2,
+      "operations": [
+        {
+          "gate": "h",
+          "targets": [
+            0
+          ]
+        },
+        {
+          "gate": "cx",
+          "targets": [
+            0,
+            1
+          ]
+        },
+        {
+          "gate": "h",
+          "targets": [
+            0
+          ]
+        },
+        {
+          "gate": "h",
+          "targets": [
+            1
+          ]
+        }
+      ],
+      "probabilities": [
+        0.5,
+        0,
+        0,
+        0.5
+      ]
+    },
+    {
+      "id": "dj-constant",
+      "qubits": 3,
+      "operations": [
+        {
+          "gate": "x",
+          "targets": [
+            2
+          ]
+        },
+        {
+          "gate": "h",
+          "targets": [
+            0
+          ]
+        },
+        {
+          "gate": "h",
+          "targets": [
+            1
+          ]
+        },
+        {
+          "gate": "h",
+          "targets": [
+            2
+          ]
+        },
+        {
+          "gate": "h",
+          "targets": [
+            0
+          ]
+        },
+        {
+          "gate": "h",
+          "targets": [
+            1
+          ]
+        }
+      ],
+      "probabilities": [
+        0.5,
+        0,
+        0,
+        0,
+        0.5,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "id": "dj-balanced",
+      "qubits": 3,
+      "operations": [
+        {
+          "gate": "x",
+          "targets": [
+            2
+          ]
+        },
+        {
+          "gate": "h",
+          "targets": [
+            0
+          ]
+        },
+        {
+          "gate": "h",
+          "targets": [
+            1
+          ]
+        },
+        {
+          "gate": "h",
+          "targets": [
+            2
+          ]
+        },
+        {
+          "gate": "cx",
+          "targets": [
+            0,
+            2
+          ]
+        },
+        {
+          "gate": "cx",
+          "targets": [
+            1,
+            2
+          ]
+        },
+        {
+          "gate": "h",
+          "targets": [
+            0
+          ]
+        },
+        {
+          "gate": "h",
+          "targets": [
+            1
+          ]
+        }
+      ],
+      "probabilities": [
+        0,
+        0,
+        0,
+        0.5,
+        0,
+        0,
+        0,
+        0.5
+      ]
+    },
+    {
+      "id": "grover",
+      "qubits": 2,
+      "operations": [
+        {
+          "gate": "h",
+          "targets": [
+            0
+          ]
+        },
+        {
+          "gate": "h",
+          "targets": [
+            1
+          ]
+        },
+        {
+          "gate": "cz",
+          "targets": [
+            0,
+            1
+          ]
+        },
+        {
+          "gate": "h",
+          "targets": [
+            0
+          ]
+        },
+        {
+          "gate": "h",
+          "targets": [
+            1
+          ]
+        },
+        {
+          "gate": "x",
+          "targets": [
+            0
+          ]
+        },
+        {
+          "gate": "x",
+          "targets": [
+            1
+          ]
+        },
+        {
+          "gate": "cz",
+          "targets": [
+            0,
+            1
+          ]
+        },
+        {
+          "gate": "x",
+          "targets": [
+            0
+          ]
+        },
+        {
+          "gate": "x",
+          "targets": [
+            1
+          ]
+        },
+        {
+          "gate": "h",
+          "targets": [
+            0
+          ]
+        },
+        {
+          "gate": "h",
+          "targets": [
+            1
+          ]
+        }
+      ],
+      "probabilities": [
+        0,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "qaoa",
+      "qubits": 2,
+      "operations": [
+        {
+          "gate": "h",
+          "targets": [
+            0
+          ]
+        },
+        {
+          "gate": "h",
+          "targets": [
+            1
+          ]
+        },
+        {
+          "gate": "rzz",
+          "targets": [
+            0,
+            1
+          ],
+          "angle": -1.5707963267948966
+        },
+        {
+          "gate": "rx",
+          "targets": [
+            0
+          ],
+          "angle": 0.7853981633974483
+        },
+        {
+          "gate": "rx",
+          "targets": [
+            1
+          ],
+          "angle": 0.7853981633974483
+        }
+      ],
+      "probabilities": [
+        0,
+        0.5,
+        0.5,
+        0
+      ]
+    },
+    {
+      "id": "vqe-z",
+      "qubits": 1,
+      "operations": [
+        {
+          "gate": "ry",
+          "targets": [
+            0
+          ],
+          "angle": 3.6052402625905993
+        }
+      ],
+      "probabilities": [
+        0.05278640450004207,
+        0.9472135954999579
+      ]
+    },
+    {
+      "id": "vqe-x",
+      "qubits": 1,
+      "operations": [
+        {
+          "gate": "ry",
+          "targets": [
+            0
+          ],
+          "angle": 3.6052402625905993
+        },
+        {
+          "gate": "h",
+          "targets": [
+            0
+          ]
+        }
+      ],
+      "probabilities": [
+        0.27639320225002106,
+        0.7236067977499789
+      ]
+    }
+  ]
+}
+

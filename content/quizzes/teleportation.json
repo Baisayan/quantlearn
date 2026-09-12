@@ -1,0 +1,256 @@
+{
+  "chapterId": "teleportation",
+  "version": 2,
+  "questions": [
+    {
+      "id": "teleportation-q1",
+      "difficulty": "easy",
+      "prompt": "What quantum resource do Alice and Bob share before the protocol?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Two independent |0> states"
+        },
+        {
+          "id": "b",
+          "text": "A Bell pair"
+        },
+        {
+          "id": "c",
+          "text": "A copy of the unknown input each"
+        },
+        {
+          "id": "d",
+          "text": "A measured classical pair only"
+        }
+      ],
+      "correctOptionId": "b",
+      "explanation": "The protocol consumes shared entanglement in addition to classical communication. An independent classical correlation is not a substitute."
+    },
+    {
+      "id": "teleportation-q2",
+      "difficulty": "easy",
+      "prompt": "How many classical bits does Alice send in this one-qubit protocol?",
+      "options": [
+        {
+          "id": "a",
+          "text": "1"
+        },
+        {
+          "id": "b",
+          "text": "3"
+        },
+        {
+          "id": "c",
+          "text": "0"
+        },
+        {
+          "id": "d",
+          "text": "2"
+        }
+      ],
+      "correctOptionId": "d",
+      "explanation": "She sends the results from measuring q0 and q1. Together they identify one of four correction branches."
+    },
+    {
+      "id": "teleportation-q3",
+      "difficulty": "easy",
+      "prompt": "Which qubit initially holds the unknown input in the chapter?",
+      "options": [
+        {
+          "id": "a",
+          "text": "q1"
+        },
+        {
+          "id": "b",
+          "text": "q2"
+        },
+        {
+          "id": "c",
+          "text": "q0"
+        },
+        {
+          "id": "d",
+          "text": "All three as identical copies"
+        }
+      ],
+      "correctOptionId": "c",
+      "explanation": "q0 holds psi, while q1 and q2 form the resource pair. Alice holds q0 and q1; Bob holds q2."
+    },
+    {
+      "id": "teleportation-q4",
+      "difficulty": "medium",
+      "prompt": "For the explicitly ordered outcome m0m1=01, which correction does Bob apply?",
+      "options": [
+        {
+          "id": "a",
+          "text": "X"
+        },
+        {
+          "id": "b",
+          "text": "Z"
+        },
+        {
+          "id": "c",
+          "text": "I"
+        },
+        {
+          "id": "d",
+          "text": "H"
+        }
+      ],
+      "correctOptionId": "a",
+      "explanation": "m1=1 triggers X, while m0=0 means no Z is required. Reversing the bit labels would change the interpretation."
+    },
+    {
+      "id": "teleportation-q5",
+      "difficulty": "medium",
+      "prompt": "For outcome m0m1=10, which correction is required?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Z"
+        },
+        {
+          "id": "b",
+          "text": "X"
+        },
+        {
+          "id": "c",
+          "text": "I"
+        },
+        {
+          "id": "d",
+          "text": "H"
+        }
+      ],
+      "correctOptionId": "a",
+      "explanation": "m0=1 triggers Z and m1=0 means no X. The table uses m0m1, not an assumed printed register order."
+    },
+    {
+      "id": "teleportation-q6",
+      "difficulty": "medium",
+      "prompt": "For m0m1=11, what is the prescribed time order?",
+      "options": [
+        {
+          "id": "a",
+          "text": "H, then X"
+        },
+        {
+          "id": "b",
+          "text": "Z, then H"
+        },
+        {
+          "id": "c",
+          "text": "X, then Z"
+        },
+        {
+          "id": "d",
+          "text": "X only"
+        }
+      ],
+      "correctOptionId": "c",
+      "explanation": "Both conditions are true. The chapter applies X followed by Z, so the combined correction matrix is ZX."
+    },
+    {
+      "id": "teleportation-q7",
+      "difficulty": "medium",
+      "prompt": "What is the probability of each measurement branch for an ideal normalized pure input?",
+      "options": [
+        {
+          "id": "a",
+          "text": "The input's P(0) for every branch"
+        },
+        {
+          "id": "b",
+          "text": "1/2"
+        },
+        {
+          "id": "c",
+          "text": "1 for branch 00 and 0 otherwise"
+        },
+        {
+          "id": "d",
+          "text": "1/4"
+        }
+      ],
+      "correctOptionId": "d",
+      "explanation": "All four branches have equal norm before conditioning. Their probabilities do not reveal the unknown input amplitudes."
+    },
+    {
+      "id": "teleportation-q8",
+      "difficulty": "hard",
+      "prompt": "For input sqrt(3)|0>/2+i|1>/2 and branch 01, which vector does Bob hold before correction?",
+      "options": [
+        {
+          "id": "a",
+          "text": "[sqrt(3)/2, -i/2]"
+        },
+        {
+          "id": "b",
+          "text": "[i/2, sqrt(3)/2]"
+        },
+        {
+          "id": "c",
+          "text": "[sqrt(3)/2, i/2]"
+        },
+        {
+          "id": "d",
+          "text": "[1/sqrt(2), 1/sqrt(2)]"
+        }
+      ],
+      "correctOptionId": "b",
+      "explanation": "Branch 01 applies X to the input, swapping its amplitudes. Applying X again recovers both the magnitudes and the relative phase."
+    },
+    {
+      "id": "teleportation-q9",
+      "difficulty": "hard",
+      "prompt": "Why are computational-basis inputs alone an insufficient test of a teleportation implementation?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Basis states cannot be teleported"
+        },
+        {
+          "id": "b",
+          "text": "Their branch probabilities are not normalized"
+        },
+        {
+          "id": "c",
+          "text": "A missing phase correction can leave their measured Z probabilities unchanged"
+        },
+        {
+          "id": "d",
+          "text": "They require more than two classical bits"
+        }
+      ],
+      "correctOptionId": "c",
+      "explanation": "A phase error can be invisible on |0> and |1> up to global phase. A superposition test checks information that basis-state tests miss."
+    },
+    {
+      "id": "teleportation-q10",
+      "difficulty": "hard",
+      "prompt": "Before Alice's message arrives, why can Bob not recover the unknown state or receive information faster than light?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Bob already has a second perfect copy but cannot measure it"
+        },
+        {
+          "id": "b",
+          "text": "Alice can select branch 00 on demand"
+        },
+        {
+          "id": "c",
+          "text": "The quantum state is encoded fully in either single classical bit"
+        },
+        {
+          "id": "d",
+          "text": "Averaging over the unknown branches gives I/2, and he lacks the correction bits"
+        }
+      ],
+      "correctOptionId": "d",
+      "explanation": "The branch-conditioned states are different, while their unconditioned average is maximally mixed. The protocol also consumes Alice's input rather than cloning it."
+    }
+  ]
+}

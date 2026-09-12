@@ -1,0 +1,406 @@
+{
+  "version": 2,
+  "title": "Quantum computing with QuantLearn",
+  "audience": "Beginners with basic algebra. Worked refreshers explain complex magnitudes, normalization, matrix action, tensor products and expectations. Advanced chapters introduce small examples, not expert-level mastery.",
+  "engines": [
+    "aer",
+    "cirq"
+  ],
+  "chapterQuiz": {
+    "questions": 10,
+    "options": 4,
+    "scoring": "One point per correct answer; no negative marking; show explanations after submission; unlimited retries.",
+    "completion": "Read the lesson and submit its quiz. Record score separately; no pass threshold or prerequisite lock in this demo.",
+    "difficultyOrder": [
+      "easy",
+      "medium",
+      "hard"
+    ],
+    "difficultyCounts": {
+      "easy": 3,
+      "medium": 4,
+      "hard": 3
+    }
+  },
+  "basisConvention": "q0 is the top circuit wire and least significant bit. Display bitstrings and statevector entries as |q(n-1)...q0>. Cirq examples explicitly reverse qubit_order and measurement order to match.",
+  "modules": [
+    {
+      "id": "foundations",
+      "title": "Quantum Foundations"
+    },
+    {
+      "id": "gates",
+      "title": "Gates and Circuits"
+    },
+    {
+      "id": "entanglement",
+      "title": "Entanglement and Communication"
+    },
+    {
+      "id": "algorithms",
+      "title": "Quantum Algorithms"
+    },
+    {
+      "id": "execution",
+      "title": "Simulation and Frameworks"
+    }
+  ],
+  "chapters": [
+    {
+      "id": "qubits",
+      "title": "Quantum bits and state notation",
+      "module": "foundations",
+      "order": 1,
+      "minutes": 18,
+      "prerequisites": [],
+      "objectives": [
+        "Read a two-entry statevector.",
+        "Convert amplitudes into probabilities.",
+        "Distinguish a qubit state from a classical probability list."
+      ],
+      "sourceIds": [
+        "ibm-single",
+        "ibm-quantum-info",
+        "q12"
+      ],
+      "visualIds": [
+        "qubit-state",
+        "statevector"
+      ],
+      "lesson": "lessons/qubits.md",
+      "quiz": "quizzes/qubits.json"
+    },
+    {
+      "id": "superposition-and-phase",
+      "title": "Superposition, phase and interference",
+      "module": "foundations",
+      "order": 2,
+      "minutes": 20,
+      "prerequisites": [
+        "qubits"
+      ],
+      "objectives": [
+        "Distinguish global and relative phase.",
+        "Explain interference using two paths.",
+        "Predict HH and HZH outputs."
+      ],
+      "sourceIds": [
+        "ibm-single",
+        "cirq-gates"
+      ],
+      "visualIds": [
+        "interference",
+        "phase-comparison"
+      ],
+      "lesson": "lessons/superposition-and-phase.md",
+      "quiz": "quizzes/superposition-and-phase.json"
+    },
+    {
+      "id": "measurement",
+      "title": "Measurement and repeated shots",
+      "module": "foundations",
+      "order": 3,
+      "minutes": 18,
+      "prerequisites": [
+        "superposition-and-phase"
+      ],
+      "objectives": [
+        "Apply the Born rule.",
+        "Separate probabilities from finite counts.",
+        "Explain measurement in Z and X bases."
+      ],
+      "sourceIds": [
+        "ibm-single",
+        "cirq-sim",
+        "aer-sim"
+      ],
+      "visualIds": [
+        "measurement",
+        "measurement-bases"
+      ],
+      "lesson": "lessons/measurement.md",
+      "quiz": "quizzes/measurement.json"
+    },
+    {
+      "id": "single-qubit-gates",
+      "title": "Single-qubit gates",
+      "module": "gates",
+      "order": 4,
+      "minutes": 20,
+      "prerequisites": [
+        "measurement"
+      ],
+      "objectives": [
+        "Use I, X, Y, Z and H.",
+        "Multiply a gate by a statevector.",
+        "Explain why gate order matters."
+      ],
+      "sourceIds": [
+        "cirq-gates",
+        "ibm-circuits"
+      ],
+      "visualIds": [
+        "gate-reference",
+        "gate-order"
+      ],
+      "lesson": "lessons/single-qubit-gates.md",
+      "quiz": "quizzes/single-qubit-gates.json"
+    },
+    {
+      "id": "phase-and-rotation-gates",
+      "title": "Phase and rotation gates",
+      "module": "gates",
+      "order": 5,
+      "minutes": 20,
+      "prerequisites": [
+        "single-qubit-gates"
+      ],
+      "objectives": [
+        "Compare S, T, Rx, Ry and Rz.",
+        "Interpret rotation angles in radians.",
+        "Relate rotations to the Bloch sphere."
+      ],
+      "sourceIds": [
+        "cirq-gates",
+        "ibm-single"
+      ],
+      "visualIds": [
+        "rotation-curve",
+        "phase-gates"
+      ],
+      "lesson": "lessons/phase-and-rotation-gates.md",
+      "quiz": "quizzes/phase-and-rotation-gates.json"
+    },
+    {
+      "id": "multi-qubit-circuits",
+      "title": "Multi-qubit states and circuit notation",
+      "module": "gates",
+      "order": 6,
+      "minutes": 22,
+      "prerequisites": [
+        "phase-and-rotation-gates"
+      ],
+      "objectives": [
+        "Form tensor-product states.",
+        "Read CX, CZ and SWAP circuits.",
+        "Separate gate count, circuit depth and bit ordering."
+      ],
+      "sourceIds": [
+        "ibm-multiple",
+        "ibm-bit-order",
+        "cirq-circuits"
+      ],
+      "visualIds": [
+        "multi-qubit",
+        "bit-order"
+      ],
+      "lesson": "lessons/multi-qubit-circuits.md",
+      "quiz": "quizzes/multi-qubit-circuits.json"
+    },
+    {
+      "id": "entanglement",
+      "title": "Entanglement and Bell states",
+      "module": "entanglement",
+      "order": 7,
+      "minutes": 22,
+      "prerequisites": [
+        "multi-qubit-circuits"
+      ],
+      "objectives": [
+        "Prepare a Bell state.",
+        "Compare a coherent Bell state to a classical mixture.",
+        "Explain why a subsystem needs a density matrix."
+      ],
+      "sourceIds": [
+        "ibm-multiple",
+        "ibm-quantum-info"
+      ],
+      "visualIds": [
+        "bell-circuit",
+        "bell-correlations"
+      ],
+      "lesson": "lessons/entanglement.md",
+      "quiz": "quizzes/entanglement.json"
+    },
+    {
+      "id": "teleportation",
+      "title": "Teleportation and classical control",
+      "module": "entanglement",
+      "order": 8,
+      "minutes": 22,
+      "prerequisites": [
+        "entanglement"
+      ],
+      "objectives": [
+        "Follow a three-qubit teleportation circuit.",
+        "Select corrections from two classical bits.",
+        "Explain why teleportation neither clones nor sends information faster than light."
+      ],
+      "sourceIds": [
+        "ibm-teleport",
+        "ibm-circuits"
+      ],
+      "visualIds": [
+        "teleportation",
+        "teleportation-corrections"
+      ],
+      "lesson": "lessons/teleportation.md",
+      "quiz": "quizzes/teleportation.json"
+    },
+    {
+      "id": "deutsch-jozsa",
+      "title": "Deutsch-Jozsa and phase kickback",
+      "module": "algorithms",
+      "order": 9,
+      "minutes": 24,
+      "prerequisites": [
+        "teleportation"
+      ],
+      "objectives": [
+        "State the constant-or-balanced promise.",
+        "Trace a two-input XOR oracle.",
+        "Interpret query complexity without overstating practical advantage."
+      ],
+      "sourceIds": [
+        "ibm-dj",
+        "ibm-circuits"
+      ],
+      "visualIds": [
+        "dj-circuit",
+        "dj-results"
+      ],
+      "lesson": "lessons/deutsch-jozsa.md",
+      "quiz": "quizzes/deutsch-jozsa.json"
+    },
+    {
+      "id": "grover",
+      "title": "Grover search and amplitude amplification",
+      "module": "algorithms",
+      "order": 10,
+      "minutes": 24,
+      "prerequisites": [
+        "deutsch-jozsa"
+      ],
+      "objectives": [
+        "Distinguish an oracle from measurement.",
+        "Calculate one diffusion step.",
+        "Explain the stopping rule and oracle-cost caveat."
+      ],
+      "sourceIds": [
+        "grover-paper",
+        "ibm-grover"
+      ],
+      "visualIds": [
+        "grover-circuit",
+        "grover-amplitudes"
+      ],
+      "lesson": "lessons/grover.md",
+      "quiz": "quizzes/grover.json"
+    },
+    {
+      "id": "qaoa",
+      "title": "QAOA and combinatorial optimization",
+      "module": "algorithms",
+      "order": 11,
+      "minutes": 26,
+      "prerequisites": [
+        "grover"
+      ],
+      "objectives": [
+        "Encode a one-edge max-cut objective.",
+        "Trace a p=1 cost/mixer circuit.",
+        "Explain parameter search and absence of guaranteed practical advantage."
+      ],
+      "sourceIds": [
+        "qaoa-paper",
+        "ibm-qaoa",
+        "cirq-observables"
+      ],
+      "visualIds": [
+        "qaoa-circuit",
+        "qaoa-cost"
+      ],
+      "lesson": "lessons/qaoa.md",
+      "quiz": "quizzes/qaoa.json"
+    },
+    {
+      "id": "vqe",
+      "title": "VQE and energy estimation",
+      "module": "algorithms",
+      "order": 12,
+      "minutes": 26,
+      "prerequisites": [
+        "qaoa"
+      ],
+      "objectives": [
+        "Define an ansatz and Hamiltonian.",
+        "Estimate energy from Pauli expectation values.",
+        "Check an analytic minimum against a variational curve."
+      ],
+      "sourceIds": [
+        "vqe-paper",
+        "ibm-vqe",
+        "cirq-observables"
+      ],
+      "visualIds": [
+        "vqe-measurements",
+        "vqe-energy"
+      ],
+      "lesson": "lessons/vqe.md",
+      "quiz": "quizzes/vqe.json"
+    },
+    {
+      "id": "simulation-and-noise",
+      "title": "Simulation, noise and result displays",
+      "module": "execution",
+      "order": 13,
+      "minutes": 20,
+      "prerequisites": [
+        "vqe"
+      ],
+      "objectives": [
+        "Compare statevector, density matrix and sampling.",
+        "Distinguish noise from shot uncertainty.",
+        "Read Bloch, statevector, histogram and circuit panels."
+      ],
+      "sourceIds": [
+        "aer-sim",
+        "cirq-noise",
+        "ibm-visualization"
+      ],
+      "visualIds": [
+        "noise-comparison",
+        "result-panels"
+      ],
+      "lesson": "lessons/simulation-and-noise.md",
+      "quiz": "quizzes/simulation-and-noise.json"
+    },
+    {
+      "id": "aer-and-cirq",
+      "title": "The same circuit in Qiskit Aer and Cirq",
+      "module": "execution",
+      "order": 14,
+      "minutes": 22,
+      "prerequisites": [
+        "simulation-and-noise"
+      ],
+      "objectives": [
+        "Read both Python APIs.",
+        "Normalize basis ordering.",
+        "Choose between sampled results and exact-state inspection."
+      ],
+      "sourceIds": [
+        "aer-sim",
+        "cirq-sim",
+        "ibm-bit-order",
+        "cirq-circuits"
+      ],
+      "visualIds": [
+        "framework-flow",
+        "framework-order"
+      ],
+      "lesson": "lessons/aer-and-cirq.md",
+      "quiz": "quizzes/aer-and-cirq.json"
+    }
+  ]
+}

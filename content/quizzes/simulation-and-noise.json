@@ -1,0 +1,256 @@
+{
+  "chapterId": "simulation-and-noise",
+  "version": 2,
+  "questions": [
+    {
+      "id": "simulation-and-noise-q1",
+      "difficulty": "easy",
+      "prompt": "How many amplitudes are stored in a dense pure n-qubit statevector?",
+      "options": [
+        {
+          "id": "a",
+          "text": "n"
+        },
+        {
+          "id": "b",
+          "text": "n squared"
+        },
+        {
+          "id": "c",
+          "text": "2^n"
+        },
+        {
+          "id": "d",
+          "text": "4^n"
+        }
+      ],
+      "correctOptionId": "c",
+      "explanation": "There is one amplitude per computational-basis string. A dense density matrix has a different size."
+    },
+    {
+      "id": "simulation-and-noise-q2",
+      "difficulty": "easy",
+      "prompt": "How many entries are in a dense n-qubit density matrix?",
+      "options": [
+        {
+          "id": "a",
+          "text": "4^n"
+        },
+        {
+          "id": "b",
+          "text": "2^n"
+        },
+        {
+          "id": "c",
+          "text": "n squared"
+        },
+        {
+          "id": "d",
+          "text": "2n"
+        }
+      ],
+      "correctOptionId": "a",
+      "explanation": "The matrix has 2^n rows and 2^n columns. Multiplying these dimensions gives 4^n entries."
+    },
+    {
+      "id": "simulation-and-noise-q3",
+      "difficulty": "easy",
+      "prompt": "What does increasing the shot count directly reduce?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Every physical gate error"
+        },
+        {
+          "id": "b",
+          "text": "The number of amplitudes"
+        },
+        {
+          "id": "c",
+          "text": "The circuit's logical depth"
+        },
+        {
+          "id": "d",
+          "text": "Sampling uncertainty"
+        }
+      ],
+      "correctOptionId": "d",
+      "explanation": "More independent observations improve a frequency estimate. They do not by themselves change the circuit or remove physical bias."
+    },
+    {
+      "id": "simulation-and-noise-q4",
+      "difficulty": "medium",
+      "prompt": "Prepare |+>, apply Z with probability 1/4, then apply H and measure. What is P(1)?",
+      "options": [
+        {
+          "id": "a",
+          "text": "3/4"
+        },
+        {
+          "id": "b",
+          "text": "1/4"
+        },
+        {
+          "id": "c",
+          "text": "1/2"
+        },
+        {
+          "id": "d",
+          "text": "0"
+        }
+      ],
+      "correctOptionId": "b",
+      "explanation": "The no-Z branch returns |0>; the Z branch returns |1>. Their probabilities are 3/4 and 1/4 respectively."
+    },
+    {
+      "id": "simulation-and-noise-q5",
+      "difficulty": "medium",
+      "prompt": "For the same experiment at p=1/2, what happens to the density matrix before the final H?",
+      "options": [
+        {
+          "id": "a",
+          "text": "It becomes the pure state |+>"
+        },
+        {
+          "id": "b",
+          "text": "Its off-diagonal entries vanish and it becomes I/2"
+        },
+        {
+          "id": "c",
+          "text": "Its diagonal entries become negative"
+        },
+        {
+          "id": "d",
+          "text": "It becomes an unnormalized zero matrix"
+        }
+      ],
+      "correctOptionId": "b",
+      "explanation": "The off-diagonal factor 1-2p is zero. The diagonal entries remain 1/2, so the state is maximally mixed."
+    },
+    {
+      "id": "simulation-and-noise-q6",
+      "difficulty": "medium",
+      "prompt": "Which panel describes the full pure Bell state, including phase, under a declared basis order?",
+      "options": [
+        {
+          "id": "a",
+          "text": "A Z histogram alone"
+        },
+        {
+          "id": "b",
+          "text": "Two separate local Bloch spheres alone"
+        },
+        {
+          "id": "c",
+          "text": "The shot count alone"
+        },
+        {
+          "id": "d",
+          "text": "The joint statevector"
+        }
+      ],
+      "correctOptionId": "d",
+      "explanation": "The statevector stores joint amplitudes. A single-basis histogram and reduced single-qubit views each discard information."
+    },
+    {
+      "id": "simulation-and-noise-q7",
+      "difficulty": "medium",
+      "prompt": "For three qubits, what are the dense statevector and density-matrix entry counts?",
+      "options": [
+        {
+          "id": "a",
+          "text": "8 and 64"
+        },
+        {
+          "id": "b",
+          "text": "3 and 9"
+        },
+        {
+          "id": "c",
+          "text": "8 and 16"
+        },
+        {
+          "id": "d",
+          "text": "6 and 12"
+        }
+      ],
+      "correctOptionId": "a",
+      "explanation": "2^3=8 amplitudes and 4^3=64 matrix entries. These are dense storage counts, not universal runtime claims."
+    },
+    {
+      "id": "simulation-and-noise-q8",
+      "difficulty": "hard",
+      "prompt": "At p=1 in the phase-flip experiment, what is the state before the final H?",
+      "options": [
+        {
+          "id": "a",
+          "text": "The maximally mixed state I/2"
+        },
+        {
+          "id": "b",
+          "text": "The pure state |+>"
+        },
+        {
+          "id": "c",
+          "text": "The pure state |->, not I/2"
+        },
+        {
+          "id": "d",
+          "text": "An invalid state because p cannot equal 1"
+        }
+      ],
+      "correctOptionId": "c",
+      "explanation": "Z now acts every time, so there is no uncertainty over which operation occurred. Full mixing happens at p=1/2 here, not at p=1."
+    },
+    {
+      "id": "simulation-and-noise-q9",
+      "difficulty": "hard",
+      "prompt": "Why is one sampled pure-state trajectory insufficient to describe a noisy ensemble?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Every noisy branch has negative norm"
+        },
+        {
+          "id": "b",
+          "text": "A trajectory includes all possible classical outcomes simultaneously"
+        },
+        {
+          "id": "c",
+          "text": "Density matrices only describe ideal pure states"
+        },
+        {
+          "id": "d",
+          "text": "It describes one branch, whereas the ensemble averages over possible noise events"
+        }
+      ],
+      "correctOptionId": "d",
+      "explanation": "For this channel a trajectory may be |+> or |->. The ensemble combines their density matrices with the stated probabilities."
+    },
+    {
+      "id": "simulation-and-noise-q10",
+      "difficulty": "hard",
+      "prompt": "Aer and Cirq agree on ideal probabilities. What does that establish, and what does it not establish?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Agreement on the modeled experiment, not a guarantee of matching hardware results"
+        },
+        {
+          "id": "b",
+          "text": "Proof that all hardware errors are absent"
+        },
+        {
+          "id": "c",
+          "text": "Proof that both engines use identical random samples"
+        },
+        {
+          "id": "d",
+          "text": "A hardware calibration for every device"
+        }
+      ],
+      "correctOptionId": "a",
+      "explanation": "The comparison is a useful consistency check for ordering and operations. Real-device noise and model accuracy require separate evidence."
+    }
+  ]
+}

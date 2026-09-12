@@ -1,0 +1,256 @@
+{
+  "chapterId": "phase-and-rotation-gates",
+  "version": 2,
+  "questions": [
+    {
+      "id": "phase-and-rotation-gates-q1",
+      "difficulty": "easy",
+      "prompt": "What phase does S add to the |1> amplitude relative to |0>?",
+      "options": [
+        {
+          "id": "a",
+          "text": "pi/4"
+        },
+        {
+          "id": "b",
+          "text": "pi"
+        },
+        {
+          "id": "c",
+          "text": "pi/2"
+        },
+        {
+          "id": "d",
+          "text": "2 pi"
+        }
+      ],
+      "correctOptionId": "c",
+      "explanation": "S has diagonal entries 1 and i, and i=exp(i pi/2). The |0> amplitude is unchanged."
+    },
+    {
+      "id": "phase-and-rotation-gates-q2",
+      "difficulty": "easy",
+      "prompt": "Which identity holds for the standard T gate?",
+      "options": [
+        {
+          "id": "a",
+          "text": "T squared equals S"
+        },
+        {
+          "id": "b",
+          "text": "T squared equals X"
+        },
+        {
+          "id": "c",
+          "text": "T equals H"
+        },
+        {
+          "id": "d",
+          "text": "T squared equals I"
+        }
+      ],
+      "correctOptionId": "a",
+      "explanation": "Two phase increments of pi/4 add to pi/2. This gives the diagonal matrix for S."
+    },
+    {
+      "id": "phase-and-rotation-gates-q3",
+      "difficulty": "easy",
+      "prompt": "In what units do the explicit Rx, Ry and Rz helpers take their angles?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Degrees"
+        },
+        {
+          "id": "b",
+          "text": "Probabilities"
+        },
+        {
+          "id": "c",
+          "text": "Shot counts"
+        },
+        {
+          "id": "d",
+          "text": "Radians"
+        }
+      ],
+      "correctOptionId": "d",
+      "explanation": "The rotation formulas use radians. A half turn is pi radians and a quarter turn is pi/2."
+    },
+    {
+      "id": "phase-and-rotation-gates-q4",
+      "difficulty": "medium",
+      "prompt": "Starting from |0>, what is P(1) after Ry(pi/2)?",
+      "options": [
+        {
+          "id": "a",
+          "text": "0"
+        },
+        {
+          "id": "b",
+          "text": "1/2"
+        },
+        {
+          "id": "c",
+          "text": "1"
+        },
+        {
+          "id": "d",
+          "text": "1/4"
+        }
+      ],
+      "correctOptionId": "b",
+      "explanation": "P(1)=sin squared(theta/2). At theta=pi/2, the half angle is pi/4 and its squared sine is 1/2."
+    },
+    {
+      "id": "phase-and-rotation-gates-q5",
+      "difficulty": "medium",
+      "prompt": "Starting from |0>, what is P(1) after Ry(pi)?",
+      "options": [
+        {
+          "id": "a",
+          "text": "0"
+        },
+        {
+          "id": "b",
+          "text": "1"
+        },
+        {
+          "id": "c",
+          "text": "1/2"
+        },
+        {
+          "id": "d",
+          "text": "1/4"
+        }
+      ],
+      "correctOptionId": "b",
+      "explanation": "The resulting amplitudes are cos(pi/2)=0 and sin(pi/2)=1. This rotation prepares |1>."
+    },
+    {
+      "id": "phase-and-rotation-gates-q6",
+      "difficulty": "medium",
+      "prompt": "Starting from |0>, what is P(0) after H, S, H?",
+      "options": [
+        {
+          "id": "a",
+          "text": "1"
+        },
+        {
+          "id": "b",
+          "text": "0"
+        },
+        {
+          "id": "c",
+          "text": "3/4"
+        },
+        {
+          "id": "d",
+          "text": "1/2"
+        }
+      ],
+      "correctOptionId": "d",
+      "explanation": "S inserts relative phase pi/2 between the two equal amplitudes. The final H gives P(0)=(1+cos(pi/2))/2=1/2."
+    },
+    {
+      "id": "phase-and-rotation-gates-q7",
+      "difficulty": "medium",
+      "prompt": "Starting from |0>, what is P(0) after H, T, H?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Approximately 0.854"
+        },
+        {
+          "id": "b",
+          "text": "Exactly 0.5"
+        },
+        {
+          "id": "c",
+          "text": "Exactly 0.25"
+        },
+        {
+          "id": "d",
+          "text": "Approximately 0.146"
+        }
+      ],
+      "correctOptionId": "a",
+      "explanation": "Use relative phase pi/4 in the interference formula. P(0)=(1+1/sqrt(2))/2; approximately 0.146 is P(1)."
+    },
+    {
+      "id": "phase-and-rotation-gates-q8",
+      "difficulty": "hard",
+      "prompt": "How do S and Rz(pi/2) compare as isolated gates?",
+      "options": [
+        {
+          "id": "a",
+          "text": "They are identical matrices entry by entry"
+        },
+        {
+          "id": "b",
+          "text": "They have opposite Z measurement probabilities for every input"
+        },
+        {
+          "id": "c",
+          "text": "They differ by a global phase, so isolated-state predictions agree"
+        },
+        {
+          "id": "d",
+          "text": "One is unitary and the other is not"
+        }
+      ],
+      "correctOptionId": "c",
+      "explanation": "Rz(pi/2) has diagonal phases exp(-i pi/4) and exp(i pi/4). Factoring out exp(-i pi/4) leaves S."
+    },
+    {
+      "id": "phase-and-rotation-gates-q9",
+      "difficulty": "hard",
+      "prompt": "Ry(2 pi) multiplies a statevector by -1. What does this imply for an isolated qubit?",
+      "options": [
+        {
+          "id": "a",
+          "text": "It changes |0> to |1>"
+        },
+        {
+          "id": "b",
+          "text": "It makes all probabilities negative"
+        },
+        {
+          "id": "c",
+          "text": "It necessarily creates a mixed state"
+        },
+        {
+          "id": "d",
+          "text": "Its physical state and measurement probabilities are unchanged"
+        }
+      ],
+      "correctOptionId": "d",
+      "explanation": "The same factor -1 multiplies every amplitude. This is global phase, not a relative phase or a bit flip."
+    },
+    {
+      "id": "phase-and-rotation-gates-q10",
+      "difficulty": "hard",
+      "prompt": "Why should controlled versions of two globally equivalent gates not automatically be treated as identical?",
+      "options": [
+        {
+          "id": "a",
+          "text": "The phase can become relative between the control-0 and control-1 branches"
+        },
+        {
+          "id": "b",
+          "text": "A control removes all phase information"
+        },
+        {
+          "id": "c",
+          "text": "Controlled gates cannot act on superpositions"
+        },
+        {
+          "id": "d",
+          "text": "Every global phase becomes a probability"
+        }
+      ],
+      "correctOptionId": "a",
+      "explanation": "The control-0 branch does nothing, while the control-1 branch applies the gate. A phase present only in the second branch can affect interference between them."
+    }
+  ]
+}

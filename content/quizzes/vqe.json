@@ -1,0 +1,256 @@
+{
+  "chapterId": "vqe",
+  "version": 2,
+  "questions": [
+    {
+      "id": "vqe-q1",
+      "difficulty": "easy",
+      "prompt": "What is an ansatz in this chapter?",
+      "options": [
+        {
+          "id": "a",
+          "text": "The list of measured bitstrings only"
+        },
+        {
+          "id": "b",
+          "text": "A parameterized trial-state preparation"
+        },
+        {
+          "id": "c",
+          "text": "The lowest eigenvalue itself"
+        },
+        {
+          "id": "d",
+          "text": "A required third simulation framework"
+        }
+      ],
+      "correctOptionId": "b",
+      "explanation": "The ansatz specifies states the circuit can prepare as its angles change. It is distinct from the Hamiltonian and the optimizer."
+    },
+    {
+      "id": "vqe-q2",
+      "difficulty": "easy",
+      "prompt": "What does VQE try to minimize?",
+      "options": [
+        {
+          "id": "a",
+          "text": "The number of possible basis states"
+        },
+        {
+          "id": "b",
+          "text": "Every individual measurement outcome independently"
+        },
+        {
+          "id": "c",
+          "text": "The magnitude of the qubit labels"
+        },
+        {
+          "id": "d",
+          "text": "The energy expectation of a Hamiltonian over trial states"
+        }
+      ],
+      "correctOptionId": "d",
+      "explanation": "VQE evaluates an energy objective and adjusts the ansatz parameters. The lowest reachable expectation depends on both the ansatz and optimization."
+    },
+    {
+      "id": "vqe-q3",
+      "difficulty": "easy",
+      "prompt": "What is ground-state energy?",
+      "options": [
+        {
+          "id": "a",
+          "text": "The first sampled bit in a run"
+        },
+        {
+          "id": "b",
+          "text": "Always zero by normalization"
+        },
+        {
+          "id": "c",
+          "text": "The smallest eigenvalue of the Hamiltonian"
+        },
+        {
+          "id": "d",
+          "text": "The angle of the first rotation gate"
+        }
+      ],
+      "correctOptionId": "c",
+      "explanation": "Eigenvalues are possible energies of energy eigenstates. The ground energy is the minimum of them, not necessarily zero."
+    },
+    {
+      "id": "vqe-q4",
+      "difficulty": "medium",
+      "prompt": "For the chapter's H=Z+0.5X and Ry(theta)|0>, which expression gives exact energy?",
+      "options": [
+        {
+          "id": "a",
+          "text": "cos(theta)+0.5 sin(theta)"
+        },
+        {
+          "id": "b",
+          "text": "sin(theta)+0.5 cos(theta)"
+        },
+        {
+          "id": "c",
+          "text": "cos squared(theta)+sin squared(theta)"
+        },
+        {
+          "id": "d",
+          "text": "0.5 cos(theta) only"
+        }
+      ],
+      "correctOptionId": "a",
+      "explanation": "The ansatz has Z expectation cos(theta) and X expectation sin(theta). The Hamiltonian weights the X term by 0.5."
+    },
+    {
+      "id": "vqe-q5",
+      "difficulty": "medium",
+      "prompt": "What is the exact energy at theta=pi?",
+      "options": [
+        {
+          "id": "a",
+          "text": "-1"
+        },
+        {
+          "id": "b",
+          "text": "1"
+        },
+        {
+          "id": "c",
+          "text": "0"
+        },
+        {
+          "id": "d",
+          "text": "-0.5"
+        }
+      ],
+      "correctOptionId": "a",
+      "explanation": "cos(pi)=-1 and sin(pi)=0. Substitute these into the energy expression."
+    },
+    {
+      "id": "vqe-q6",
+      "difficulty": "medium",
+      "prompt": "How is the X contribution measured using a Z detector?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Use the Z histogram again with no basis change"
+        },
+        {
+          "id": "b",
+          "text": "Apply Z immediately before the same detector"
+        },
+        {
+          "id": "c",
+          "text": "Prepare a fresh ansatz state, apply H, then measure"
+        },
+        {
+          "id": "d",
+          "text": "Measure the rotation angle as a bit"
+        }
+      ],
+      "correctOptionId": "c",
+      "explanation": "H converts the X basis to the detector's Z basis. Separate fresh preparations are needed for the two incompatible settings used here."
+    },
+    {
+      "id": "vqe-q7",
+      "difficulty": "medium",
+      "prompt": "The Z setting gives 80 zeros and 20 ones; the X setting gives 60 zeros and 40 ones. What is the estimated energy?",
+      "options": [
+        {
+          "id": "a",
+          "text": "0.9"
+        },
+        {
+          "id": "b",
+          "text": "0.3"
+        },
+        {
+          "id": "c",
+          "text": "1.4"
+        },
+        {
+          "id": "d",
+          "text": "0.7"
+        }
+      ],
+      "correctOptionId": "d",
+      "explanation": "The estimates are <Z>=0.6 and <X>=0.2. Combining them gives 0.6+0.5(0.2)=0.7."
+    },
+    {
+      "id": "vqe-q8",
+      "difficulty": "hard",
+      "prompt": "Which theta reaches the exact minimum of this example?",
+      "options": [
+        {
+          "id": "a",
+          "text": "arctan(1/2)"
+        },
+        {
+          "id": "b",
+          "text": "pi+arctan(1/2)"
+        },
+        {
+          "id": "c",
+          "text": "0"
+        },
+        {
+          "id": "d",
+          "text": "pi/2"
+        }
+      ],
+      "correctOptionId": "b",
+      "explanation": "Write E as sqrt(1.25) cos(theta-arctan(1/2)). It is smallest when that cosine is -1, giving energy -sqrt(1.25)."
+    },
+    {
+      "id": "vqe-q9",
+      "difficulty": "hard",
+      "prompt": "The exact ground energy is about -1.118, but a finite-shot estimate is -1.13. What is the sound interpretation?",
+      "options": [
+        {
+          "id": "a",
+          "text": "A lower exact eigenvalue has been proved"
+        },
+        {
+          "id": "b",
+          "text": "Normalization must allow negative probabilities"
+        },
+        {
+          "id": "c",
+          "text": "Sampling can fluctuate below the bound; the exact variational principle is not disproved"
+        },
+        {
+          "id": "d",
+          "text": "The optimizer has necessarily found a better physical ground state"
+        }
+      ],
+      "correctOptionId": "c",
+      "explanation": "The variational bound applies to the exact expectation of a normalized state. A noisy finite-sample estimate is not that exact quantity."
+    },
+    {
+      "id": "vqe-q10",
+      "difficulty": "hard",
+      "prompt": "An optimizer stops at energy -1, above the known minimum. What should be concluded?",
+      "options": [
+        {
+          "id": "a",
+          "text": "VQE guarantees -1 must be the true ground energy"
+        },
+        {
+          "id": "b",
+          "text": "The Hamiltonian's eigenvalues changed during optimization"
+        },
+        {
+          "id": "c",
+          "text": "More shots alone guarantee the best angle will be found"
+        },
+        {
+          "id": "d",
+          "text": "Stopping is not proof of a global optimum; check ansatz reachability, search and estimation"
+        }
+      ],
+      "correctOptionId": "d",
+      "explanation": "A restricted ansatz or unsuccessful search can miss the ground state. In this model the ansatz can reach the bound, so optimizer behavior and estimation deserve inspection."
+    }
+  ]
+}

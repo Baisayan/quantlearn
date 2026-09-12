@@ -3,6 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "content:build": "node ../content/scripts/prepare.mjs",
+    "content:check": "node ../content/scripts/prepare.mjs --check",
+    "predev": "npm run content:build",
+    "prebuild": "npm run content:build",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",

@@ -1,0 +1,256 @@
+{
+  "chapterId": "deutsch-jozsa",
+  "version": 2,
+  "questions": [
+    {
+      "id": "deutsch-jozsa-q1",
+      "difficulty": "easy",
+      "prompt": "What promise does Deutsch-Jozsa require?",
+      "options": [
+        {
+          "id": "a",
+          "text": "The function always returns 1"
+        },
+        {
+          "id": "b",
+          "text": "The function has exactly one input"
+        },
+        {
+          "id": "c",
+          "text": "The Boolean function is constant or balanced"
+        },
+        {
+          "id": "d",
+          "text": "The function is already known in full"
+        }
+      ],
+      "correctOptionId": "c",
+      "explanation": "Constant means the same output on every input; balanced means half zero and half one. The stated classification guarantee assumes one of these cases."
+    },
+    {
+      "id": "deutsch-jozsa-q2",
+      "difficulty": "easy",
+      "prompt": "How many oracle invocations does the ideal algorithm use?",
+      "options": [
+        {
+          "id": "a",
+          "text": "1"
+        },
+        {
+          "id": "b",
+          "text": "2"
+        },
+        {
+          "id": "c",
+          "text": "n for n input bits"
+        },
+        {
+          "id": "d",
+          "text": "2 to the n"
+        }
+      ],
+      "correctOptionId": "a",
+      "explanation": "The complete reversible function is queried once. Gates used to implement that oracle are a different resource count."
+    },
+    {
+      "id": "deutsch-jozsa-q3",
+      "difficulty": "easy",
+      "prompt": "In which state is the helper qubit prepared?",
+      "options": [
+        {
+          "id": "a",
+          "text": "|+>"
+        },
+        {
+          "id": "b",
+          "text": "|0>"
+        },
+        {
+          "id": "c",
+          "text": "An equal classical mixture of 0 and 1"
+        },
+        {
+          "id": "d",
+          "text": "|->"
+        }
+      ],
+      "correctOptionId": "d",
+      "explanation": "An X on |-> contributes a minus sign. This allows the function value to become a relative phase on input-register amplitudes."
+    },
+    {
+      "id": "deutsch-jozsa-q4",
+      "difficulty": "medium",
+      "prompt": "For two inputs, which truth-table output list is balanced?",
+      "options": [
+        {
+          "id": "a",
+          "text": "0000"
+        },
+        {
+          "id": "b",
+          "text": "0110"
+        },
+        {
+          "id": "c",
+          "text": "1111"
+        },
+        {
+          "id": "d",
+          "text": "0001"
+        }
+      ],
+      "correctOptionId": "b",
+      "explanation": "A balanced two-input-bit function has two zeros and two ones across its four inputs. 0001 does not satisfy the promise."
+    },
+    {
+      "id": "deutsch-jozsa-q5",
+      "difficulty": "medium",
+      "prompt": "Under the promise, what ideal input-register measurement identifies a constant function?",
+      "options": [
+        {
+          "id": "a",
+          "text": "The all-one string in every case"
+        },
+        {
+          "id": "b",
+          "text": "The all-zero string"
+        },
+        {
+          "id": "c",
+          "text": "Any string containing a 1"
+        },
+        {
+          "id": "d",
+          "text": "The helper's measurement alone"
+        }
+      ],
+      "correctOptionId": "b",
+      "explanation": "For a constant function the all-zero amplitude is +1 or -1. Both give probability one for the same all-zero outcome."
+    },
+    {
+      "id": "deutsch-jozsa-q6",
+      "difficulty": "medium",
+      "prompt": "The two-input XOR oracle uses two CX gates. How many oracle calls does this represent?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Two calls because there are two controls"
+        },
+        {
+          "id": "b",
+          "text": "Zero calls because CX is not an oracle gate"
+        },
+        {
+          "id": "c",
+          "text": "Four calls because there are four basis inputs"
+        },
+        {
+          "id": "d",
+          "text": "One call implemented by two gates"
+        }
+      ],
+      "correctOptionId": "d",
+      "explanation": "An oracle invocation includes its full implementation. Counting individual CX gates as separate function queries changes the computational model."
+    },
+    {
+      "id": "deutsch-jozsa-q7",
+      "difficulty": "medium",
+      "prompt": "For signs +1,-1,-1,+1 in the all-zero amplitude sum, what is P(00)?",
+      "options": [
+        {
+          "id": "a",
+          "text": "0"
+        },
+        {
+          "id": "b",
+          "text": "1/4"
+        },
+        {
+          "id": "c",
+          "text": "1/2"
+        },
+        {
+          "id": "d",
+          "text": "1"
+        }
+      ],
+      "correctOptionId": "a",
+      "explanation": "The sum is zero, so dividing by four still gives zero amplitude. Its squared magnitude is also zero."
+    },
+    {
+      "id": "deutsch-jozsa-q8",
+      "difficulty": "hard",
+      "prompt": "If f(x)=1 for every input, why is the final measured input register still all zero?",
+      "options": [
+        {
+          "id": "a",
+          "text": "The helper measures f and writes it into every input bit"
+        },
+        {
+          "id": "b",
+          "text": "The oracle changes no amplitudes even in sign"
+        },
+        {
+          "id": "c",
+          "text": "The uniform minus sign is global and disappears from probabilities"
+        },
+        {
+          "id": "d",
+          "text": "Constant-one functions are outside the promise"
+        }
+      ],
+      "correctOptionId": "c",
+      "explanation": "All inputs acquire the same factor -1. The final Hadamards still return the input register to zero up to that global phase."
+    },
+    {
+      "id": "deutsch-jozsa-q9",
+      "difficulty": "hard",
+      "prompt": "For a balanced function with more than one input bit, must the output always be 11?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Yes; every balanced function uses the XOR truth table"
+        },
+        {
+          "id": "b",
+          "text": "No; the all-zero outcome occurs with probability 1/2"
+        },
+        {
+          "id": "c",
+          "text": "Yes; the helper forces all input bits to 1"
+        },
+        {
+          "id": "d",
+          "text": "No; only the all-zero outcome is excluded in the ideal promised case"
+        }
+      ],
+      "correctOptionId": "d",
+      "explanation": "11 is the result of the particular two-bit XOR example. The general guarantee concerns exclusion of all zero, not a fixed nonzero string."
+    },
+    {
+      "id": "deutsch-jozsa-q10",
+      "difficulty": "hard",
+      "prompt": "For n=3, what is the worst-case query count for exact deterministic classical classification under the promise?",
+      "options": [
+        {
+          "id": "a",
+          "text": "5"
+        },
+        {
+          "id": "b",
+          "text": "1"
+        },
+        {
+          "id": "c",
+          "text": "3"
+        },
+        {
+          "id": "d",
+          "text": "8"
+        }
+      ],
+      "correctOptionId": "a",
+      "explanation": "Four identical results could still be half of a balanced table. A fifth identical result establishes constant behavior, giving 2^(3-1)+1=5; bounded-error randomized testing is a different comparison."
+    }
+  ]
+}
