@@ -16,7 +16,7 @@ Even a perfect 50/50 state will usually yield unequal counts in a finite experim
 
 For an explicit teaching channel, prepare plus, apply Z with probability p and do nothing otherwise, then apply H. The expected final probabilities are P(0)=1-p and P(1)=p. At p=1/4 they are 3/4 and 1/4. This is a phase-flip channel, not a calibrated hardware model.
 
-![Ideal versus phase-flip-channel outcome probabilities; both are exact predictions.](../visuals/noise-comparison.svg)
+![Ideal versus phase-flip-channel outcome probabilities; both are exact predictions.](/learn/visuals/noise-comparison.svg)
 
 Before the final H, the state's density matrix is
 
@@ -40,7 +40,7 @@ Use the same preparation, gate conventions and noise model when comparing engine
 
 ## Four complementary panels
 
-![Circuit, statevector, histogram and reduced Bloch interpretation for a Bell pair.](../visuals/result-panels.svg)
+![Circuit, statevector, histogram and reduced Bloch interpretation for a Bell pair.](/learn/visuals/result-panels.svg)
 
 A circuit diagram describes the operations. A statevector shows amplitudes and phases for a pure state, with explicit basis ordering. A histogram shows probabilities or counts, with the distinction labeled. Bloch spheres summarize individual qubits but do not retain all joint correlations.
 

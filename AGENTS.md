@@ -12,7 +12,7 @@ It has five navigation areas: **Home**, **Learn**, **Lab**, **Progress**, and **
 - **Learn:** five modules and fourteen chapters, lesson cards, completion state, Continue, study content and read-only figures. Each chapter ends with a ten-question multiple-choice quiz ordered by difficulty (3 easy, 4 medium, 3 hard). See `content/README.md` and `content/catalog.json`. Prerequisites guide the reading order rather than locking chapters in this demo.
 - **Lab:** lesson text and target on the left; Circuit and Code tabs in the center; Run/Reset above the result panels; tutor drawer on the right; quiz and assignment below.
 - **Progress:** completion tracking, scores, attempts, map to what have been completed and whats left, user progress, login info, etc, profile dashboard.
-- **Login:** one combined login/registration experience at `/login`, followed by redirect to Learn. The existing `/auth/confirm` endpoint is an authentication callback.
+- **Login:** one combined email/password login and registration experience at `/login`, followed by redirect to Learn. Email confirmation is disabled for the demo.
 
 ## Architecture and stack
 
@@ -32,6 +32,7 @@ quantlearn/
 |   |   `-- globals.css
 |   |-- components/{circuit,visualizations,lessons,tutor,progress}/
 |   |-- lib/{supabase.ts,api.ts}
+|   |-- public/learn/visuals/       Canonical public teaching figures
 |   `-- package.json
 |-- backend/                           FastAPI
 |   |-- app/
@@ -44,7 +45,7 @@ quantlearn/
 |   |-- tests/
 |   |-- requirements.txt
 |   `-- .env.example
-|-- content/{lessons,quizzes,visuals}/
+|-- content/{lessons,quizzes}/
 |-- supabase/schema.sql
 `-- SIH26140.md
 ~~~
@@ -53,7 +54,7 @@ Qiskit Aer and Cirq expose Python-first SDKs, so simulation stays in FastAPI. Ne
 
 The tree above is a target architecture, not a list of already implemented files. Add backend routes/adapters and Lab assignments only when their features are implemented; do not create empty placeholder modules. Keep Next.js forwarding routes thin and avoid duplicating grading/progress business logic in both servers. The actual Supabase clients currently live under `frontend/lib/supabase/`.
 
-Learn content is authored once in root `content/`. `npm run content:build` from `frontend/` validates it and prepares an ignored `frontend/.generated/learn.json` bundle plus public SVG assets; it also runs automatically before dev/build. Keep the full bundle and quiz answer keys in server-only imports when the lesson reader is implemented. `npm run content:check` verifies authored content, numerical examples and generated visuals. The authoring math utility is not the Lab simulator.
+Lesson and quiz content is authored in root `content/`. The canonical teaching figures live once in `frontend/public/learn/visuals/` because Next.js serves them directly from `public/`. `npm run content:build` from `frontend/` validates the content, regenerates the public figures and prepares an ignored `frontend/.generated/learn.json` bundle; it also runs automatically before dev/build. Keep the full bundle and quiz answer keys in server-only imports when the lesson reader is implemented. `npm run content:check` verifies authored content, numerical examples and public visuals. The authoring math utility is not the Lab simulator.
 
 ## References
 

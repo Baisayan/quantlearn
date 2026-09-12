@@ -10,7 +10,7 @@ The states $|+\rangle=(|0\rangle+|1\rangle)/\sqrt2$ and $|-\rangle=(|0\rangle-|1
 
 Multiplying every amplitude by the same complex factor $e^{i\gamma}$ changes global phase and leaves physical predictions unchanged. Changing the phase of one amplitude relative to another can change later interference.
 
-![Plus and minus have identical probabilities but opposite relative phase.](../visuals/phase-comparison.svg)
+![Plus and minus have identical probabilities but opposite relative phase.](/learn/visuals/phase-comparison.svg)
 
 ## Follow amplitudes through a circuit
 
@@ -24,7 +24,7 @@ The two contributions to $|1\rangle$ cancel. The contributions to $|0\rangle$ ad
 
 Now put a Z gate between the two Hadamards. Z changes $|+\rangle$ to $|-\rangle$. The final Hadamard produces $|1\rangle$. Read the figure from left to right; in matrix notation the last gate appears on the left.
 
-![HH returns zero, while HZH returns one in an ideal experiment.](../visuals/interference.svg)
+![HH returns zero, while HZH returns one in an ideal experiment.](/learn/visuals/interference.svg)
 
 ## A worked phase experiment
 

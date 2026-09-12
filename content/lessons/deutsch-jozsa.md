@@ -22,7 +22,7 @@ Prepare the input register in a uniform superposition. Prepare the helper qubit 
 
 For $f(q_1,q_0)=q_1\oplus q_0$, the helper is flipped by a CX from each input. These two gates implement one complete oracle invocation; query count and physical gate count are different.
 
-![Three-qubit XOR-oracle circuit with a minus-state helper and final Hadamards on the inputs.](../visuals/dj-circuit.svg)
+![Three-qubit XOR-oracle circuit with a minus-state helper and final Hadamards on the inputs.](/learn/visuals/dj-circuit.svg)
 
 ## Why the final Hadamards work
 
@@ -34,7 +34,7 @@ $$
 
 For a constant function, all terms have the same sign and the probability is one. For a balanced function, opposite signs cancel and that probability is zero.
 
-![The constant-zero example produces 00; the balanced XOR example produces 11.](../visuals/dj-results.svg)
+![The constant-zero example produces 00; the balanced XOR example produces 11.](/learn/visuals/dj-results.svg)
 
 Our particular XOR oracle gives 11 deterministically. Other balanced functions may give different nonzero outputs or distributions; 11 is not the universal balanced answer. The helper is not needed for the classification.
 

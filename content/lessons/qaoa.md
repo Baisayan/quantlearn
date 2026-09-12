@@ -32,7 +32,7 @@ $$
 
 The cost evolution adds phases according to cut score. The mixer combines amplitudes using X rotations. These parameters are angles, not probabilities.
 
-![One QAOA layer with a cost RZZ gate followed by two Rx mixer gates.](../visuals/qaoa-circuit.svg)
+![One QAOA layer with a cost RZZ gate followed by two Rx mixer gates.](/learn/visuals/qaoa-circuit.svg)
 
 Under our convention, the cost block is RZZ(-gamma), up to global phase, and each mixer gate is Rx(2 beta). Some references minimize a ZZ Hamiltonian instead. Their parameter signs and scale need not match ours; changing conventions halfway produces wrong results.
 
@@ -46,7 +46,7 @@ $$
 
 At gamma=pi/2 and beta=pi/8, the probabilities are [0,1/2,1/2,0]. Every ideal sample is a maximum cut. At beta=0, cost evolution alone leaves all four probabilities at 1/4.
 
-![Cut-score table and exact distributions for zero mixing and an optimal one-edge parameter pair.](../visuals/qaoa-cost.svg)
+![Cut-score table and exact distributions for zero mixing and an optimal one-edge parameter pair.](/learn/visuals/qaoa-cost.svg)
 
 ## The classical loop
 

@@ -62,13 +62,13 @@ For Aer, prepare a separate unmeasured circuit and call save_statevector() befor
 
 Bell probabilities look identical after reversing bits. Instead prepare X(q0) with q1 untouched. The expected QuantLearn statevector is [0,1,0,0], and the outcome is 01. Cirq with the order [q0,q1] would instead place the nonzero amplitude at index 2.
 
-![Explicit mapping between wire order, Qiskit output and the chosen Cirq order.](../visuals/framework-order.svg)
+![Explicit mapping between wire order, Qiskit output and the chosen Cirq order.](/learn/visuals/framework-order.svg)
 
 In Cirq, include both qubits in qubit_order even when one is idle. In Qiskit, the allocated two-qubit register retains that idle qubit.
 
 ## Choose the result you need
 
-![A comparison of sampled measurements, exact pure states and mixed-state representations.](../visuals/framework-flow.svg)
+![A comparison of sampled measurements, exact pure states and mixed-state representations.](/learn/visuals/framework-flow.svg)
 
 To investigate finite measurement counts, use a sampled run with a stated shot count. In Cirq this is simulator.run(circuit, repetitions=N). To investigate amplitudes and phase, simulate an unmeasured circuit and inspect its state. To model a noisy ensemble, choose a density-matrix representation rather than interpreting one random trajectory as the whole ensemble.
 

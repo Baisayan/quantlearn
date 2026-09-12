@@ -32,7 +32,7 @@ $$
 
 The squared magnitudes are $3/4$ and $1/4$, which sum to one. If many independent copies are measured in the Z basis, approximately 75% return 0. This is a prediction about a distribution, not a promise about the next four outcomes.
 
-![Two complex amplitudes, their squared magnitudes and labeled basis states.](../visuals/statevector.svg)
+![Two complex amplitudes, their squared magnitudes and labeled basis states.](/learn/visuals/statevector.svg)
 
 ## Check normalization yourself
 
@@ -52,7 +52,7 @@ $$
 
 Its Bloch coordinates are $(\sin\theta\cos\phi,\sin\theta\sin\phi,\cos\theta)$. Our example has $\theta=\pi/3$ and $\phi=\pi/2$. The arrow lies on the surface. Its north/south position determines the Z measurement probabilities; moving around a latitude changes relative phase.
 
-![Bloch sphere with the example state at theta pi/3 and phi pi/2.](../visuals/qubit-state.svg)
+![Bloch sphere with the example state at theta pi/3 and phi pi/2.](/learn/visuals/qubit-state.svg)
 
 This sphere is a representation of a state, not a picture of a particle orbit. A strictly mixed qubit lies inside the sphere; pure states lie on its surface. Multi-qubit states need a larger description; one sphere cannot represent all their correlations.
 

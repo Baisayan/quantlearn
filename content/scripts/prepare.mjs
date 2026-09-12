@@ -7,6 +7,7 @@ import { buildVisuals } from "./visuals.mjs";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const frontend = resolve(root, "../frontend");
+const visualDirectory = resolve(frontend, "public/learn/visuals");
 const checkOnly = process.argv.includes("--check");
 const readJson = async (path) => JSON.parse(await readFile(resolve(root, path), "utf8"));
 const catalog = await readJson("catalog.json");
@@ -60,7 +61,7 @@ for (const [index, chapter] of catalog.chapters.entries()) {
   assert.ok(markdown.trim().split(/\s+/).length >= 250, "Lesson too short: " + chapter.id);
   assert.equal((markdown.match(new RegExp("^" + String.fromCharCode(96).repeat(3), "gm")) ?? []).length % 2, 0, "Unclosed code fence");
   assert.equal((markdown.match(/^\$\$/gm) ?? []).length % 2, 0, "Unclosed display math");
-  const refs = [...markdown.matchAll(/!\[([^\]]+)\]\(\.\.\/visuals\/([a-z0-9-]+)\.svg\)/g)];
+  const refs = [...markdown.matchAll(/!\[([^\]]+)\]\(\/learn\/visuals\/([a-z0-9-]+)\.svg\)/g)];
   assert.deepEqual(refs.map((r) => r[2]).sort(), [...chapter.visualIds].sort(), "Figure references differ in " + chapter.id);
   refs.forEach((r) => { assert.ok(r[1].length >= 20, "Missing descriptive alt text"); usedFigures.add(r[2]); });
   chapter.sourceIds.forEach((id) => assert.ok(markdown.includes(sources.find((s) => s.id === id).url), "Missing chapter citation"));
@@ -83,7 +84,7 @@ for (const [index, chapter] of catalog.chapters.entries()) {
     assert.ok(q.prompt && q.explanation && q.options.every((o) => o.text));
     questionCount++;
   }
-  chapters.push({ ...chapter, markdown: markdown.replaceAll("../visuals/", "/learn/visuals/"), quiz });
+  chapters.push({ ...chapter, markdown, quiz });
 }
 assert.deepEqual([...usedFigures].sort(), [...figureIds].sort(), "Unused or unreferenced figure");
 for (const [folder, extension, expected] of [
@@ -99,26 +100,24 @@ const visualManifest = figures.map(({ svg, data, ...f }) => ({
   chapterIds: catalog.chapters.filter((c) => c.visualIds.includes(f.id)).map((c) => c.id),
 }));
 const json = (value) => JSON.stringify(value, null, 2) + "\n";
-const outputs = new Map(figures.map((f) => ["visuals/" + f.id + ".svg", f.svg]));
-outputs.set("visuals/manifest.json", json(visualManifest));
-outputs.set("visuals/data.json", json({
+const outputs = new Map(figures.map((f) => [f.id + ".svg", f.svg]));
+outputs.set("manifest.json", json(visualManifest));
+outputs.set("data.json", json({
   note: "Exact authoring calculations unless a figure explicitly says synthetic samples. SVGs are static. These data can support future interactive components.",
   basisOrder: "q(n-1)...q0",
   states: results,
   figures: Object.fromEntries(figures.map((f) => [f.id, f.data])),
 }));
 const esc = (v) => v.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll('"', "&quot;");
-outputs.set("visuals/index.html", '<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>QuantLearn chapter figures</title><style>body{margin:0;padding:2rem;font:1rem/1.5 system-ui;background:#faf8ff;color:#221536}main{max-width:80rem;margin:auto}section{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,32rem),1fr));gap:1.5rem}figure{margin:0;background:white;border:1px solid #ddd6fe;padding:1rem}img{display:block;width:100%;height:auto}figcaption{margin-top:1rem;color:#62556f}a{color:#6d28d9}</style><main><h1>QuantLearn chapter figures</h1><p>28 original read-only figures. Open an image for its full-size view. Circuit basis: q(n−1)…q0; q0 is the top wire.</p><section>' + figures.map((f) => '<figure><a href="' + f.id + '.svg"><img src="' + f.id + '.svg" alt="' + esc(f.description) + '"></a><figcaption>' + esc(f.id + " · " + f.kind) + '</figcaption></figure>').join("") + '</section></main></html>\n');
+outputs.set("index.html", '<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>QuantLearn chapter figures</title><style>body{margin:0;padding:2rem;font:1rem/1.5 system-ui;background:#faf8ff;color:#221536}main{max-width:80rem;margin:auto}section{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,32rem),1fr));gap:1.5rem}figure{margin:0;background:white;border:1px solid #ddd6fe;padding:1rem}img{display:block;width:100%;height:auto}figcaption{margin-top:1rem;color:#62556f}a{color:#6d28d9}</style><main><h1>QuantLearn chapter figures</h1><p>28 original read-only figures. Open an image for its full-size view. Circuit basis: q(n−1)…q0; q0 is the top wire.</p><section>' + figures.map((f) => '<figure><a href="' + f.id + '.svg"><img src="' + f.id + '.svg" alt="' + esc(f.description) + '"></a><figcaption>' + esc(f.id + " · " + f.kind) + '</figcaption></figure>').join("") + '</section></main></html>\n');
 
 if (checkOnly) {
-  for (const [path, expected] of outputs) assert.equal(await readFile(resolve(root, path), "utf8"), expected, "Generated content is stale: " + path);
+  for (const [path, expected] of outputs) assert.equal(await readFile(resolve(visualDirectory, path), "utf8"), expected, "Generated public visual is stale: " + path);
 } else {
-  await mkdir(resolve(root, "visuals"), { recursive: true });
-  for (const [path, value] of outputs) await writeFile(resolve(root, path), value);
+  await mkdir(visualDirectory, { recursive: true });
+  for (const [path, value] of outputs) await writeFile(resolve(visualDirectory, path), value);
   await mkdir(resolve(frontend, ".generated"), { recursive: true });
   await writeFile(resolve(frontend, ".generated/learn.json"), json({ ...catalog, chapters, sources, visuals: visualManifest }));
-  await mkdir(resolve(frontend, "public/learn/visuals"), { recursive: true });
-  for (const f of figures) await writeFile(resolve(frontend, "public/learn/visuals", f.id + ".svg"), f.svg);
 }
 console.log((checkOnly ? "Verified" : "Prepared") + ": " + chapters.length + " chapters; " + questionCount + " MCQs; " + figures.length + " SVGs; " + circuits.length + " circuit fixtures; " + sources.length + " sources.");
 console.log("Physics checks: fixture probabilities, Grover phase and overshoot, 7 VQE angles, 20 QAOA angle pairs, 16 teleportation branches, mixture/Bell comparisons and expanded assessment arithmetic.");

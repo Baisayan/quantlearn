@@ -10,7 +10,7 @@ Two qubits use four basis states. Throughout QuantLearn, q0 is the top wire and 
 
 If q1 is 0 and q0 is +, the joint state is $|0\rangle\otimes|+\rangle=(|00\rangle+|01\rangle)/\sqrt2$. A product vector $[a,b]^T\otimes[c,d]^T$ is $[ac,ad,bc,bd]^T$. An n-qubit pure state has $2^n$ amplitudes; they are not all separately readable from one measurement.
 
-![X on the top wire prepares bitstring 01, not 10, under the declared convention.](../visuals/bit-order.svg)
+![X on the top wire prepares bitstring 01, not 10, under the declared convention.](/learn/visuals/bit-order.svg)
 
 ## Work through a product state
 
@@ -32,7 +32,7 @@ A control dot connected to a plus target means controlled X, also called CX or C
 
 CZ changes the phase of 11 by -1. SWAP exchanges the states of two wires. SWAP can be decomposed into three CX operations with alternating directions.
 
-![A two-qubit circuit prepares 01 and then uses a controlled X to obtain 11.](../visuals/multi-qubit.svg)
+![A two-qubit circuit prepares 01 and then uses a controlled X to obtain 11.](/learn/visuals/multi-qubit.svg)
 
 A CX does not always create entanglement. On input 01 it simply produces 11. The input state matters, as the next chapter demonstrates.
 

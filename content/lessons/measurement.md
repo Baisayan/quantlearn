@@ -20,7 +20,7 @@ $$
 
 At $N=16$, this is about 0.108. At $N=1024$, it is about 0.0135. Increasing shots reduces sampling uncertainty; it does not repair a systematically biased experiment.
 
-![An exact 75/25 distribution beside reproducible synthetic shot counts.](../visuals/measurement.svg)
+![An exact 75/25 distribution beside reproducible synthetic shot counts.](/learn/visuals/measurement.svg)
 
 The sample counts in this figure are generated with a fixed seed for teaching. They are labeled synthetic and are not claimed to be hardware results.
 
@@ -28,7 +28,7 @@ The sample counts in this figure are generated with a fixed seed for teaching. T
 
 Z measurement distinguishes $|0\rangle$ and $|1\rangle$. X measurement distinguishes $|+\rangle$ and $|-\rangle$. In a circuit that measures in Z, insert H immediately before measurement to perform an X-basis measurement on the original state.
 
-![Z measurement is direct; X measurement uses a Hadamard before the detector.](../visuals/measurement-bases.svg)
+![Z measurement is direct; X measurement uses a Hadamard before the detector.](/learn/visuals/measurement-bases.svg)
 
 For $|+\rangle$, direct Z outcomes are 50/50. Applying H first makes the outcome 0 certain. In that X measurement, the recorded bit 0 represents the +1 eigenvalue; bit 1 represents -1. The average eigenvalue is estimated by $(n_0-n_1)/N$.
 

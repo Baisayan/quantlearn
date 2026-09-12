@@ -19,7 +19,7 @@ $$
 
 I leaves the state unchanged. X exchanges the two amplitudes. Z changes the sign of the second amplitude. Y combines an exchange with phase factors.
 
-![Gate effects on the zero and one basis states.](../visuals/gate-reference.svg)
+![Gate effects on the zero and one basis states.](/learn/visuals/gate-reference.svg)
 
 ## How to multiply a gate and a state
 
@@ -41,7 +41,7 @@ An unchanged histogram therefore does not imply that a gate did nothing. A subse
 
 Starting from 0, apply X and then H: the result is $|-\rangle$. Apply H and then X instead: the result is $|+\rangle$. Both look 50/50 in a Z histogram. A final H distinguishes them: the first path gives 1 and the second gives 0.
 
-![Two gate orders with a final Hadamard analyzer yield different outcomes.](../visuals/gate-order.svg)
+![Two gate orders with a final Hadamard analyzer yield different outcomes.](/learn/visuals/gate-order.svg)
 
 In operator notation these paths are $HX|0\rangle$ and $XH|0\rangle$. The rightmost operator acts first. Circuit time goes left to right.
 

@@ -13,7 +13,7 @@ $$
 \longrightarrow|\Phi^+\rangle=\frac{|00\rangle+|11\rangle}{\sqrt2}.
 $$
 
-![Bell preparation circuit with explicit control and target.](../visuals/bell-circuit.svg)
+![Bell preparation circuit with explicit control and target.](/learn/visuals/bell-circuit.svg)
 
 The final state cannot be written as a product of two single-qubit vectors. For a pure two-qubit vector with coefficients a00, a01, a10, a11, a product factorization would require a00 a11 = a01 a10. Here the left side is 1/2 and the right side is zero.
 
@@ -23,7 +23,7 @@ In Z measurements, this Bell state returns 00 or 11 with equal probabilities. So
 
 Measure both qubits in X by applying H to each before Z measurement. The Bell state still produces matching outcomes. The classical mixture now gives 00, 01, 10 and 11 equally.
 
-![Bell and classical-mixture probabilities in ZZ and XX measurement settings.](../visuals/bell-correlations.svg)
+![Bell and classical-mixture probabilities in ZZ and XX measurement settings.](/learn/visuals/bell-correlations.svg)
 
 These two settings distinguish the specific examples shown. They are not a universal entanglement detector or a loophole-free Bell test.
 

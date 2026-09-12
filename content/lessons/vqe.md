@@ -34,7 +34,7 @@ $$
 
 At theta=0 the energy is 1. At theta=pi it is -1. At theta=pi+arctan(1/2) it is $-\sqrt{1.25}$, approximately -1.118. The Hamiltonian's eigenvalues are plus and minus sqrt(1.25), so this ansatz can reach its true ground state.
 
-![Analytically computed energy versus theta and the exact ground-energy bound.](../visuals/vqe-energy.svg)
+![Analytically computed energy versus theta and the exact ground-energy bound.](/learn/visuals/vqe-energy.svg)
 
 The curve is an exact parameter sweep. It is not a claimed optimizer training history.
 
@@ -42,7 +42,7 @@ The curve is an exact parameter sweep. It is not a claimed optimizer training hi
 
 To estimate Z, prepare the ansatz and measure directly. To estimate X, prepare a fresh copy, apply H, then measure. Convert each recorded bit to the eigenvalue +1 for 0 or -1 for 1. Combine the averages as mean(Z)+0.5 mean(X).
 
-![Separate circuits for estimating Z and X contributions to the toy Hamiltonian.](../visuals/vqe-measurements.svg)
+![Separate circuits for estimating Z and X contributions to the toy Hamiltonian.](/learn/visuals/vqe-measurements.svg)
 
 A single Z-basis histogram cannot supply the X expectation. The basis change is part of the experiment.
 

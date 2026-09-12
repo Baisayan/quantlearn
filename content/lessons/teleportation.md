@@ -10,7 +10,7 @@ Let q0 hold the input $|\psi\rangle=\alpha|0\rangle+\beta|1\rangle$. Alice also 
 
 Alice applies CX(q0,q1), then H(q0). She measures q0 into m0 and q1 into m1. Bob applies X if m1=1, then Z if m0=1. These are classical conditions.
 
-![Teleportation circuit with dashed classical control links and separate input, Alice and Bob wires.](../visuals/teleportation.svg)
+![Teleportation circuit with dashed classical control links and separate input, Alice and Bob wires.](/learn/visuals/teleportation.svg)
 
 ## Read the correction table carefully
 
@@ -23,7 +23,7 @@ With the outcomes written m0m1, Bob's state before correction and his action are
 | 10 | Z psi | Z |
 | 11 | XZ psi | X, then Z |
 
-![Four equally probable measurement branches and their correction operations.](../visuals/teleportation-corrections.svg)
+![Four equally probable measurement branches and their correction operations.](/learn/visuals/teleportation-corrections.svg)
 
 The outcome order here is explicitly m0m1, not the default printed Qiskit register order. The table's labels define its meaning.
 

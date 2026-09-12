@@ -10,7 +10,7 @@ The S gate is $\mathrm{diag}(1,i)$ and T is $\mathrm{diag}(1,e^{i\pi/4})$. S add
 
 Start in 0 and apply H, S, H. The result has probabilities 1/2 and 1/2. Replacing S with T gives $P(0)=(1+1/\sqrt2)/2$, about 0.854. The final H converts phase differences into probability differences.
 
-![Phase-gate sequences and their exact output probabilities.](../visuals/phase-gates.svg)
+![Phase-gate sequences and their exact output probabilities.](/learn/visuals/phase-gates.svg)
 
 ## Angles without a new mathematics course
 
@@ -40,7 +40,7 @@ $$
 
 The probability of 1 is $\sin^2(\theta/2)$. At $\theta=0,\pi/2,\pi$, it is respectively 0, 1/2 and 1. A rotation of $\pi$ around Y takes 0 to 1. A full $2\pi$ rotation changes the statevector's overall sign, which does not change an isolated state's measurement probabilities.
 
-![Exact Ry probability curve from zero to two pi with labeled reference angles.](../visuals/rotation-curve.svg)
+![Exact Ry probability curve from zero to two pi with labeled reference angles.](/learn/visuals/rotation-curve.svg)
 
 ## Conventions worth noticing
 

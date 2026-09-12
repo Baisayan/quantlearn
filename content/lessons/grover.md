@@ -14,7 +14,7 @@ Prepare the uniform state using H on both qubits. The amplitudes, ordered 00, 01
 
 Define $D=2|s\rangle\langle s|-I$, where s is the uniform state. For real amplitudes, this reflects each amplitude about their mean. The mean after the oracle is 1/4. Each new amplitude is $2(1/4)-a$, giving [0,0,0,1].
 
-![Signed amplitudes before the oracle, after the phase flip and after mathematical diffusion.](../visuals/grover-amplitudes.svg)
+![Signed amplitudes before the oracle, after the phase flip and after mathematical diffusion.](/learn/visuals/grover-amplitudes.svg)
 
 The table separates signed amplitudes from nonnegative probabilities. A phase flip is not a negative probability.
 
@@ -22,7 +22,7 @@ The table separates signed amplitudes from nonnegative probabilities. A phase fl
 
 The circuit below uses H-X-CZ-X-H on both wires for diffusion. That gate decomposition implements -D, so its final state is -|11> rather than |11>. The difference is global phase; measurement still returns 11 with probability one. The visual labels this convention explicitly.
 
-![Two-qubit Grover circuit with phase oracle and decomposed diffusion.](../visuals/grover-circuit.svg)
+![Two-qubit Grover circuit with phase oracle and decomposed diffusion.](/learn/visuals/grover-circuit.svg)
 
 ## When to stop
 

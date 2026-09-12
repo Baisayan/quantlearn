@@ -63,19 +63,15 @@ content/
   scripts/quantum.mjs          Offline numerical checks used during content preparation
   scripts/visuals.mjs          Original deterministic SVG rendering
   scripts/verify-frameworks.py Optional independent checks using actual Aer and Cirq
-  visuals/*.svg                Twenty-eight generated figures, committed for review
-  visuals/manifest.json        Figure titles, descriptions, URLs and chapter references
-  visuals/data.json            Numerical states, chart series and diagram metadata
-  visuals/index.html           Review gallery that opens locally in a browser
 
 frontend/
   .generated/learn.json        Generated, ignored server-import bundle
-  public/learn/visuals/*.svg   Generated, ignored copies served by Next.js
+  public/learn/visuals/*       Canonical public figures, metadata and review gallery
 ~~~
 
 Authored lesson text is plain Markdown with dollar-delimited LaTeX. For the requested read-only phase this is sufficient and avoids embedding executable JSX in course prose. Interactive components can later use the catalog's stable visual IDs and numerical data. MDX remains an option if future lessons genuinely need embedded React; it is not required to serve this pack. See [react-markdown](https://github.com/remarkjs/react-markdown), [remark-math](https://github.com/remarkjs/remark-math) and [Next.js MDX](https://nextjs.org/docs/app/guides/mdx).
 
-The root folder is the source of truth. Files in frontend/.generated and frontend/public/learn/visuals are build products, not a second editable curriculum. Figures are generated deterministically from the authoring code and fixtures; editing an SVG directly will be overwritten on the next content build.
+Lesson and quiz files remain the root content source. The SVG pack is stored once in frontend/public/learn/visuals because it is served directly by Next.js. Figures are generated deterministically from the authoring code and fixtures; editing an SVG directly will be overwritten on the next content build.
 
 Run from frontend:
 
@@ -88,7 +84,7 @@ Normal npm dev and build commands run content preparation first. If lesson mater
 
 ## Frontend access plan
 
-The preparation step reads all canonical files, checks references, turns relative image paths into /learn/visuals URLs and writes a combined JSON bundle inside frontend/.generated. The future Learn server code should statically import that bundle, look up a chapter by its catalog ID and render only the requested chapter.
+The preparation step reads all canonical files, checks references to /learn/visuals URLs and writes the combined JSON bundle inside frontend/.generated. It also regenerates the single public visual pack. The future Learn server code should statically import that bundle, look up a chapter by its catalog ID and render only the requested chapter.
 
 A minimal future loader would look like this; it is an integration recipe, not an unused runtime module added ahead of the screen:
 
@@ -123,7 +119,7 @@ The expanded quizzes and catalog are version 2. Question IDs have been reassigne
 
 ## Visual design and scientific conventions
 
-All supplied figures are original, scalable SVGs using white and violet with light-violet comparisons. They include an SVG title/description and descriptive Markdown alt text. The [figure gallery](visuals/index.html) shows the complete set; opening an image gives its full-size view. Mobile lesson layouts should offer an accessible full-size view for dense diagrams.
+All supplied figures are original, scalable SVGs using white and violet with light-violet comparisons. They include an SVG title/description and descriptive Markdown alt text. The [figure gallery](../frontend/public/learn/visuals/index.html) shows the complete set; opening an image gives its full-size view. Mobile lesson layouts should offer an accessible full-size view for dense diagrams.
 
 No third-party diagrams, logos, course screenshots or stock photos are bundled. Scientific figures are derived from specified states, matrices and circuit operations. A raster illustration generator is not needed for this material.
 
@@ -204,7 +200,7 @@ These checks establish data consistency, the tested numerical examples and build
 
 Every explicitly named curriculum topic has a lesson, read-only figures and a ten-question quiz. Every named visualization category has educational coverage. Interactive examples and live visualizations still need implementation. The two-engine MVP intentionally omits PennyLane and qBraid. Circuit editing, simulation APIs, coding challenges, scoring UI, learner persistence, analytics, AI tutoring and instructor views are not completed by static content files. See the ownership table above for the page responsible for each item.
 
-The canonical Markdown, JSON and SVG files remain in content/. The existing authoring utilities are retained because the current build and numerical checks use them; this assessment revision does not add a Learn runtime simulator or new backend modules. No landing-page, login or global stylesheet changes are part of this work.
+The canonical lesson and quiz Markdown/JSON files remain in content/. The SVG pack is stored once in frontend/public/learn/visuals. The existing authoring utilities are retained because the current build and numerical checks use them; this assessment revision does not add a Learn runtime simulator or new backend modules. No landing-page, login or global stylesheet changes are part of this work.
 
 ## Recommended build sequence
 
