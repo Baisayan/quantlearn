@@ -1,7 +1,7 @@
 "use client";
 
 import { type FormEvent, useState } from "react";
-import { ArrowRight, LoaderCircle, LockKeyhole } from "lucide-react";
+import { ArrowRight, LoaderCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
@@ -18,34 +18,21 @@ import { createClient } from "@/lib/supabase/client";
 
 type AuthMode = "login" | "register";
 
-type LoginFormProps = {
-  initialError?: string;
-  initialMode: AuthMode;
-  nextPath: string;
-};
-
-export function LoginForm({
-  initialError,
-  initialMode,
-  nextPath,
-}: LoginFormProps) {
+export function LoginForm() {
   const router = useRouter();
-  const [mode, setMode] = useState<AuthMode>(initialMode);
+  const [mode, setMode] = useState<AuthMode>("login");
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [error, setError] = useState(initialError ?? "");
-  const [message, setMessage] = useState("");
+  const [error, setError] = useState("");
   const registering = mode === "register";
 
   function changeMode(nextMode: AuthMode) {
     setMode(nextMode);
     setError("");
-    setMessage("");
   }
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setError("");
-    setMessage("");
 
     const formData = new FormData(event.currentTarget);
     const email = String(formData.get("email") ?? "").trim();
@@ -60,7 +47,6 @@ export function LoginForm({
           password,
           options: {
             data: { username },
-            emailRedirectTo: `${window.location.origin}/auth/confirm?next=${encodeURIComponent(nextPath)}`,
           },
         })
       : await supabase.auth.signInWithPassword({
@@ -74,30 +60,26 @@ export function LoginForm({
       return;
     }
 
-    if (registering && !result.data.session) {
-      setMessage("Account created. Check your email to confirm it, then sign in here.");
-      setMode("login");
+    if (!result.data.session) {
+      setError("Unable to start your session. Please try signing in.");
       setIsSubmitting(false);
       return;
     }
 
-    router.replace(nextPath);
+    router.replace("/learn");
     router.refresh();
   }
 
   return (
     <Card className="w-full max-w-md border-white/70 bg-white/65 shadow-2xl shadow-primary/10 backdrop-blur-xl">
       <CardHeader className="space-y-3 px-6 pb-5 pt-7 text-center sm:px-8 sm:pt-8">
-        <span className="mx-auto grid size-12 place-items-center rounded-2xl bg-primary/10 text-primary">
-          <LockKeyhole className="size-6" aria-hidden="true" />
-        </span>
         <CardTitle className="text-2xl tracking-tight sm:text-3xl">
           {mode === "login" ? "Welcome back" : "Join QuantLearn"}
         </CardTitle>
         <CardDescription className="text-sm leading-6 sm:text-base">
           {mode === "login"
             ? "Continue your journey through the quantum world."
-            : "Create one simple account to save lessons and progress."}
+            : "Create account to save lessons and progress."}
         </CardDescription>
       </CardHeader>
 
@@ -180,7 +162,6 @@ export function LoginForm({
 
           <div aria-live="polite" className="min-h-6 text-sm leading-6">
             {error ? <p className="text-primary">{error}</p> : null}
-            {message ? <p className="text-secondary-foreground">{message}</p> : null}
           </div>
 
           <Button

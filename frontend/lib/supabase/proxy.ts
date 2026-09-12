@@ -3,10 +3,6 @@ import { NextResponse, type NextRequest } from "next/server";
 
 const PUBLIC_PATHS = new Set(["/", "/login"]);
 
-function isPublicPath(pathname: string) {
-  return PUBLIC_PATHS.has(pathname) || pathname === "/auth/confirm";
-}
-
 function copyAuthState(source: NextResponse, target: NextResponse) {
   source.cookies.getAll().forEach((cookie) => target.cookies.set(cookie));
 
@@ -22,18 +18,16 @@ function copyAuthState(source: NextResponse, target: NextResponse) {
 
 function createLoginRedirect(request: NextRequest, response: NextResponse) {
   const loginUrl = request.nextUrl.clone();
-  const requestedPath = `${request.nextUrl.pathname}${request.nextUrl.search}`;
 
   loginUrl.pathname = "/login";
   loginUrl.search = "";
-  loginUrl.searchParams.set("next", requestedPath);
 
   return copyAuthState(response, NextResponse.redirect(loginUrl));
 }
 
 export async function updateSession(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
-  const publicPath = isPublicPath(pathname);
+  const publicPath = PUBLIC_PATHS.has(pathname);
 
   let supabaseResponse = NextResponse.next({ request });
   const supabase = createServerClient(

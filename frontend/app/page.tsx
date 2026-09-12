@@ -3,7 +3,6 @@ import {
   ArrowRight,
   ChartNoAxesCombined,
   Infinity,
-  Play,
   Sparkles,
 } from "lucide-react";
 
@@ -30,32 +29,7 @@ const features = [
 
 export default function Home() {
   return (
-    <main
-      className="flex h-svh min-h-svh flex-col overflow-hidden bg-cover bg-center bg-no-repeat text-foreground"
-      style={{ backgroundImage: "url('/bg.webp')" }}
-    >
-      <header className="mx-auto flex w-full max-w-7xl shrink-0 items-center justify-between px-6 py-4 sm:px-8 sm:py-5 lg:px-10">
-        <Link
-          href="/"
-          aria-label="QuantLearn home"
-          className="text-2xl font-bold tracking-tight focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-4"
-        >
-          <span className="text-foreground">Quant</span>
-          <span className="text-primary">Learn</span>
-        </Link>
-
-        <Button
-          asChild
-          size="lg"
-          className="h-auto rounded-full px-6 py-3 font-medium shadow-lg shadow-primary/25 sm:px-8"
-        >
-          <Link href="/login?mode=register">
-            Getting Started
-            <ArrowRight className="size-4" />
-          </Link>
-        </Button>
-      </header>
-
+    <main className="flex min-h-0 flex-1 flex-col overflow-hidden">
       <section
         className="flex min-h-0 flex-1 items-center justify-center px-6 pb-10 text-center sm:px-8 sm:pb-16 lg:px-10 lg:pb-24"
         aria-labelledby="hero-heading"
@@ -86,7 +60,7 @@ export default function Home() {
               size="lg"
               className="h-auto rounded-full px-8 py-3.5 text-base font-medium shadow-xl shadow-primary/25 sm:px-9"
             >
-              <Link href="/login?mode=register">
+              <Link href="/learn">
                 Getting Started
                 <ArrowRight className="size-5" />
               </Link>
@@ -95,12 +69,15 @@ export default function Home() {
               asChild
               size="lg"
               variant="outline"
-              className="h-auto rounded-full border-primary/50 bg-white/20 px-8 py-3.5 text-base font-medium text-primary shadow-sm hover:bg-white/50 hover:text-primary sm:px-9"
+              className="h-auto rounded-full border-primary/50 bg-white/20 px-8 py-3.5 text-base text-primary shadow-sm hover:bg-white/50 hover:text-primary sm:px-9"
             >
-              <Link href="/learn">
-                <Play className="size-5 fill-current" />
-                Explore Features
-              </Link>
+              <a
+                href="https://github.com/Baisayan/quantlearn"
+                target="_blank"
+                rel="noreferrer"
+              >
+                Go To GitHub
+              </a>
             </Button>
           </div>
 
