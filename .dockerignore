@@ -1,0 +1,10 @@
+.git
+**/node_modules
+**/.next
+**/.venv
+**/.env*
+**/__pycache__
+frontend
+content/lessons
+content/quizzes
+content/scripts

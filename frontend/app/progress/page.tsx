@@ -4,10 +4,15 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { course } from "@/lib/learn/content";
 import { getProgress } from "@/lib/learn/progress";
+import { getLabProgress } from "@/lib/lab/progress";
+import challenges from "@/.generated/lab.json";
 
 export default async function ProgressPage() {
   const { email, chapterProgress, attempts } = await getProgress();
-  const completed = new Set(Object.keys(chapterProgress).filter((id) => chapterProgress[id].count));
+  const labAttempts = await getLabProgress();
+  const completed = new Set(
+    Object.keys(chapterProgress).filter((id) => chapterProgress[id].count),
+  );
   const next = course.chapters.find((chapter) => !completed.has(chapter.id));
   return (
     <main className="mx-auto w-full max-w-5xl space-y-8 px-5 py-10 sm:px-8 sm:py-14">
@@ -80,7 +85,51 @@ export default async function ProgressPage() {
         </div>
       </section>
       <section className="space-y-4">
-        <h2 className="text-xl font-semibold">Recent attempts</h2>
+        <h2 className="text-xl font-semibold">Lab challenges</h2>
+        <p className="text-sm text-muted-foreground">
+          {
+            new Set(
+              labAttempts.filter((a) => a.passed).map((a) => a.challenge_id),
+            ).size
+          }{" "}
+          / {challenges.length} completed · {labAttempts.length} submissions
+        </p>
+        <div className="divide-y rounded-xl border bg-white/80">
+          {challenges.map((challenge) => {
+            const results = labAttempts.filter(
+              (a) => a.challenge_id === challenge.id,
+            );
+            return (
+              <div
+                key={challenge.id}
+                className="flex flex-wrap justify-between gap-2 p-5"
+              >
+                <span className="font-medium">{challenge.title}</span>
+                <span className="text-sm text-muted-foreground">
+                  {results.length
+                    ? `${results.some((a) => a.passed) ? "Completed" : "In progress"} · Best ${Math.max(...results.map((a) => a.score))}% · ${results.length} attempts`
+                    : "Not started"}
+                </span>
+              </div>
+            );
+          })}
+        </div>
+        <Button asChild variant="outline">
+          <Link href="/lab">Open Lab</Link>
+        </Button>
+        {labAttempts.length > 0 && (
+          <p className="text-sm text-muted-foreground">
+            Latest:{" "}
+            {
+              challenges.find((c) => c.id === labAttempts[0].challenge_id)
+                ?.title
+            }{" "}
+            · {labAttempts[0].engine} · {labAttempts[0].score}%
+          </p>
+        )}
+      </section>
+      <section className="space-y-4">
+        <h2 className="text-xl font-semibold">Recent quiz attempts</h2>
         {attempts.length ? (
           <ul className="divide-y rounded-xl border bg-white/80">
             {attempts.slice(0, 10).map((attempt) => (

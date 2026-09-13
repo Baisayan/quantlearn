@@ -315,7 +315,7 @@
     {
       "id": "qaoa",
       "summary": "Encode a small max-cut problem and trace a cost and mixer layer.",
-      "difficulty": "Advanced introduction",
+      "difficulty": "Advanced",
       "title": "QAOA and combinatorial optimization",
       "module": "algorithms",
       "order": 11,
@@ -342,7 +342,7 @@
     {
       "id": "vqe",
       "summary": "Estimate an energy and check a variational ansatz against an exact minimum.",
-      "difficulty": "Advanced introduction",
+      "difficulty": "Advanced",
       "title": "VQE and energy estimation",
       "module": "algorithms",
       "order": 12,

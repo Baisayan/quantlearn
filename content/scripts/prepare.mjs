@@ -115,6 +115,13 @@ outputs.set("index.html", '<!doctype html><html lang="en"><meta charset="utf-8">
 await mkdir(visualDirectory, { recursive: true });
 for (const [path, value] of outputs) await writeFile(resolve(visualDirectory, path), value);
 await mkdir(resolve(frontend, ".generated"), { recursive: true });
+const challenges = await readJson("lab/challenges.json");
+unique(challenges.map((c) => c.id), "Lab challenge IDs");
+for (const challenge of challenges) {
+  assert(catalog.chapters.some((c) => c.id === challenge.chapterId), "Unknown Lab chapter");
+  assert(circuits.some((c) => c.id === challenge.fixture), "Unknown Lab fixture");
+}
+await writeFile(resolve(frontend, ".generated/lab.json"), json(challenges));
 await writeFile(resolve(frontend, ".generated/learn.json"), json({ ...catalog, chapters, sources, visuals: visualManifest }));
 const sqlString = (value) => "'" + value.replaceAll("'", "''") + "'";
 const quizRows = chapters.map(({ id, quiz }) => "(" + sqlString(id) + "," + quiz.version + "," + sqlString(JSON.stringify(Object.fromEntries(quiz.questions.map((q) => [q.id, q.correctOptionId])))) + "::jsonb)");

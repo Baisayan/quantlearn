@@ -10,9 +10,9 @@ It has five navigation areas: **Home**, **Learn**, **Lab**, **Progress**, and **
 
 - **Home:** Landing Page, lists features, getting Started.
 - **Learn:** five modules and fourteen chapters, lesson cards, completion state, Continue, study content and read-only figures. Each chapter ends with a ten-question multiple-choice quiz ordered by difficulty (3 easy, 4 medium, 3 hard). See `README.md` and `content/catalog.json`. Prerequisites guide the reading order rather than locking chapters in this demo.
-- **Lab:** lesson text and target on the left; Circuit and Code tabs in the center; Run/Reset above the result panels; tutor drawer on the right; quiz and assignment below.
+- **Lab:** eight guided challenges and a free experiment, drag-and-drop gate placement/reordering, Circuit and Python Code tabs, Aer/Cirq selection, Run/Reset/Compare, live result panels and assignment submission. Static hints link to Learn; the AI tutor is deferred.
 - **Progress:** completion tracking, scores, attempts, map to what have been completed and whats left, user progress, login info, etc, profile dashboard.
-- Learn and its chapter routes now render the static curriculum and ten-question quizzes. Progress shows saved Learn results. `supabase/schema.sql` defines learner-owned records and trusted transactional grading. Build-generated `.generated/learn-seed.sql` supplies the private answer keys; apply it when quiz versions change. Lab and AI remain future implementation.
+- Learn and its chapter routes render the static curriculum and ten-question quizzes. Progress shows Learn results and Lab submissions. `supabase/schema.sql` defines Learn records and transactional grading. `.generated/learn-seed.sql` supplies private quiz keys; apply it when quiz versions change. `supabase/lab.sql` defines Lab attempts; only the Python server may write scores. AI remains future implementation.
 - **Login:** one combined email/password login and registration experience at `/login`, followed by redirect to Learn. Email confirmation is disabled for the demo.
 
 ## Architecture and stack
@@ -29,36 +29,42 @@ quantlearn/
 |   |   |-- progress/page.tsx
 |   |   |-- login/page.tsx
 |   |   |-- api/{grade,progress}/route.ts
+|   |   |-- api/lab/[action]/route.ts
 |   |   |-- layout.tsx
 |   |   `-- globals.css
-|   |-- components/{learn,ui}/
-|   |-- lib/{learn,supabase}/
+|   |-- components/{learn,lab,ui}/
+|   |-- lib/{learn,lab,supabase}/
 |   |-- public/learn/visuals/       Canonical public teaching figures
 |   `-- package.json
 |-- backend/                           FastAPI
 |   |-- app/
 |   |   |-- main.py
 |   |   |-- models.py
-|   |   |-- auth.py
-|   |   |-- qasm.py
-|   |   |-- routes/{simulate,tutor,grade,progress}.py
-|   |   `-- adapters/{base,registry,aer,cirq}.py
+|   |   |-- code.py
+|   |   `-- adapters.py
+|   |-- tests/test_lab.py
+|   |-- Dockerfile
 |   |-- requirements.txt
 |   `-- .env.example
-|-- content/{lessons,quizzes}/
-|-- supabase/schema.sql
+|-- content/{lessons,quizzes,lab}/
+|-- supabase/{schema,lab}.sql
 `-- SIH26140.md
 ~~~
 
 Qiskit Aer and Cirq expose Python-first SDKs, so simulation stays in FastAPI. Next.js calls the backend through normalized JSON endpoints; the browser does not import either simulator directly.
 
-The tree above is a target architecture, not a list of already implemented files. Add backend routes/adapters and Lab assignments only when their features are implemented; do not create empty placeholder modules. Keep Next.js forwarding routes thin and avoid duplicating grading/progress business logic in both servers. The actual Supabase clients currently live under `frontend/lib/supabase/`.
+The tree above shows the implemented structure. Keep the two small SDK adapters in one module with the `ENGINES` registry; split only when it becomes useful. Keep Next.js forwarding routes thin and avoid duplicating grading/progress business logic in both servers. Supabase clients live under `frontend/lib/supabase/`.
+
+Lab accepts 1-3 qubits, 48 operations, and up to 4096 shots. Its Python editor parses a documented subset into the circuit model without executing submitted code. Both SDKs use q0 as the least significant bit. Statevectors precede automatic terminal Z measurements; Bloch views use reduced single-qubit states. Mid-circuit measurement, noise and unrestricted Python are outside this demo. Backend authentication validates the caller with Supabase; the secret key in `backend/.env` is used only to persist trusted grading results.
+
+`content/lab/challenges.json` is the canonical Lab exercise list and references existing teaching fixtures. Content builds validate these references and produce `.generated/lab.json` for the UI. MCQ quizzes remain in Learn. Backend grading compares exact target states up to global phase, or the QAOA/VQE objective, and checks gate constraints.
 
 Lesson and quiz content is authored in root `content/`. The canonical teaching figures live once in `frontend/public/learn/visuals/` because Next.js serves them directly from `public/`. `npm run content:build` from `frontend/` validates the content, regenerates the public figures and prepares an ignored `frontend/.generated/learn.json` bundle; it also runs automatically before dev/build. Keep the full bundle and quiz answer keys in server-only imports. The authoring math utility is not the Lab simulator.
 
 Progress loading and chapter summaries live in `frontend/lib/learn/progress.ts`. Detail routes filter by chapter; full-course history is paginated rather than assumed to fit one Supabase response. Keep historical quiz versions in storage but fetch only UI-used fields. Quiz revisions accept positive integer versions; regenerate and apply the private seed when definitions change.
 
 Run `npm run content:build`, `npm run lint` and `npm run build` from `frontend/`. See `README.md` for the concise setup guide and feature boundaries.
+Run `python -m unittest discover -s backend/tests -v` from the repository root using the backend virtual environment. Verify a signed-in browser run and saved submission after backend/schema changes. Never claim that a mocked persistence test proves live Supabase saving.
 
 ## References
 
