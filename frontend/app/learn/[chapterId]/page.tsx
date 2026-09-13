@@ -47,7 +47,7 @@ export default async function ChapterPage({
       <div className="space-y-4">
         <p className="text-sm text-accent-foreground">
           Chapter {chapter.order} of {course.chapters.length} ·{" "}
-          {chapter.minutes} min · {chapter.difficulty}
+          {chapter.difficulty}
         </p>
         <h1 className="text-3xl font-semibold leading-tight tracking-tight sm:text-4xl">
           {chapter.title}

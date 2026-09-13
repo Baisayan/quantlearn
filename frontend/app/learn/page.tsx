@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, BookOpen, Check, Clock } from "lucide-react";
+import { ArrowRight, BookOpen, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
@@ -11,11 +11,6 @@ export default async function LearnPage() {
   const completed = new Set(Object.keys(chapterProgress).filter((id) => chapterProgress[id].count));
   const started = new Set(lessons.map((lesson) => lesson.chapter_id));
   const next = course.chapters.find((chapter) => !completed.has(chapter.id));
-  const totalMinutes = course.chapters.reduce(
-    (sum, chapter) => sum + chapter.minutes,
-    0,
-  );
-
   return (
     <main className="mx-auto w-full max-w-6xl space-y-12 px-5 py-10 sm:px-8 sm:py-14">
       <section className="space-y-6">
@@ -154,10 +149,6 @@ export default async function LearnPage() {
                           {chapter.summary}
                         </p>
                         <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted-foreground">
-                          <span className="inline-flex items-center gap-1">
-                            <Clock className="size-3" aria-hidden="true" />
-                            {chapter.minutes} min
-                          </span>
                           <span>{chapter.difficulty}</span>
                           {count > 0 && (
                             <span>
@@ -182,8 +173,7 @@ export default async function LearnPage() {
       })}
       <p className="border-t pt-6 text-center text-sm text-muted-foreground">
         {course.modules.length} modules · {course.chapters.length} chapters ·
-        About {Math.floor(totalMinutes / 60)} hr {totalMinutes % 60} min of
-        study · Qiskit Aer &amp; Cirq
+        Qiskit Aer &amp; Cirq
       </p>
     </main>
   );

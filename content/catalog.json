@@ -58,7 +58,6 @@
       "title": "Quantum bits and state notation",
       "module": "foundations",
       "order": 1,
-      "minutes": 18,
       "prerequisites": [],
       "objectives": [
         "Read a two-entry statevector.",
@@ -84,7 +83,6 @@
       "title": "Superposition, phase and interference",
       "module": "foundations",
       "order": 2,
-      "minutes": 20,
       "prerequisites": [
         "qubits"
       ],
@@ -111,7 +109,6 @@
       "title": "Measurement and repeated shots",
       "module": "foundations",
       "order": 3,
-      "minutes": 18,
       "prerequisites": [
         "superposition-and-phase"
       ],
@@ -139,7 +136,6 @@
       "title": "Single-qubit gates",
       "module": "gates",
       "order": 4,
-      "minutes": 20,
       "prerequisites": [
         "measurement"
       ],
@@ -166,7 +162,6 @@
       "title": "Phase and rotation gates",
       "module": "gates",
       "order": 5,
-      "minutes": 20,
       "prerequisites": [
         "single-qubit-gates"
       ],
@@ -193,7 +188,6 @@
       "title": "Multi-qubit states and circuit notation",
       "module": "gates",
       "order": 6,
-      "minutes": 22,
       "prerequisites": [
         "phase-and-rotation-gates"
       ],
@@ -221,7 +215,6 @@
       "title": "Entanglement and Bell states",
       "module": "entanglement",
       "order": 7,
-      "minutes": 22,
       "prerequisites": [
         "multi-qubit-circuits"
       ],
@@ -248,7 +241,6 @@
       "title": "Teleportation and classical control",
       "module": "entanglement",
       "order": 8,
-      "minutes": 22,
       "prerequisites": [
         "entanglement"
       ],
@@ -275,7 +267,6 @@
       "title": "Deutsch-Jozsa and phase kickback",
       "module": "algorithms",
       "order": 9,
-      "minutes": 24,
       "prerequisites": [
         "teleportation"
       ],
@@ -302,7 +293,6 @@
       "title": "Grover search and amplitude amplification",
       "module": "algorithms",
       "order": 10,
-      "minutes": 24,
       "prerequisites": [
         "deutsch-jozsa"
       ],
@@ -329,7 +319,6 @@
       "title": "QAOA and combinatorial optimization",
       "module": "algorithms",
       "order": 11,
-      "minutes": 26,
       "prerequisites": [
         "grover"
       ],
@@ -357,7 +346,6 @@
       "title": "VQE and energy estimation",
       "module": "algorithms",
       "order": 12,
-      "minutes": 26,
       "prerequisites": [
         "qaoa"
       ],
@@ -385,7 +373,6 @@
       "title": "Simulation, noise and result displays",
       "module": "execution",
       "order": 13,
-      "minutes": 20,
       "prerequisites": [
         "vqe"
       ],
@@ -413,7 +400,6 @@
       "title": "The same circuit in Qiskit Aer and Cirq",
       "module": "execution",
       "order": 14,
-      "minutes": 22,
       "prerequisites": [
         "simulation-and-noise"
       ],
