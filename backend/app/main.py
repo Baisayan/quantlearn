@@ -15,7 +15,6 @@ from .adapters import ENGINES, normalize
 
 ROOT = Path(__file__).resolve().parents[2]
 load_dotenv(ROOT / 'backend' / '.env')
-load_dotenv(ROOT / 'frontend' / '.env.local')
 CHALLENGES = json.loads((ROOT / 'content/lab/challenges.json').read_text())
 FIXTURES = {c['id']: c for c in json.loads((ROOT / 'content/examples/circuits.json').read_text())['circuits']}
 app = FastAPI(title='QuantLearn Lab', version='1.0.0')
@@ -53,8 +52,8 @@ app.add_middleware(BodyLimit)
 
 
 def authenticate(credentials: HTTPAuthorizationCredentials = Depends(HTTPBearer())):
-    url = os.getenv('SUPABASE_URL') or os.getenv('NEXT_PUBLIC_SUPABASE_URL')
-    key = os.getenv('SUPABASE_PUBLISHABLE_KEY') or os.getenv('NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY')
+    url = os.getenv('SUPABASE_URL')
+    key = os.getenv('SUPABASE_PUBLISHABLE_KEY')
     if not url or not key: raise HTTPException(503, 'Backend authentication is not configured.')
     try:
         response = httpx.get(f'{url}/auth/v1/user', headers={'apikey': key, 'Authorization': f'Bearer {credentials.credentials}'}, timeout=10)
@@ -112,7 +111,7 @@ def grade(request: RunRequest, user_id: str = Depends(authenticate)):
     except ValueError as exc: raise HTTPException(422, 'A valid submission ID is required.') from exc
     circuit, state, result = execute(request)
     assessment = grade_result(request, circuit, state, result)
-    url = os.getenv('SUPABASE_URL') or os.getenv('NEXT_PUBLIC_SUPABASE_URL')
+    url = os.getenv('SUPABASE_URL')
     secret = os.getenv('SUPABASE_SECRET_KEY')
     if not secret: raise HTTPException(503, 'Saving Lab assessments requires the backend Supabase secret key.')
     row = {'id': attempt_id, 'user_id': user_id, 'challenge_id': request.challengeId, 'engine': request.engine, 'circuit': circuit.model_dump(exclude_none=True), **{k: assessment[k] for k in ('passed', 'score', 'feedback')}}

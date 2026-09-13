@@ -41,7 +41,7 @@ export async function POST(
           Authorization: `Bearer ${session.access_token}`,
         },
         body,
-        signal: AbortSignal.timeout(30000),
+        signal: AbortSignal.timeout(90000),
         cache: "no-store",
       },
     );

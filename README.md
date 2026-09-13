@@ -57,9 +57,26 @@ From `frontend/`: `npm run content:build`, `npm run lint`, `npm run build`.
 From the root: `uv run --python backend/.venv --no-project python -m unittest discover -s backend/tests -v`.
 The backend checks cover SDK agreement against all teaching fixtures, bit order, Bloch states, code parsing, grading and authenticated endpoint validation.
 
-## Deployment
+## Deploy the demo
 
-Deploy `frontend/` as a Next.js app. Build the Python image from the repository root with `docker build -f backend/Dockerfile -t quantlearn-lab .`, and run it with the backend environment variables and port 8000. Set the frontend's server-only `LAB_API_URL` to that service's HTTPS URL. Set Supabase's Site URL to your deployed frontend URL. The browser calls same-origin Next.js routes; those forward the user's token to Python, which validates it with Supabase. Both services need outbound access to Supabase.
+Use Vercel for `frontend/`, Render for the Python Lab service, and Supabase for Auth and the database. The repository includes a small `render.yaml` Blueprint for the Render service. Connect the GitHub repository in Render, choose **New → Blueprint**, and select the repository. Render will detect the Blueprint, build `backend/Dockerfile` from the repository root, and use `/health` as its health check. If creating a Web Service manually, choose Docker, keep the repository root as the context, set the Dockerfile path to `backend/Dockerfile`, and set the health check path to `/health`.
+
+Keep environment variables separated by runtime:
+
+| Runtime | Variables | Responsibility |
+| --- | --- | --- |
+| Vercel and local `frontend/.env.local` | `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | Browser Supabase client and login session handling. These values are public by design. |
+| Vercel and local `frontend/.env.local` | `LAB_API_URL` | Server-only URL used by the Next.js Lab proxy to reach FastAPI. Do not prefix it with `NEXT_PUBLIC_`. |
+| Render and local `backend/.env` | `SUPABASE_URL`, `SUPABASE_PUBLISHABLE_KEY` | FastAPI's token validation against Supabase Auth. |
+| Render and local `backend/.env` | `SUPABASE_SECRET_KEY` | Backend-only permission to save trusted Lab assessments. |
+
+In Render, set the three backend variables under the service's Environment page. Use the same project URL and publishable key as the frontend, and paste the Supabase secret key only into `SUPABASE_SECRET_KEY`. Never put that secret in Vercel, a `NEXT_PUBLIC_*` variable, `render.yaml`, Docker build arguments, or Git.
+
+For Vercel, import the same repository, set the project root directory to `frontend`, and keep the Next.js framework preset. Add the two public Supabase variables and `LAB_API_URL` under Project Settings → Environment Variables, using the Render service's HTTPS URL for `LAB_API_URL`, then redeploy.
+
+After the Render service deploys, open its `/health` URL. It should return `{"status":"ok","engines":["aer","cirq"]}`. Then redeploy Vercel and set Supabase Authentication → URL Configuration → Site URL to the Vercel URL. Keep `http://localhost:3000` as an additional redirect URL for local testing. Render's free service sleeps after inactivity, so its first request may take about a minute; the Next.js Lab proxy allows up to 90 seconds for that wake-up.
+
+For a local container smoke test, build from the repository root with `docker build -f backend/Dockerfile -t quantlearn-lab .` and run it with the backend variables and `-p 8000:8000`. The Docker command uses Render's injected `PORT` when deployed and falls back to `8000` locally.
 
 ## Where things live
 
