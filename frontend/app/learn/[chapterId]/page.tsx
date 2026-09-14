@@ -6,6 +6,7 @@ import { LessonReader } from "@/components/learn/lesson-reader";
 import { ChapterQuiz } from "@/components/learn/chapter-quiz";
 import { course, getChapter, getQuizQuestions } from "@/lib/learn/content";
 import { getProgress } from "@/lib/learn/progress";
+import { AIPanel } from "@/components/ai/ai-panel";
 
 export default async function ChapterPage({
   params,
@@ -67,6 +68,7 @@ export default async function ChapterPage({
           >
             Go to quiz
           </a>
+          <AIPanel key={chapter.id} context={{ surface: "learn", chapterId: chapter.id }} />
         </div>
         {chapter.prerequisites.length > 0 && (
           <p className="text-sm text-muted-foreground">

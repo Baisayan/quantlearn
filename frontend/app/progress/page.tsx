@@ -6,6 +6,7 @@ import { course } from "@/lib/learn/content";
 import { getProgress } from "@/lib/learn/progress";
 import { getLabProgress } from "@/lib/lab/progress";
 import challenges from "@/.generated/lab.json";
+import { AIPanel } from "@/components/ai/ai-panel";
 
 export default async function ProgressPage() {
   const { email, chapterProgress, attempts } = await getProgress();
@@ -22,6 +23,7 @@ export default async function ProgressPage() {
           Every chapter is a step forward.
         </h1>
         <p className="break-words text-muted-foreground">{email}</p>
+        <AIPanel context={{ surface: "progress" }} label="Ask for a study plan" title="Your next steps" />
       </div>
       <div className="grid gap-4 sm:grid-cols-3">
         {[

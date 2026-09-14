@@ -9,8 +9,11 @@ Learn quantum computing, build a circuit, and see what it does. The [problem sta
 - A Lab with drag-and-drop gate placement, a Python code editor and real Qiskit Aer/Cirq simulation.
 - Histograms, complex statevectors, rotatable reduced Bloch views and circuit diagrams.
 - Eight guided challenges, server grading and saved Learn/Lab results in Progress.
+- A Gemini tutor for lessons, quiz hints and submitted-answer reviews, Lab explanations and debugging suggestions, plus an on-demand study plan in Progress.
 
-The demo supports 1-3 qubits, up to 48 gates and 4096 shots. Python input is a documented circuit-building subset, parsed as data without executing arbitrary code. Terminal Z measurements are automatic. Noise, mid-circuit measurement, unrestricted Python, PennyLane/qBraid, instructor tools and AI tutoring are outside this release. AI is the next phase.
+The demo supports 1-3 qubits, up to 48 gates and 4096 shots. Python input is a documented circuit-building subset, parsed as data without executing arbitrary code. Terminal Z measurements are automatic. Noise, mid-circuit measurement, unrestricted Python, PennyLane/qBraid and instructor tools are outside this release.
+
+The tutor explains and suggests; it cannot execute code, modify circuits or grade work. Quiz review requires a saved attempt belonging to the learner. Unsubmitted quizzes use a hint-only prompt without answer keys; model instructions cannot guarantee that a determined user will never elicit a solution. Conversations stay in page memory and disappear on navigation/reload. Google receives questions and relevant page context; avoid entering personal information. Free-tier data may be used by Google to improve its products.
 
 ## Run yourself
 
@@ -31,6 +34,8 @@ Create a Supabase project named **quantlearn** in your organization. Wait for pr
 In Authentication → Sign In / Providers → Email, enable email/password registration and disable **Confirm email** for this demo. Under Authentication → URL Configuration, set the Site URL to `http://localhost:3000`. Passwords are managed by Supabase; don't create a separate users/password table.
 
 Copy `frontend/.env.example` to `frontend/.env.local`. From Project Settings → API Keys, copy the publishable key; copy the project URL from the Connect dialog. Set the two `NEXT_PUBLIC_SUPABASE_*` values. Leave `LAB_API_URL=http://127.0.0.1:8000` for local development.
+
+Create a Gemini API key in [Google AI Studio](https://aistudio.google.com/apikey), then set `GEMINI_API_KEY` in `frontend/.env.local` and in Vercel. Restart the dev server after changing it. The model is fixed in `frontend/lib/ai/provider.ts`; no model environment variable is needed. Missing keys or exhausted quotas show a retryable tutor error and do not block lessons, quizzes or Lab. Requests use at most six recent messages and have a per-instance burst guard; this is not a global daily quota across Vercel instances. Check your project's actual provider limits in AI Studio.
 
 Copy `backend/.env.example` to `backend/.env`. Set the same project URL and publishable key, plus a **secret key** from Project Settings → API Keys → Secret keys. The secret is only used by the Python server to save scores. Never put it in a `NEXT_PUBLIC_*` variable or commit either environment file.
 
@@ -53,9 +58,10 @@ Open `http://localhost:3000`, create an account and open Lab. A quick first circ
 
 ## Checks
 
-From `frontend/`: `npm run content:build`, `npm run lint`, `npm run build`.
+From `frontend/`: `npm run content:build`, `npm run lint`, `npm run test:ai`, `npm run build`.
 From the root: `uv run --python backend/.venv --no-project python -m unittest discover -s backend/tests -v`.
 The backend checks cover SDK agreement against all teaching fixtures, bit order, Bloch states, code parsing, grading and authenticated endpoint validation.
+AI checks cover context privacy, quiz-review ownership, request limits and provider errors. Also try a lesson explanation, a pre-submission quiz hint, Lab help and a Progress study plan with a configured Gemini key.
 
 ## Deploy the demo
 
@@ -67,12 +73,13 @@ Keep environment variables separated by runtime:
 | --- | --- | --- |
 | Vercel and local `frontend/.env.local` | `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | Browser Supabase client and login session handling. These values are public by design. |
 | Vercel and local `frontend/.env.local` | `LAB_API_URL` | Server-only URL used by the Next.js Lab proxy to reach FastAPI. Do not prefix it with `NEXT_PUBLIC_`. |
+| Vercel and local `frontend/.env.local` | `GEMINI_API_KEY` | Server-only tutor API key. Never prefix it with `NEXT_PUBLIC_`. |
 | Render and local `backend/.env` | `SUPABASE_URL`, `SUPABASE_PUBLISHABLE_KEY` | FastAPI's token validation against Supabase Auth. |
 | Render and local `backend/.env` | `SUPABASE_SECRET_KEY` | Backend-only permission to save trusted Lab assessments. |
 
 In Render, set the three backend variables under the service's Environment page. Use the same project URL and publishable key as the frontend, and paste the Supabase secret key only into `SUPABASE_SECRET_KEY`. Never put that secret in Vercel, a `NEXT_PUBLIC_*` variable, Docker build arguments, or Git.
 
-For Vercel, import the same repository, set the project root directory to `frontend`, and keep the Next.js framework preset. Add the two public Supabase variables and `LAB_API_URL` under Project Settings → Environment Variables, using the Render service's HTTPS URL for `LAB_API_URL`, then redeploy.
+For Vercel, import the same repository, set the project root directory to `frontend`, and keep the Next.js framework preset. Add the two public Supabase variables, `LAB_API_URL` and `GEMINI_API_KEY` under Project Settings → Environment Variables, using the Render service's HTTPS URL for `LAB_API_URL`, then redeploy.
 
 After the Render service deploys, open its `/health` URL. It should return `{"status":"ok","engines":["aer","cirq"]}`. Then redeploy Vercel and set Supabase Authentication → URL Configuration → Site URL to the Vercel URL. Keep `http://localhost:3000` as an additional redirect URL for local testing. Render's free service sleeps after inactivity, so its first request may take about a minute; the Next.js Lab proxy allows up to 90 seconds for that wake-up.
 

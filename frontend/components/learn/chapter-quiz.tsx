@@ -7,6 +7,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { AIPanel } from "@/components/ai/ai-panel";
 
 type Question = {
   id: string;
@@ -15,6 +16,7 @@ type Question = {
   options: { id: string; text: string }[];
 };
 type Result = {
+  attemptId: string;
   score: number;
   total: number;
   feedback: { id: string; correctOptionId: string; explanation: string }[];
@@ -87,7 +89,7 @@ export function ChapterQuiz({
       const data = await response.json();
       if (!response.ok)
         throw new Error(data.error || "Your quiz could not be saved.");
-      setResult(data);
+      setResult({ ...data, attemptId: attemptId.current });
       setProgressError("");
       router.refresh();
     } catch (cause) {
@@ -141,6 +143,12 @@ export function ChapterQuiz({
           {progressError}
         </p>
       )}
+      <AIPanel
+        key={result?.attemptId ?? "quiz-hints"}
+        context={{ surface: "learn", chapterId, ...(result ? { attemptId: result.attemptId } : {}) }}
+        label={result ? "Review my answers with AI" : "Ask for a quiz hint"}
+        title={result ? "Review your quiz" : "Quiz hints"}
+      />
       <form onSubmit={submit} className="space-y-5">
         {questions.map((question, index) => {
           const feedback = result?.feedback.find(

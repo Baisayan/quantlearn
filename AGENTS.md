@@ -2,7 +2,7 @@
 
 QuantLearn is an interactive web-based platform that enables users to learn, design, simulate, and visualize quantum algorithms. It offers structured learning modules covering quantum computing fundamentals, circuit design, and standard quantum algorithms. Users will be able to construct quantum circuits through a drag-and-drop interface or by writing code, execute them on multiple quantum simulators, and visualize quantum states and measurement outcomes.
 
-Source: [the supplied problem statement](SIH26140.md). This describes the full platform. The current MVP implements deliberately narrow examples and supports **Qiskit Aer and Cirq only**; PennyLane and qBraid integrations are deferred. AI is deferred until Learn and Lab are established. Keep the original problem statement unchanged as the requirements reference.
+Source: [the supplied problem statement](SIH26140.md). This describes the full platform. The current MVP implements deliberately narrow examples and supports **Qiskit Aer and Cirq only**; PennyLane and qBraid integrations are deferred. A contextual Gemini tutor supports Learn, Lab and Progress. Keep the original problem statement unchanged as the requirements reference.
 
 ## Screens and interaction
 
@@ -10,9 +10,10 @@ It has five navigation areas: **Home**, **Learn**, **Lab**, **Progress**, and **
 
 - **Home:** Landing Page, lists features, getting Started.
 - **Learn:** five modules and fourteen chapters, lesson cards, completion state, Continue, study content and read-only figures. Each chapter ends with a ten-question multiple-choice quiz ordered by difficulty (3 easy, 4 medium, 3 hard). See `README.md` and `content/catalog.json`. Prerequisites guide the reading order rather than locking chapters in this demo.
-- **Lab:** eight guided challenges and a free experiment, drag-and-drop gate placement/reordering, Circuit and Python Code tabs, Aer/Cirq selection, Run/Reset/Compare, live result panels and assignment submission. Static hints link to Learn; the AI tutor is deferred.
+- **Lab:** eight guided challenges and a free experiment, drag-and-drop gate placement/reordering, Circuit and Python Code tabs, Aer/Cirq selection, Run/Reset/Compare, live result panels and assignment submission. Static hints link to Learn; the optional AI panel explains browser snapshots and suggests code for manual review.
 - **Progress:** completion tracking, scores, attempts, map to what have been completed and whats left, user progress, login info, etc, profile dashboard.
-- Learn and its chapter routes render the static curriculum and ten-question quizzes. Progress shows Learn results and Lab submissions. `supabase/schema.sql` defines Learn records and transactional grading. `.generated/learn-seed.sql` supplies private quiz keys; apply it when quiz versions change. `supabase/lab.sql` defines Lab attempts; only the Python server may write scores. AI remains future implementation.
+- Learn and its chapter routes render the static curriculum and ten-question quizzes. Progress shows Learn results and Lab submissions. `supabase/schema.sql` defines Learn records and transactional grading. `.generated/learn-seed.sql` supplies private quiz keys; apply it when quiz versions change. `supabase/lab.sql` defines Lab attempts; only the Python server may write scores.
+- AI uses `frontend/app/api/ai/route.ts`, `frontend/lib/ai/` and the shared `components/ai/ai-panel.tsx`. Keep `GEMINI_API_KEY` server-only in frontend/Vercel and the model constant in code. Read lesson/progress context on the server. Verify quiz attempt ownership and version before including answers. AI has no execution, grading or database-write tools. Use safe Markdown, validated structured output and allowlisted citations. Progress offers an on-demand plan without chat. Chat is ephemeral; no AI database setup is required.
 - **Login:** one combined email/password login and registration experience at `/login`, followed by redirect to Learn. Email confirmation is disabled for the demo.
 
 ## Architecture and stack

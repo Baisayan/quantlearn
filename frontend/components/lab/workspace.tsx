@@ -11,6 +11,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Circuit, Engine, Result, toCode } from "@/lib/lab/types";
 import { CircuitEditor } from "./circuit-editor";
 import { Results } from "./results";
+import { AIPanel } from "@/components/ai/ai-panel";
 const CodeMirror = dynamic(() => import("@uiw/react-codemirror"), {
   ssr: false,
   loading: () => <p>Loading editor…</p>,
@@ -101,6 +102,7 @@ export function LabWorkspace() {
           Explore up to three qubits with Qiskit Aer and Cirq.
         </p>
       </div>
+      <AIPanel key={challengeId} context={{ surface: "lab", challengeId, engine, circuit, code, codeDirty, error, results }} label="Ask about this experiment" />
       <fieldset
         disabled={Boolean(busy)}
         className="space-y-6 disabled:opacity-80"
