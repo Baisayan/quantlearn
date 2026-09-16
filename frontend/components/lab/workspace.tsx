@@ -59,7 +59,9 @@ export function LabWorkspace() {
     setError("");
     setAssessment(undefined);
     try {
-      const engines: Engine[] = compare ? ["aer", "cirq"] : [engine];
+      const engines: Engine[] = compare
+        ? ["aer", "cirq", "pennylane"]
+        : [engine];
       const responses: Result[] = [];
       for (const selected of engines) {
         const payload = { engine: selected, ...(tab === "code" ? { code } : { circuit }), shots, seed: 42, ...(action === "grade" ? { challengeId } : {}) };
@@ -99,7 +101,7 @@ export function LabWorkspace() {
           Build. Run. Understand.
         </h1>
         <p className="mt-2 text-muted-foreground">
-          Explore up to three qubits with Qiskit Aer and Cirq.
+          Explore up to three qubits with Qiskit Aer, Cirq and PennyLane.
         </p>
       </div>
       <AIPanel key={challengeId} context={{ surface: "lab", challengeId, engine, circuit, code, codeDirty, error, results }} label="Ask about this experiment" />
@@ -142,6 +144,7 @@ export function LabWorkspace() {
             >
               <option value="aer">Qiskit Aer</option>
               <option value="cirq">Cirq</option>
+              <option value="pennylane">PennyLane</option>
             </select>
           </div>
           <div className="flex flex-col gap-2">
@@ -281,7 +284,7 @@ export function LabWorkspace() {
                   </div>
                   <p className="text-xs text-muted-foreground">
                     Supported: single-qubit gates, CX/CNOT, CZ, SWAP and
-                    rotations. RZZ is generated as CX-RZ-CX for Cirq.
+                    rotations. RZZ maps to IsingZZ in PennyLane and CX-RZ-CX in Cirq.
                     Measurement is automatic. Loops, file access and arbitrary
                     Python are outside this demo.
                   </p>
@@ -330,12 +333,16 @@ export function LabWorkspace() {
           </Card>
         )}
       </div>
-      {results.length === 2 && (
+      {results.length >= 2 && (
         <p className="rounded-lg border bg-white p-4 text-sm">
-          Maximum exact probability difference:{" "}
+          Maximum exact probability difference across engines:{" "}
           {Math.max(
             ...results[0].statevector.map((v, i) =>
-              Math.abs(v.probability - results[1].statevector[i].probability),
+              Math.max(
+                ...results.slice(1).map((other) =>
+                  Math.abs(v.probability - other.statevector[i].probability),
+                ),
+              ),
             ),
           ).toExponential(2)}
           . Sampled counts can differ between engines even with the same seed.

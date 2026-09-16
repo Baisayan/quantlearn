@@ -18,7 +18,7 @@ unique(catalog.chapters.map((c) => c.id), "chapter IDs");
 unique(catalog.modules.map((m) => m.id), "module IDs");
 assert.ok(catalog.modules.every((m) => m.description), "Missing module description");
 unique(circuits.map((c) => c.id), "circuit IDs");
-assert.deepEqual(catalog.engines, ["aer", "cirq"]);
+assert.deepEqual(catalog.engines, ["aer", "cirq", "pennylane"]);
 assert.equal(catalog.chapters.length, 14);
 assert.equal(catalog.chapterQuiz.questions, 10);
 assert.deepEqual(catalog.chapterQuiz.difficultyOrder, ["easy", "medium", "hard"]);
@@ -102,15 +102,6 @@ const visualManifest = figures.map(({ svg, data, ...f }) => ({
 }));
 const json = (value) => JSON.stringify(value, null, 2) + "\n";
 const outputs = new Map(figures.map((f) => [f.id + ".svg", f.svg]));
-outputs.set("manifest.json", json(visualManifest));
-outputs.set("data.json", json({
-  note: "Exact authoring calculations unless a figure explicitly says synthetic samples. SVGs are static. These data can support future interactive components.",
-  basisOrder: "q(n-1)...q0",
-  states: results,
-  figures: Object.fromEntries(figures.map((f) => [f.id, f.data])),
-}));
-const esc = (v) => v.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll('"', "&quot;");
-outputs.set("index.html", '<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>QuantLearn chapter figures</title><style>body{margin:0;padding:2rem;font:1rem/1.5 system-ui;background:#faf8ff;color:#221536}main{max-width:80rem;margin:auto}section{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,32rem),1fr));gap:1.5rem}figure{margin:0;background:white;border:1px solid #ddd6fe;padding:1rem}img{display:block;width:100%;height:auto}figcaption{margin-top:1rem;color:#62556f}a{color:#6d28d9}</style><main><h1>QuantLearn chapter figures</h1><p>28 original read-only figures. Open an image for its full-size view. Circuit basis: q(n−1)…q0; q0 is the top wire.</p><section>' + figures.map((f) => '<figure><a href="' + f.id + '.svg"><img src="' + f.id + '.svg" alt="' + esc(f.description) + '"></a><figcaption>' + esc(f.id + " · " + f.kind) + '</figcaption></figure>').join("") + '</section></main></html>\n');
 
 await mkdir(visualDirectory, { recursive: true });
 for (const [path, value] of outputs) await writeFile(resolve(visualDirectory, path), value);

@@ -8,7 +8,7 @@ Choose a state representation, separate noise from sampling, and interpret each 
 
 An ideal statevector simulator tracks $2^n$ complex amplitudes for n qubits. A dense density matrix tracks $4^n$ entries and can describe mixed states. Specialized methods can use less memory for suitable circuits, so these dense scaling rules are not universal runtime predictions.
 
-Aer and Cirq both support ideal-state simulation and density-matrix approaches. Sampling produces classical counts from a distribution; exposing an internal statevector is a separate simulator capability.
+Aer, Cirq and PennyLane support ideal-state simulation, while their density-matrix and noise APIs differ. Sampling produces classical counts from a distribution; exposing an internal statevector is a separate simulator capability.
 
 ## Shot noise is not device noise
 
@@ -48,7 +48,7 @@ For a Bell pair, the joint statevector is pure while both reduced Bloch vectors 
 
 ## Real hardware has limits
 
-Coherence times, imperfect gates, connectivity and readout errors affect results. Error mitigation and error correction are different ideas and are beyond this demo's implementation. Comparing Aer and Cirq verifies consistent mathematical interpretation; agreement does not prove that a hardware experiment will match.
+Coherence times, imperfect gates, connectivity and readout errors affect results. Error mitigation and error correction are different ideas and are beyond this demo's implementation. Comparing Aer, Cirq and PennyLane verifies consistent mathematical interpretation for the ideal shared circuits; agreement does not prove that a hardware experiment will match.
 
 ## Summary
 
@@ -62,4 +62,5 @@ Answer all 10 questions in order: 3 easy checks, 4 medium applications and 3 har
 
 - [Simulators](https://qiskit.github.io/qiskit-aer/tutorials/1_aersimulator.html). Qiskit Aer Documentation.
 - [Representing noise](https://quantumai.google/cirq/noise/representing_noise). Google Quantum AI.
+- [Measurements](https://docs.pennylane.ai/en/stable/introduction/measurements.html). PennyLane Documentation.
 - [visualization API](https://quantum.cloud.ibm.com/docs/en/api/qiskit/visualization). IBM Quantum Documentation.

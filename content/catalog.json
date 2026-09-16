@@ -4,7 +4,8 @@
   "audience": "Beginners with basic algebra. Worked refreshers explain complex magnitudes, normalization, matrix action, tensor products and expectations. Advanced chapters introduce small examples, not expert-level mastery.",
   "engines": [
     "aer",
-    "cirq"
+    "cirq",
+    "pennylane"
   ],
   "chapterQuiz": {
     "questions": 10,
@@ -22,7 +23,7 @@
       "hard": 3
     }
   },
-  "basisConvention": "q0 is the top circuit wire and least significant bit. Display bitstrings and statevector entries as |q(n-1)...q0>. Cirq examples explicitly reverse qubit_order and measurement order to match.",
+  "basisConvention": "q0 is the top circuit wire and least significant bit. Display bitstrings and statevector entries as |q(n-1)...q0>. Cirq examples explicitly reverse qubit_order and measurement order to match; PennyLane integer wires are normalized to the same display order.",
   "modules": [
     {
       "id": "foundations",
@@ -47,7 +48,7 @@
     {
       "id": "execution",
       "title": "Simulation and Frameworks",
-      "description": "Read simulation results and compare the same experiment in Aer and Cirq."
+      "description": "Read simulation results and compare the same experiment in Aer, Cirq and PennyLane."
     }
   ],
   "chapters": [
@@ -397,20 +398,22 @@
       "id": "aer-and-cirq",
       "summary": "Read equivalent Python circuits and align their output conventions.",
       "difficulty": "Intermediate",
-      "title": "The same circuit in Qiskit Aer and Cirq",
+      "title": "The same circuit in Qiskit Aer, Cirq and PennyLane",
       "module": "execution",
       "order": 14,
       "prerequisites": [
         "simulation-and-noise"
       ],
       "objectives": [
-        "Read both Python APIs.",
+        "Read all three Python APIs.",
         "Normalize basis ordering.",
         "Choose between sampled results and exact-state inspection."
       ],
       "sourceIds": [
         "aer-sim",
         "cirq-sim",
+        "pennylane-circuits",
+        "pennylane-measurements",
         "ibm-bit-order",
         "cirq-circuits"
       ],

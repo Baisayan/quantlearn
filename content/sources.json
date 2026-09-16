@@ -160,6 +160,26 @@
     "reuse": "Reference only. Google page footer generally licenses prose CC BY 4.0 and code Apache 2.0; check page-specific exceptions before direct reuse."
   },
   {
+    "id": "pennylane-circuits",
+    "title": "Circuits",
+    "publisher": "PennyLane Documentation",
+    "url": "https://docs.pennylane.ai/en/stable/introduction/circuits.html",
+    "published": null,
+    "accessed": "2026-09-16",
+    "supports": "Quantum functions, QNodes, devices, operations and state measurements.",
+    "reuse": "Reference only; no third-party prose, diagrams or photographs are reproduced."
+  },
+  {
+    "id": "pennylane-measurements",
+    "title": "Measurements",
+    "publisher": "PennyLane Documentation",
+    "url": "https://docs.pennylane.ai/en/stable/introduction/measurements.html",
+    "published": null,
+    "accessed": "2026-09-16",
+    "supports": "State, probability and computational-basis count measurements with finite shots.",
+    "reuse": "Reference only; no third-party prose, diagrams or photographs are reproduced."
+  },
+  {
     "id": "cirq-gates",
     "title": "Gates and operations",
     "publisher": "Google Quantum AI",

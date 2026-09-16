@@ -37,7 +37,7 @@ class Circuit(BaseModel):
 
 class RunRequest(BaseModel):
     model_config = ConfigDict(extra='forbid')
-    engine: Literal['aer', 'cirq'] = 'aer'
+    engine: Literal['aer', 'cirq', 'pennylane'] = 'aer'
     circuit: Circuit | None = None
     code: str | None = Field(default=None, max_length=12000)
     shots: int = Field(default=1024, ge=32, le=4096, strict=True)

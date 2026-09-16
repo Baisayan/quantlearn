@@ -1,6 +1,7 @@
 """SDK adapters share little-endian basis ordering: |q(n-1)...q0>."""
 import numpy as np
 import cirq
+import pennylane as qml
 from qiskit import QuantumCircuit, transpile
 from qiskit_aer import AerSimulator
 from .models import Circuit
@@ -40,7 +41,68 @@ def cirq_engine(circuit: Circuit, shots: int, seed: int):
     return state, counts
 
 
-ENGINES = {'aer': aer, 'cirq': cirq_engine}
+def _apply_pennylane(circuit: Circuit):
+    """Queue one normalized circuit on the active PennyLane QNode."""
+    one_qubit = {
+        'h': qml.Hadamard,
+        'x': qml.PauliX,
+        'y': qml.PauliY,
+        'z': qml.PauliZ,
+        's': qml.S,
+        't': qml.T,
+    }
+    for op in circuit.operations:
+        if op.gate in one_qubit:
+            one_qubit[op.gate](wires=op.targets[0])
+        elif op.gate in ('rx', 'ry', 'rz'):
+            getattr(qml, op.gate.upper())(op.angle, wires=op.targets[0])
+        elif op.gate == 'cx':
+            qml.CNOT(wires=op.targets)
+        elif op.gate == 'cz':
+            qml.CZ(wires=op.targets)
+        elif op.gate == 'swap':
+            qml.SWAP(wires=op.targets)
+        elif op.gate == 'rzz':
+            qml.IsingZZ(op.angle, wires=op.targets)
+
+
+def _reverse_bits(index: int, width: int):
+    return int(format(index, f'0{width}b')[::-1], 2)
+
+
+def pennylane_engine(circuit: Circuit, shots: int, seed: int):
+    """Run the shared circuit with PennyLane's local default.qubit device."""
+    exact_device = qml.device('default.qubit', wires=circuit.qubits)
+
+    @qml.qnode(exact_device)
+    def exact_circuit():
+        _apply_pennylane(circuit)
+        return qml.state()
+
+    raw_state = np.asarray(exact_circuit(), dtype=np.complex128)
+    width = circuit.qubits
+    state = np.asarray(
+        [raw_state[_reverse_bits(index, width)] for index in range(len(raw_state))],
+        dtype=np.complex128,
+    )
+    sampled_device = qml.device('default.qubit', wires=circuit.qubits, seed=seed)
+
+    @qml.set_shots(shots=shots)
+    @qml.qnode(sampled_device)
+    def sampled_circuit():
+        _apply_pennylane(circuit)
+        return qml.counts(all_outcomes=True)
+
+    raw_counts = sampled_circuit()
+    counts = {
+        format(_reverse_bits(int(key, 2), width), f'0{width}b'): int(value)
+        for key, value in raw_counts.items()
+        if value
+    }
+    return state, counts
+
+
+ENGINES = {'aer': aer, 'cirq': cirq_engine, 'pennylane': pennylane_engine}
 
 
 def normalize(state, counts, circuit, engine, shots):

@@ -173,7 +173,7 @@ export default async function LearnPage() {
       })}
       <p className="border-t pt-6 text-center text-sm text-muted-foreground">
         {course.modules.length} modules · {course.chapters.length} chapters ·
-        Qiskit Aer &amp; Cirq
+        Qiskit Aer · Cirq · PennyLane
       </p>
     </main>
   );

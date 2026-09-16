@@ -100,12 +100,17 @@ function Bloch({ point }: { point: Result["bloch"][number] }) {
 
 export function Results({ result }: { result: Result }) {
   const n = result.circuit.qubits;
+  const engineName = {
+    aer: "Qiskit Aer",
+    cirq: "Cirq",
+    pennylane: "PennyLane",
+  }[result.engine];
   return (
     <Card className="min-w-0 bg-white/90 shadow-none">
       <CardContent className="space-y-4 p-5">
         <div className="flex flex-wrap justify-between gap-2">
           <h2 className="text-lg font-semibold">
-            {result.engine === "aer" ? "Qiskit Aer" : "Cirq"} results
+            {engineName} results
           </h2>
           <span className="text-sm text-muted-foreground">
             {result.shots} shots · ideal simulation

@@ -25,7 +25,7 @@
         }
       ],
       "correctOptionId": "d",
-      "explanation": "AerSimulator and cirq.Simulator are local simulation objects in these snippets. They do not submit QPU jobs."
+      "explanation": "AerSimulator, cirq.Simulator and PennyLane's default.qubit device are local simulation objects in these snippets. They do not submit QPU jobs."
     },
     {
       "id": "aer-and-cirq-q2",
@@ -230,7 +230,7 @@
     {
       "id": "aer-and-cirq-q10",
       "difficulty": "hard",
-      "prompt": "If Aer and Cirq use the same seed, must their sampled counts match exactly?",
+      "prompt": "If Aer, Cirq and PennyLane use the same seed, must their sampled counts match exactly?",
       "options": [
         {
           "id": "a",

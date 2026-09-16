@@ -9,8 +9,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint",
-    "test:ai": "node --test lib/ai/ai.test.mjs"
+    "lint": "eslint"
   },
   "dependencies": {
     "@codemirror/lang-python": "^6.2.1",

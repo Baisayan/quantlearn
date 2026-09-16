@@ -1,4 +1,4 @@
-export type Engine = "aer" | "cirq";
+export type Engine = "aer" | "cirq" | "pennylane";
 export const gates = [
   "h",
   "x",
@@ -54,22 +54,51 @@ export function toCode(circuit: Circuit, engine: Engine) {
           `circuit.${op.gate}(${[...(op.angle === undefined ? [] : [op.angle]), ...op.targets].join(", ")})`,
       ),
     ].join("\n");
-  const names: Record<string, string> = { cx: "CNOT", cz: "CZ", swap: "SWAP" };
-  const line = (op: Operation) =>
-    `circuit.append(cirq.${op.angle === undefined ? names[op.gate] || op.gate.toUpperCase() : `${op.gate}(${op.angle})`}(${op.targets.map((q) => `qubits[${q}]`).join(", ")}))`;
+  if (engine === "cirq") {
+    const names: Record<string, string> = { cx: "CNOT", cz: "CZ", swap: "SWAP" };
+    const line = (op: Operation) =>
+      `circuit.append(cirq.${op.angle === undefined ? names[op.gate] || op.gate.toUpperCase() : `${op.gate}(${op.angle})`}(${op.targets.map((q) => `qubits[${q}]`).join(", ")}))`;
+    return [
+      "import cirq",
+      "from math import pi",
+      `qubits = cirq.LineQubit.range(${circuit.qubits})`,
+      "circuit = cirq.Circuit()",
+      ...circuit.operations.flatMap((op) =>
+        op.gate === "rzz"
+          ? [
+              line({ gate: "cx", targets: op.targets }),
+              line({ gate: "rz", targets: [op.targets[1]], angle: op.angle }),
+              line({ gate: "cx", targets: op.targets }),
+            ]
+          : [line(op)],
+      ),
+    ].join("\n");
+  }
+  const names: Record<string, string> = {
+    h: "Hadamard",
+    x: "PauliX",
+    y: "PauliY",
+    z: "PauliZ",
+    s: "S",
+    t: "T",
+    rx: "RX",
+    ry: "RY",
+    rz: "RZ",
+    cx: "CNOT",
+    cz: "CZ",
+    swap: "SWAP",
+    rzz: "IsingZZ",
+  };
   return [
-    "import cirq",
+    "import pennylane as qml",
     "from math import pi",
-    `qubits = cirq.LineQubit.range(${circuit.qubits})`,
-    "circuit = cirq.Circuit()",
-    ...circuit.operations.flatMap((op) =>
-      op.gate === "rzz"
-        ? [
-            line({ gate: "cx", targets: op.targets }),
-            line({ gate: "rz", targets: [op.targets[1]], angle: op.angle }),
-            line({ gate: "cx", targets: op.targets }),
-          ]
-        : [line(op)],
+    `dev = qml.device("default.qubit", wires=${circuit.qubits})`,
+    "@qml.qnode(dev)",
+    "def circuit():",
+    ...circuit.operations.map(
+      (op) =>
+        `    qml.${names[op.gate]}(${op.angle === undefined ? "" : `${op.angle}, `}wires=${JSON.stringify(op.targets.length === 1 ? op.targets[0] : op.targets)})`,
     ),
+    "    return qml.state()",
   ].join("\n");
 }

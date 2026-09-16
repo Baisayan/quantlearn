@@ -60,7 +60,7 @@ A classical optimizer updates theta from measured energy estimates. Noise, shot 
 
 ## QAOA versus VQE
 
-Both use parameterized circuits and classical optimization. QAOA imposes alternating cost/mixer structure for an objective. VQE chooses an ansatz to minimize an energy. Neither requires PennyLane: Aer and Cirq provide the operations and expectation calculations needed for our models.
+Both use parameterized circuits and classical optimization. QAOA imposes alternating cost/mixer structure for an objective. VQE chooses an ansatz to minimize an energy. Aer, Cirq and PennyLane can provide the operations and expectation calculations needed for these models; this demo keeps its normalized Lab contract intentionally smaller.
 
 ## Summary
 

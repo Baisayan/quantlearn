@@ -64,7 +64,7 @@ This exact one-edge solution does not demonstrate a useful quantum advantage. Fi
 
 ## Summary
 
-Specify the objective and sign convention before writing gates. Distinguish cost phases, mixing, expectation values and sampled solutions. QAOA can be taught and simulated using Aer or Cirq without another framework.
+Specify the objective and sign convention before writing gates. Distinguish cost phases, mixing, expectation values and sampled solutions. QAOA can be taught and simulated using Aer, Cirq or PennyLane; the Lab currently exposes a small shared gate contract rather than a full optimizer API.
 
 ## Chapter quiz
 

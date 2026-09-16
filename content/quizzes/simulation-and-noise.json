@@ -230,7 +230,7 @@
     {
       "id": "simulation-and-noise-q10",
       "difficulty": "hard",
-      "prompt": "Aer and Cirq agree on ideal probabilities. What does that establish, and what does it not establish?",
+      "prompt": "Aer, Cirq and PennyLane agree on ideal probabilities. What does that establish, and what does it not establish?",
       "options": [
         {
           "id": "a",
@@ -242,7 +242,7 @@
         },
         {
           "id": "c",
-          "text": "Proof that both engines use identical random samples"
+          "text": "Proof that all engines use identical random samples"
         },
         {
           "id": "d",

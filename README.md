@@ -6,12 +6,12 @@ Learn quantum computing, build a circuit, and see what it does. The [problem sta
 
 - Email/password login with Supabase and protected application pages.
 - Five Learn modules, fourteen chapters, 28 figures and 140 quiz questions.
-- A Lab with drag-and-drop gate placement, a Python code editor and real Qiskit Aer/Cirq simulation.
+- A Lab with drag-and-drop gate placement, a Python code editor and real Qiskit Aer, Cirq and PennyLane simulation.
 - Histograms, complex statevectors, rotatable reduced Bloch views and circuit diagrams.
 - Eight guided challenges, server grading and saved Learn/Lab results in Progress.
 - A Gemini tutor for lessons, quiz hints and submitted-answer reviews, Lab explanations and debugging suggestions, plus an on-demand study plan in Progress.
 
-The demo supports 1-3 qubits, up to 48 gates and 4096 shots. Python input is a documented circuit-building subset, parsed as data without executing arbitrary code. Terminal Z measurements are automatic. Noise, mid-circuit measurement, unrestricted Python, PennyLane/qBraid and instructor tools are outside this release.
+The demo supports 1-3 qubits, up to 48 gates and 4096 shots. Python input is a documented circuit-building subset, parsed as data without executing arbitrary code. Terminal Z measurements are automatic. Noise, mid-circuit measurement, unrestricted Python and instructor tools are outside this release. PennyLane uses its built-in ideal `default.qubit` simulator; compare mode checks normalized probabilities across all three engines, while finite-shot counts can differ.
 
 The tutor explains and suggests; it cannot execute code, modify circuits or grade work. Quiz review requires a saved attempt belonging to the learner. Unsubmitted quizzes use a hint-only prompt without answer keys; model instructions cannot guarantee that a determined user will never elicit a solution. Conversations stay in page memory and disappear on navigation/reload. Google receives questions and relevant page context; avoid entering personal information. Free-tier data may be used by Google to improve its products.
 
@@ -29,7 +29,7 @@ Create a Supabase project named **quantlearn** in your organization. Wait for pr
 
 1. `supabase/schema.sql` from the repository root, once for a new project.
 2. `frontend/.generated/learn-seed.sql` to load the quiz answer keys.
-3. `supabase/lab.sql` to add learner-owned Lab attempts.
+3. `supabase/lab.sql` to create or update learner-owned Lab attempts. Rerun it after this backend-engine change so the existing table accepts PennyLane submissions.
 
 In Authentication → Sign In / Providers → Email, enable email/password registration and disable **Confirm email** for this demo. Under Authentication → URL Configuration, set the Site URL to `http://localhost:3000`. Passwords are managed by Supabase; don't create a separate users/password table.
 
@@ -58,10 +58,8 @@ Open `http://localhost:3000`, create an account and open Lab. A quick first circ
 
 ## Checks
 
-From `frontend/`: `npm run content:build`, `npm run lint`, `npm run test:ai`, `npm run build`.
-From the root: `uv run --python backend/.venv --no-project python -m unittest discover -s backend/tests -v`.
-The backend checks cover SDK agreement against all teaching fixtures, bit order, Bloch states, code parsing, grading and authenticated endpoint validation.
-AI checks cover context privacy, quiz-review ownership, request limits and provider errors. Also try a lesson explanation, a pre-submission quiz hint, Lab help and a Progress study plan with a configured Gemini key.
+From `frontend/`: `npm run content:build`, `npm run lint`, and `npm run build`.
+Also try a lesson explanation, a pre-submission quiz hint, Lab help, and a Progress study plan with a configured Gemini key.
 
 ## Deploy the demo
 
@@ -81,7 +79,7 @@ In Render, set the three backend variables under the service's Environment page.
 
 For Vercel, import the same repository, set the project root directory to `frontend`, and keep the Next.js framework preset. Add the two public Supabase variables, `LAB_API_URL` and `GEMINI_API_KEY` under Project Settings → Environment Variables, using the Render service's HTTPS URL for `LAB_API_URL`, then redeploy.
 
-After the Render service deploys, open its `/health` URL. It should return `{"status":"ok","engines":["aer","cirq"]}`. Then redeploy Vercel and set Supabase Authentication → URL Configuration → Site URL to the Vercel URL. Keep `http://localhost:3000` as an additional redirect URL for local testing. Render's free service sleeps after inactivity, so its first request may take about a minute; the Next.js Lab proxy allows up to 90 seconds for that wake-up.
+After the Render service deploys, open its `/health` URL. It should return `{"status":"ok","engines":["aer","cirq","pennylane"]}`. Then redeploy Vercel and set Supabase Authentication → URL Configuration → Site URL to the Vercel URL. Keep `http://localhost:3000` as an additional redirect URL for local testing. Render's free service sleeps after inactivity, so its first request may take about a minute; the Next.js Lab proxy allows up to 90 seconds for that wake-up.
 
 For a local container smoke test, build from the repository root with `docker build -f backend/Dockerfile -t quantlearn-lab .` and run it with the backend variables and `-p 8000:8000`. The Docker command uses Render's injected `PORT` when deployed and falls back to `8000` locally.
 

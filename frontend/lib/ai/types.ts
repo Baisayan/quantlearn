@@ -79,7 +79,7 @@ export function parseRequest(value: unknown): {
     if (
       typeof c.challengeId !== "string" ||
       !short(c.challengeId, 100) ||
-      !["aer", "cirq"].includes(String(c.engine)) ||
+      !["aer", "cirq", "pennylane"].includes(String(c.engine)) ||
       typeof c.code !== "string" ||
       c.code.length > 12000 ||
       typeof c.error !== "string" ||
@@ -88,7 +88,7 @@ export function parseRequest(value: unknown): {
       !c.circuit ||
       typeof c.circuit !== "object" ||
       !Array.isArray(c.results) ||
-      c.results.length > 2
+      c.results.length > 3
     )
       throw new AIError("Invalid Lab context.");
   } else if (c.surface !== "progress") throw new AIError("Unknown tutor page.");

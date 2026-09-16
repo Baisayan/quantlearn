@@ -246,7 +246,7 @@
         },
         {
           "id": "d",
-          "text": "Cirq and Aer cannot represent its gates"
+          "text": "Aer, Cirq and PennyLane cannot represent its gates"
         }
       ],
       "correctOptionId": "c",
