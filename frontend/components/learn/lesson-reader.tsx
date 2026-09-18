@@ -7,7 +7,7 @@ import "katex/dist/katex.min.css";
 
 export function LessonReader({ markdown }: { markdown: string }) {
   return (
-    <div className="min-w-0 space-y-5 leading-8 text-foreground/90 [&_.katex-display]:overflow-x-auto [&_.katex-display]:overflow-y-hidden [&_.katex-display]:py-3 [&_.katex]:text-base">
+    <div className="min-w-0 space-y-5 leading-8 text-foreground [&_.katex-display]:overflow-x-auto [&_.katex-display]:overflow-y-hidden [&_.katex-display]:py-3 [&_.katex]:text-base">
       <Markdown
         remarkPlugins={[remarkGfm, remarkMath]}
         rehypePlugins={[rehypeKatex]}
@@ -25,7 +25,7 @@ export function LessonReader({ markdown }: { markdown: string }) {
           a: ({ href, children }) => (
             <a
               href={href}
-              className="break-words font-medium text-accent-foreground underline underline-offset-4"
+              className="break-words font-medium text-primary underline underline-offset-4 transition-colors duration-300 hover:text-primary/80"
               target={href?.startsWith("https:") ? "_blank" : undefined}
               rel={href?.startsWith("https:") ? "noreferrer" : undefined}
             >
@@ -46,7 +46,7 @@ export function LessonReader({ markdown }: { markdown: string }) {
             <pre
               tabIndex={0}
               aria-label="Read-only code example"
-              className="overflow-x-auto rounded-xl border bg-secondary/50 p-5 text-sm leading-7 focus-visible:outline-2 focus-visible:outline-primary"
+              className="overflow-x-auto rounded-xl border border-border/70 bg-secondary/50 p-5 text-sm leading-7 focus-visible:outline-2 focus-visible:outline-primary"
             >
               {children}
             </pre>
@@ -61,7 +61,7 @@ export function LessonReader({ markdown }: { markdown: string }) {
             </code>
           ),
           table: ({ children }) => (
-            <div className="overflow-x-auto rounded-xl border">
+            <div className="overflow-x-auto rounded-xl border border-border/70">
               <table className="w-full text-left text-sm">{children}</table>
             </div>
           ),
@@ -84,7 +84,7 @@ export function LessonReader({ markdown }: { markdown: string }) {
                 href={src}
                 target="_blank"
                 rel="noreferrer"
-                className="my-6 block rounded-xl border bg-white p-2 outline-none focus-visible:ring-2 focus-visible:ring-primary sm:p-4"
+                className="my-6 block rounded-xl border border-border/70 bg-card p-2 outline-none focus-visible:ring-2 focus-visible:ring-primary sm:p-4"
                 aria-label={`${alt}. Open full-size figure in a new tab`}
               >
                 <Image
@@ -97,7 +97,7 @@ export function LessonReader({ markdown }: { markdown: string }) {
                 />
                 <span className="mt-2 block px-2 text-center text-xs leading-relaxed text-muted-foreground">
                   {alt}{" "}
-                  <span className="text-accent-foreground">
+                  <span className="text-primary">
                     Open full size ↗
                   </span>
                 </span>

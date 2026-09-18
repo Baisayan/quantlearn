@@ -2,11 +2,20 @@ import * as React from "react";
 
 import { cn } from "@/lib/utils";
 
-function Card({ className, ...props }: React.ComponentProps<"div">) {
+type CardProps = React.ComponentProps<"div"> & {
+  interactive?: boolean;
+};
+
+function Card({ className, interactive = false, ...props }: CardProps) {
   return (
     <div
       data-slot="card"
-      className={cn("rounded-xl border bg-card text-card-foreground shadow-sm", className)}
+      className={cn(
+        "rounded-xl border bg-card text-card-foreground shadow-sm",
+        interactive &&
+          "transition-[transform,box-shadow,border-color] duration-300 ease-out hover:-translate-y-1 hover:border-primary/25 hover:shadow-lg",
+        className,
+      )}
       {...props}
     />
   );

@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 
 export default function LearnError({ reset }: { reset: () => void }) {
   return (
-    <main className="mx-auto w-full max-w-2xl space-y-4 px-5 py-16 text-center">
+    <main className="mx-auto w-full max-w-2xl space-y-4 px-5 py-10 text-center sm:px-8 sm:py-14">
       <h1 className="text-2xl font-semibold">Learn could not be loaded</h1>
       <p className="text-muted-foreground">
         Please check your connection and try again. Your saved progress is kept.

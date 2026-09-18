@@ -140,14 +140,14 @@ export function AIPanel({
       <SheetTrigger asChild>
         <Button
           variant="outline"
-          className="rounded-full border-primary/30 bg-white/80 text-primary"
+          className="rounded-xl border-primary/30 bg-card text-primary hover:bg-primary-soft hover:text-primary"
         >
           <Sparkles className="size-4" aria-hidden="true" />
           {label}
         </Button>
       </SheetTrigger>
-      <SheetContent className="flex w-full flex-col bg-white p-0 sm:max-w-lg">
-        <SheetHeader className="border-b bg-secondary/40 pr-12">
+      <SheetContent className="flex w-full flex-col bg-card p-0 sm:max-w-lg">
+        <SheetHeader className="border-b border-border/70 bg-secondary/40 pr-12">
           <SheetTitle>{title}</SheetTitle>
           <SheetDescription>
             {plan
@@ -232,7 +232,7 @@ export function AIPanel({
           {error && (
             <div
               role="alert"
-              className="space-y-2 rounded-lg border p-3 text-sm"
+              className="space-y-2 rounded-lg border border-border/70 p-3 text-sm"
             >
               <p>{error}</p>
               <Button
@@ -249,7 +249,7 @@ export function AIPanel({
         </div>
         <div className="space-y-3 border-t p-5">
           {selection && context.surface === "learn" && (
-            <div className="rounded-lg bg-secondary/50 p-3 text-xs">
+            <div className="rounded-lg border border-border/70 bg-secondary/50 p-3 text-xs">
               <p className="line-clamp-3">Selected text: {selection}</p>
               <Button
                 size="sm"

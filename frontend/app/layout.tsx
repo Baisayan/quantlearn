@@ -19,9 +19,6 @@ const appLinks = [
   { href: "/lab", label: "Lab" },
 ];
 
-const buttonMotion =
-  "transition-[transform,background-color,border-color,color,box-shadow] duration-[160ms] [transition-timing-function:cubic-bezier(0.2,0,0,1)] active:scale-[0.96]";
-
 function SiteHeader() {
   const pathname = usePathname() ?? "/";
   const router = useRouter();
@@ -32,7 +29,7 @@ function SiteHeader() {
   const isLogin = pathname === "/login";
   const isApplicationRoute = !isHome && !isLogin;
   const isProgress = pathname === "/progress" || pathname.startsWith("/progress/");
-  const headerWidth = isHome ? "max-w-[94rem]" : "";
+  const headerWidth = isHome ? "max-w-screen-2xl" : "";
 
   async function handleSignOut() {
     setSignOutError("");
@@ -54,12 +51,11 @@ function SiteHeader() {
   return (
     <header className="fixed inset-x-0 top-0 z-50 border-b border-border/70 bg-background/90 backdrop-blur-xl">
       <div
-        className={`mx-auto flex min-h-20 w-full ${headerWidth} flex-wrap items-center justify-between gap-x-4 gap-y-3 px-5 py-4 sm:px-8 lg:px-10`}
+        className={`mx-auto flex min-h-16 w-full ${headerWidth} flex-wrap items-center justify-between gap-x-4 gap-y-3 px-5 py-3 sm:px-8 lg:px-10`}
       >
         <Link
           href="/"
-          aria-label="QuantLearn home"
-          className="font-display text-2xl font-semibold tracking-[-0.055em] focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-4"
+          className="font-display text-2xl font-semibold tracking-tight focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-4"
         >
           <span className="text-foreground">Quant</span>
           <span className="text-primary">Learn</span>
@@ -68,8 +64,8 @@ function SiteHeader() {
         {isHome ? (
           <Button
             asChild
-            size="lg"
-            className={`${buttonMotion} h-auto rounded-xl px-5 py-2.5 font-medium shadow-[0_8px_18px_rgba(35,87,217,0.18)] sm:px-6`}
+            size="default"
+            className="h-auto rounded-xl px-4 py-2 font-medium shadow-md sm:px-5"
           >
             <Link href="/learn">
               Getting started
@@ -82,7 +78,7 @@ function SiteHeader() {
           <Button
             asChild
             variant="outline"
-            className={`${buttonMotion} rounded-xl border-primary/30 bg-white/70 text-primary shadow-sm hover:bg-primary-soft hover:text-primary`}
+            className="rounded-xl border-primary/30 bg-white/70 text-primary shadow-sm hover:bg-primary-soft hover:text-primary"
           >
             <Link href="/">Home</Link>
           </Button>
@@ -103,7 +99,7 @@ function SiteHeader() {
                     asChild
                     size="sm"
                     variant={active ? "default" : "ghost"}
-                    className={`${buttonMotion} rounded-xl px-4`}
+                    className="rounded-xl px-4"
                   >
                     <Link href={href} aria-current={active ? "page" : undefined}>
                       {label}
@@ -119,7 +115,7 @@ function SiteHeader() {
                   type="button"
                   variant="outline"
                   size="sm"
-                  className={`${buttonMotion} rounded-xl`}
+                  className="rounded-xl"
                   onClick={handleSignOut}
                   disabled={isSigningOut}
                 >
@@ -131,7 +127,7 @@ function SiteHeader() {
                   Sign out
                 </Button>
               ) : (
-                <Button asChild variant="ghost" size="icon" className={`${buttonMotion} rounded-xl`}>
+                <Button asChild variant="ghost" size="icon" className="rounded-xl">
                   <Link href="/progress" aria-label="Open profile and progress">
                     <CircleUserRound className="size-5" aria-hidden="true" />
                   </Link>
@@ -153,10 +149,8 @@ function SiteHeader() {
 export default function RootLayout({ children }: RootLayoutProps) {
   const pathname = usePathname() ?? "/";
   const isHome = pathname === "/";
-  const contentTop = isHome ? "pt-24 md:pt-28" : "pt-28 md:pt-20";
-  const shellBackground = isHome
-    ? "bg-background bg-[linear-gradient(rgba(35,87,217,0.055)_1px,transparent_1px),linear-gradient(90deg,rgba(35,87,217,0.055)_1px,transparent_1px)] [background-position:center_top] [background-size:48px_48px]"
-    : "bg-background";
+  const contentTop = isHome ? "pt-16" : "pt-20 md:pt-16";
+  const shellBackground = isHome ? "landing-shell" : "bg-background";
 
   return (
     <html lang="en">

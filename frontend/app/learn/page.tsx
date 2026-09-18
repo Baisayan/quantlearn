@@ -6,17 +6,17 @@ import { Progress } from "@/components/ui/progress";
 import { course } from "@/lib/learn/content";
 import { getProgress } from "@/lib/learn/progress";
 
+const eyebrow = "font-mono text-xs font-semibold uppercase tracking-widest";
+
 export default async function LearnPage() {
   const { lessons, chapterProgress } = await getProgress();
   const completed = new Set(Object.keys(chapterProgress).filter((id) => chapterProgress[id].count));
   const started = new Set(lessons.map((lesson) => lesson.chapter_id));
   const next = course.chapters.find((chapter) => !completed.has(chapter.id));
   return (
-    <main className="mx-auto w-full max-w-6xl space-y-12 px-5 py-10 sm:px-8 sm:py-14">
-      <section className="space-y-6">
-        <p className="text-sm font-medium uppercase tracking-widest text-primary">
-          Your learning path
-        </p>
+    <main className="mx-auto w-full max-w-7xl space-y-10 px-5 py-8 sm:px-8 sm:py-10 lg:px-10">
+      <section className="space-y-5">
+        <p className={`${eyebrow} text-primary`}>Your learning path</p>
         <div className="flex flex-col justify-between gap-6 sm:flex-row sm:items-end">
           <div className="max-w-2xl space-y-3">
             <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">
@@ -29,15 +29,15 @@ export default async function LearnPage() {
           </div>
           <Link
             href="/progress"
-            className="shrink-0 text-sm font-medium text-accent-foreground underline-offset-4 hover:underline"
+            className="shrink-0 text-sm font-medium text-primary underline-offset-4 transition-colors duration-300 hover:text-primary/80 hover:underline"
           >
             View your progress ↗
           </Link>
         </div>
-        <Card className="border-primary/20 bg-white/80 shadow-none">
-          <CardContent className="grid gap-6 p-6 sm:grid-cols-2 sm:items-center sm:p-8">
+        <Card className="border-primary/20">
+          <CardContent className="grid gap-6 p-5 sm:grid-cols-2 sm:items-center sm:p-6">
             <div className="space-y-3">
-              <div className="flex items-center gap-2 text-sm text-accent-foreground">
+              <div className="flex items-center gap-2 text-sm text-secondary-foreground">
                 <BookOpen className="size-4" aria-hidden="true" />
                 {next
                   ? completed.size || started.size
@@ -52,7 +52,7 @@ export default async function LearnPage() {
                 {next?.summary ??
                   "Revisit a lesson, retry a quiz or review how your scores have changed."}
               </p>
-              <Button asChild className="rounded-full">
+              <Button asChild className="rounded-xl">
                 <Link href={next ? `/learn/${next.id}` : "/progress"}>
                   {next ? "Open chapter" : "Review progress"}
                   <ArrowRight aria-hidden="true" />
@@ -64,7 +64,7 @@ export default async function LearnPage() {
                 <span>
                   {completed.size} of {course.chapters.length} chapters complete
                 </span>
-                <span className="text-accent-foreground">
+                <span className="text-primary">
                   {Math.round((completed.size / course.chapters.length) * 100)}%
                 </span>
               </div>
@@ -92,11 +92,11 @@ export default async function LearnPage() {
             key={module.id}
             id={module.id}
             aria-labelledby={`${module.id}-title`}
-            className="scroll-mt-36 space-y-5"
+            className="scroll-mt-36 space-y-4"
           >
             <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
               <div className="space-y-2">
-                <p className="text-xs font-medium uppercase tracking-widest text-primary">
+                <p className={`${eyebrow} text-primary`}>
                   Module {String(index + 1).padStart(2, "0")}
                 </p>
                 <h2
@@ -127,15 +127,15 @@ export default async function LearnPage() {
                   <Link
                     key={chapter.id}
                     href={`/learn/${chapter.id}`}
-                    className="group rounded-xl outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-4"
+                    className="block rounded-2xl outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-4"
                   >
-                    <Card className="h-full bg-white/75 shadow-none transition-colors group-hover:border-primary/50 group-hover:bg-white">
+                    <Card interactive className="h-full rounded-2xl border-border/80">
                       <CardContent className="flex h-full flex-col gap-4 p-6">
                         <div className="flex items-center justify-between gap-2 text-xs">
                           <span className="font-medium text-muted-foreground">
                             Chapter {String(chapter.order).padStart(2, "0")}
                           </span>
-                          <span className="inline-flex items-center gap-1 rounded-full bg-secondary px-2 py-1 text-accent-foreground">
+                          <span className="inline-flex items-center gap-1 rounded-full bg-secondary px-2 py-1 text-secondary-foreground">
                             {done && (
                               <Check className="size-3" aria-hidden="true" />
                             )}
@@ -171,7 +171,7 @@ export default async function LearnPage() {
           </section>
         );
       })}
-      <p className="border-t pt-6 text-center text-sm text-muted-foreground">
+      <p className="border-t border-border/70 pt-6 text-center text-sm text-muted-foreground">
         {course.modules.length} modules · {course.chapters.length} chapters ·
         Qiskit Aer · Cirq · PennyLane
       </p>

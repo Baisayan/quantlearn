@@ -27,18 +27,18 @@ export default async function ChapterPage({
     .replace(/## Learning objectives\r?\n[\s\S]*?(?=\r?\n## )/, "")
     .replace(/## Chapter quiz\r?\n[\s\S]*?(?=\r?\n## |$)/, "");
   return (
-    <main className="mx-auto w-full max-w-4xl min-w-0 space-y-8 px-5 py-10 sm:px-8 sm:py-14">
+    <main className="mx-auto w-full max-w-5xl min-w-0 space-y-8 px-5 py-8 sm:px-8 sm:py-10 lg:px-10">
       <nav
         aria-label="Breadcrumb"
         className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground"
       >
-        <Link href="/learn" className="hover:text-primary">
+        <Link href="/learn" className="transition-colors duration-300 hover:text-primary">
           Learn
         </Link>
         <span aria-hidden="true">/</span>
         <Link
           href={`/learn#${chapterModule.id}`}
-          className="hover:text-primary"
+          className="transition-colors duration-300 hover:text-primary"
         >
           {chapterModule.title}
         </Link>
@@ -46,29 +46,32 @@ export default async function ChapterPage({
         <span aria-current="page">Chapter {chapter.order}</span>
       </nav>
       <div className="space-y-4">
-        <p className="text-sm text-accent-foreground">
+        <p className="font-mono text-xs font-semibold uppercase tracking-widest text-primary">
           Chapter {chapter.order} of {course.chapters.length} ·{" "}
           {chapter.difficulty}
         </p>
         <h1 className="text-3xl font-semibold leading-tight tracking-tight sm:text-4xl">
           {chapter.title}
         </h1>
-        <p className="text-lg leading-relaxed text-muted-foreground">
+        <p className="max-w-3xl text-lg leading-relaxed text-muted-foreground">
           {chapter.summary}
         </p>
         <div className="flex flex-wrap items-center gap-4 text-sm">
-          <span className="rounded-full bg-secondary px-3 py-1 text-accent-foreground">
+          <span className="rounded-full bg-secondary px-3 py-1 text-secondary-foreground">
             {progress.count
               ? `Completed · Best ${progress.bestScore}/10`
               : "In progress"}
           </span>
           <a
             href="#chapter-quiz"
-            className="text-accent-foreground underline underline-offset-4"
+            className="text-primary underline underline-offset-4 transition-colors duration-300 hover:text-primary/80"
           >
             Go to quiz
           </a>
-          <AIPanel key={chapter.id} context={{ surface: "learn", chapterId: chapter.id }} />
+          <AIPanel
+            key={chapter.id}
+            context={{ surface: "learn", chapterId: chapter.id }}
+          />
         </div>
         {chapter.prerequisites.length > 0 && (
           <p className="text-sm text-muted-foreground">
@@ -77,7 +80,7 @@ export default async function ChapterPage({
               <Link
                 key={id}
                 href={`/learn/${id}`}
-                className="text-accent-foreground underline underline-offset-4"
+                className="text-primary underline underline-offset-4 transition-colors duration-300 hover:text-primary/80"
               >
                 {getChapter(id).title}
               </Link>
@@ -86,7 +89,7 @@ export default async function ChapterPage({
           </p>
         )}
       </div>
-      <Card className="bg-white/75 shadow-none">
+      <Card>
         <CardContent className="space-y-3 p-6">
           <h2 className="font-semibold">What you will learn</h2>
           <ul className="list-disc space-y-2 pl-5 text-sm leading-relaxed text-muted-foreground marker:text-primary">
@@ -108,15 +111,15 @@ export default async function ChapterPage({
       />
       <nav
         aria-label="Chapter navigation"
-        className="flex flex-wrap justify-between gap-4 border-t pt-6"
+        className="flex flex-wrap justify-between gap-4 border-t border-border/70 pt-6"
       >
-        <Button asChild variant="outline" className="rounded-full">
+        <Button asChild variant="outline" className="rounded-xl">
           <Link href={previous ? `/learn/${previous.id}` : "/learn"}>
             <ArrowLeft aria-hidden="true" />
             {previous ? "Previous chapter" : "All chapters"}
           </Link>
         </Button>
-        <Button asChild className="rounded-full">
+        <Button asChild className="rounded-xl">
           <Link href={next ? `/learn/${next.id}` : "/progress"}>
             {next ? "Next chapter" : "Review progress"}
             <ArrowRight aria-hidden="true" />

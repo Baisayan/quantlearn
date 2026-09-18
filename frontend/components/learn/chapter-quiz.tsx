@@ -120,10 +120,12 @@ export function ChapterQuiz({
     <section
       id="chapter-quiz"
       aria-labelledby="quiz-title"
-      className="scroll-mt-36 space-y-6 border-t pt-8"
+      className="scroll-mt-36 space-y-6 border-t border-border/70 pt-8"
     >
       <div className="space-y-3">
-        <p className="text-sm font-medium text-primary">Put it together</p>
+        <p className="font-mono text-xs font-semibold uppercase tracking-widest text-primary">
+          Put it together
+        </p>
         <h2 id="quiz-title" className="text-2xl font-semibold">
           Chapter quiz
         </h2>
@@ -133,7 +135,7 @@ export function ChapterQuiz({
           retry as often as you like.
         </p>
         {previousScore !== undefined && (
-          <p className="text-sm text-accent-foreground">
+          <p className="text-sm text-secondary-foreground">
             Last saved score: {previousScore}/10
           </p>
         )}
@@ -156,7 +158,7 @@ export function ChapterQuiz({
           );
           const correct = feedback?.correctOptionId === answers[question.id];
           return (
-            <Card key={question.id} className="bg-white/80 shadow-none">
+            <Card key={question.id}>
               <CardContent className="p-5 sm:p-6">
                 <fieldset
                   disabled={pending || Boolean(result)}
@@ -166,7 +168,7 @@ export function ChapterQuiz({
                     id={`${question.id}-prompt`}
                     className="w-full space-y-2 pb-4"
                   >
-                    <span className="block text-xs font-medium capitalize text-accent-foreground">
+                    <span className="block text-xs font-medium capitalize text-secondary-foreground">
                       Question {index + 1} · {question.difficulty}
                     </span>
                     <span className="block font-medium leading-relaxed">
@@ -189,7 +191,7 @@ export function ChapterQuiz({
                       <Label
                         key={option.id}
                         htmlFor={`${question.id}-${option.id}`}
-                        className="flex cursor-pointer items-start gap-3 rounded-lg border px-4 py-3 text-sm font-normal leading-relaxed has-[[data-state=checked]]:border-primary has-[[data-state=checked]]:bg-secondary/70"
+                        className="flex cursor-pointer items-start gap-3 rounded-lg border border-border/70 px-4 py-3 text-sm font-normal leading-relaxed transition-[border-color,background-color] duration-300 hover:border-primary/40 has-[[data-state=checked]]:border-primary has-[[data-state=checked]]:bg-secondary/70"
                       >
                         <RadioGroupItem
                           id={`${question.id}-${option.id}`}
@@ -197,7 +199,7 @@ export function ChapterQuiz({
                           className="mt-1"
                         />
                         <span>
-                          <span className="mr-2 font-medium uppercase text-accent-foreground">
+                          <span className="mr-2 font-medium uppercase text-secondary-foreground">
                             {option.id}.
                           </span>
                           {option.text}
@@ -223,7 +225,7 @@ export function ChapterQuiz({
           );
         })}
         {!result && (
-          <div className="space-y-4 rounded-xl border bg-white/70 p-5">
+          <div className="space-y-4 rounded-2xl border border-border/70 bg-card p-5">
             <Label
               htmlFor="lesson-read"
               className="flex items-start gap-3 text-sm font-normal leading-relaxed"
@@ -242,7 +244,7 @@ export function ChapterQuiz({
               {Object.keys(answers).length} of {questions.length} answered
             </p>
             {error && (
-              <p role="alert" className="text-sm text-accent-foreground">
+              <p role="alert" className="text-sm text-destructive">
                 {error}
               </p>
             )}
@@ -253,7 +255,7 @@ export function ChapterQuiz({
                 !read ||
                 Object.keys(answers).length !== questions.length
               }
-              className="rounded-full"
+              className="rounded-xl"
             >
               {pending ? "Saving your result…" : "Submit quiz"}
             </Button>
@@ -265,7 +267,7 @@ export function ChapterQuiz({
           ref={resultRef}
           tabIndex={-1}
           role="status"
-          className="space-y-3 rounded-xl border border-primary/30 bg-secondary/70 p-6 outline-none"
+          className="space-y-3 rounded-2xl border border-primary/30 bg-secondary/70 p-6 outline-none"
         >
           <h3 className="text-xl font-semibold">
             {result.score} of {result.total} correct
@@ -277,7 +279,7 @@ export function ChapterQuiz({
               ? "You answered every question correctly."
               : "Read the explanations above and revisit any ideas that need more practice."}
           </p>
-          <Button variant="outline" onClick={retry} className="rounded-full">
+          <Button variant="outline" onClick={retry} className="rounded-xl">
             Try again
           </Button>
         </div>

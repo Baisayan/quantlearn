@@ -22,6 +22,9 @@
   --destructive-foreground: #ffffff;
   --teal: #0d8f83;
   --amber: #e0a72f;
+  --violet: #6d5ce7;
+  --violet-soft: #f0edff;
+  --grid-line: rgba(35, 87, 217, 0.055);
   --surface-alt: #edf2f7;
   --font-quant-display: "Sora", "Avenir Next", "Segoe UI", sans-serif;
   --font-quant-body: "Manrope", "Avenir Next", "Segoe UI", sans-serif;
@@ -50,6 +53,8 @@
   --color-destructive-foreground: var(--destructive-foreground);
   --color-teal: var(--teal);
   --color-amber: var(--amber);
+  --color-violet: var(--violet);
+  --color-violet-soft: var(--violet-soft);
   --color-surface-alt: var(--surface-alt);
   --radius-sm: calc(var(--radius) - 6px);
   --radius-md: calc(var(--radius) - 4px);
@@ -58,6 +63,7 @@
   --font-sans: var(--font-quant-body), ui-sans-serif, system-ui, sans-serif;
   --font-display: var(--font-quant-display), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-quant-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
+  --animate-spin: spin 300ms linear infinite;
 }
 
 @layer base {
@@ -87,6 +93,14 @@
     background: rgba(35, 87, 217, 0.18);
     color: var(--foreground);
   }
+}
+
+.landing-shell {
+  background-color: var(--background);
+  background-image: linear-gradient(var(--grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+  background-position: center top;
+  background-size: 3rem 3rem;
 }
 
 @media (prefers-reduced-motion: reduce) {
