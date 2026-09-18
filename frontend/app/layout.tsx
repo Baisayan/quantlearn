@@ -19,6 +19,9 @@ const appLinks = [
   { href: "/lab", label: "Lab" },
 ];
 
+const buttonMotion =
+  "transition-[transform,background-color,border-color,color,box-shadow] duration-[160ms] [transition-timing-function:cubic-bezier(0.2,0,0,1)] active:scale-[0.96]";
+
 function SiteHeader() {
   const pathname = usePathname() ?? "/";
   const router = useRouter();
@@ -29,6 +32,7 @@ function SiteHeader() {
   const isLogin = pathname === "/login";
   const isApplicationRoute = !isHome && !isLogin;
   const isProgress = pathname === "/progress" || pathname.startsWith("/progress/");
+  const headerWidth = isHome ? "max-w-[94rem]" : "";
 
   async function handleSignOut() {
     setSignOutError("");
@@ -48,12 +52,14 @@ function SiteHeader() {
   }
 
   return (
-    <header className="fixed inset-x-0 top-0 z-50 border-b border-white/70 bg-white/70 backdrop-blur-md">
-      <div className="mx-auto flex w-full max-w-7xl flex-wrap items-center justify-between gap-x-4 gap-y-3 px-5 py-4 sm:px-8 sm:py-5 md:grid md:grid-cols-[1fr_auto_1fr] md:gap-y-0 lg:px-10">
+    <header className="fixed inset-x-0 top-0 z-50 border-b border-border/70 bg-background/90 backdrop-blur-xl">
+      <div
+        className={`mx-auto flex min-h-20 w-full ${headerWidth} flex-wrap items-center justify-between gap-x-4 gap-y-3 px-5 py-4 sm:px-8 lg:px-10`}
+      >
         <Link
           href="/"
           aria-label="QuantLearn home"
-          className="text-2xl font-bold tracking-tight focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-4"
+          className="font-display text-2xl font-semibold tracking-[-0.055em] focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-4"
         >
           <span className="text-foreground">Quant</span>
           <span className="text-primary">Learn</span>
@@ -63,10 +69,10 @@ function SiteHeader() {
           <Button
             asChild
             size="lg"
-            className="h-auto rounded-full px-6 py-3 font-medium shadow-lg shadow-primary/25 sm:px-8 md:col-start-3 md:row-start-1 md:justify-self-end"
+            className={`${buttonMotion} h-auto rounded-xl px-5 py-2.5 font-medium shadow-[0_8px_18px_rgba(35,87,217,0.18)] sm:px-6`}
           >
             <Link href="/learn">
-              Getting Started
+              Getting started
               <ArrowRight className="size-4" />
             </Link>
           </Button>
@@ -76,7 +82,7 @@ function SiteHeader() {
           <Button
             asChild
             variant="outline"
-            className="rounded-full border-primary/30 bg-white/40 text-primary shadow-sm hover:bg-white/70 hover:text-primary md:col-start-3 md:row-start-1 md:justify-self-end"
+            className={`${buttonMotion} rounded-xl border-primary/30 bg-white/70 text-primary shadow-sm hover:bg-primary-soft hover:text-primary`}
           >
             <Link href="/">Home</Link>
           </Button>
@@ -85,7 +91,7 @@ function SiteHeader() {
         {isApplicationRoute ? (
           <>
             <nav
-              className="order-3 flex basis-full items-center justify-center gap-1 sm:gap-2 md:order-none md:col-start-2 md:row-start-1 md:basis-auto"
+              className="order-3 flex basis-full items-center justify-center gap-1 sm:gap-2 lg:order-none lg:ml-auto lg:basis-auto"
               aria-label="Application navigation"
             >
               {appLinks.map(({ href, label }) => {
@@ -97,7 +103,7 @@ function SiteHeader() {
                     asChild
                     size="sm"
                     variant={active ? "default" : "ghost"}
-                    className="rounded-full px-4"
+                    className={`${buttonMotion} rounded-xl px-4`}
                   >
                     <Link href={href} aria-current={active ? "page" : undefined}>
                       {label}
@@ -107,13 +113,13 @@ function SiteHeader() {
               })}
             </nav>
 
-            <div className="ml-auto flex items-center gap-1 sm:gap-2 md:col-start-3 md:row-start-1 md:justify-self-end">
+            <div className="ml-auto flex items-center gap-1 sm:gap-2">
               {isProgress ? (
                 <Button
                   type="button"
                   variant="outline"
                   size="sm"
-                  className="rounded-full"
+                  className={`${buttonMotion} rounded-xl`}
                   onClick={handleSignOut}
                   disabled={isSigningOut}
                 >
@@ -125,7 +131,7 @@ function SiteHeader() {
                   Sign out
                 </Button>
               ) : (
-                <Button asChild variant="ghost" size="icon" className="rounded-full">
+                <Button asChild variant="ghost" size="icon" className={`${buttonMotion} rounded-xl`}>
                   <Link href="/progress" aria-label="Open profile and progress">
                     <CircleUserRound className="size-5" aria-hidden="true" />
                   </Link>
@@ -145,6 +151,13 @@ function SiteHeader() {
 }
 
 export default function RootLayout({ children }: RootLayoutProps) {
+  const pathname = usePathname() ?? "/";
+  const isHome = pathname === "/";
+  const contentTop = isHome ? "pt-24 md:pt-28" : "pt-28 md:pt-20";
+  const shellBackground = isHome
+    ? "bg-background bg-[linear-gradient(rgba(35,87,217,0.055)_1px,transparent_1px),linear-gradient(90deg,rgba(35,87,217,0.055)_1px,transparent_1px)] [background-position:center_top] [background-size:48px_48px]"
+    : "bg-background";
+
   return (
     <html lang="en">
       <head>
@@ -155,13 +168,9 @@ export default function RootLayout({ children }: RootLayoutProps) {
         />
       </head>
       <body>
-        <div className="relative isolate min-h-svh text-foreground">
-          <div
-            aria-hidden="true"
-            className="pointer-events-none fixed inset-0 z-0 bg-[radial-gradient(circle_at_center,var(--background)_0%,var(--background)_34%,var(--secondary)_68%,var(--accent)_100%)]"
-          />
+        <div className={`relative isolate min-h-svh text-foreground ${shellBackground}`}>
           <SiteHeader />
-          <div className="relative z-10 flex min-h-svh flex-col pt-28 md:pt-20">
+          <div className={`relative z-10 flex min-h-svh flex-col ${contentTop}`}>
             {children}
           </div>
         </div>
