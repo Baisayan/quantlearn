@@ -15,7 +15,7 @@ function Bloch({ point }: { point: Result["bloch"][number] }) {
   const end = project(point.x, point.y, point.z);
   const length = Math.hypot(point.x, point.y, point.z);
   return (
-    <div className="space-y-2 text-center">
+    <div className="space-y-2 rounded-xl bg-secondary/30 p-3 text-center">
       <p className="font-medium">Qubit {point.qubit}</p>
       <svg
         viewBox="0 0 280 280"
@@ -106,7 +106,7 @@ export function Results({ result }: { result: Result }) {
     pennylane: "PennyLane",
   }[result.engine];
   return (
-    <Card className="min-w-0 bg-white/90 shadow-none">
+    <Card className="min-w-0 rounded-2xl border-border/80">
       <CardContent className="space-y-4 p-5">
         <div className="flex flex-wrap justify-between gap-2">
           <h2 className="text-lg font-semibold">
@@ -174,7 +174,7 @@ export function Results({ result }: { result: Result }) {
                 </thead>
                 <tbody>
                   {result.statevector.map((v) => (
-                    <tr key={v.basis} className="border-t font-mono">
+                    <tr key={v.basis} className="border-t border-border/70 font-mono">
                       <td className="p-2">|{v.basis}⟩</td>
                       <td className="p-2">{v.real.toFixed(5)}</td>
                       <td className="p-2">{v.imag.toFixed(5)}</td>
@@ -225,7 +225,7 @@ export function Results({ result }: { result: Result }) {
                       stroke="currentColor"
                       strokeOpacity="0.3"
                     />
-                    <rect x={118 + result.circuit.operations.length * 70} y={26 + q * 70} width="28" height="28" rx="4" fill="white" stroke="currentColor" />
+                    <rect x={118 + result.circuit.operations.length * 70} y={26 + q * 70} width="28" height="28" rx="4" fill="var(--card)" stroke="currentColor" />
                     <text x={132 + result.circuit.operations.length * 70} y={45 + q * 70} textAnchor="middle" fill="currentColor" fontSize="12">M</text>
                   </g>
                 ))}
@@ -258,7 +258,7 @@ export function Results({ result }: { result: Result }) {
                               width="44"
                               height="36"
                               rx="5"
-                              fill="white"
+                              fill="var(--card)"
                               stroke="currentColor"
                             />
                             <text

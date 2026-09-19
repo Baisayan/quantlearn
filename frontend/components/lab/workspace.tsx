@@ -17,7 +17,7 @@ const CodeMirror = dynamic(() => import("@uiw/react-codemirror"), {
   loading: () => <p>Loading editor…</p>,
 });
 const selectClass =
-  "h-10 max-w-full rounded-md border bg-white px-3 text-sm focus-visible:outline-primary";
+  "h-10 max-w-full rounded-xl border border-border/80 bg-card px-3 text-sm outline-none transition-[border-color,box-shadow] duration-300 focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/50";
 
 export function LabWorkspace() {
   const [challengeId, setChallengeId] = useState("bell");
@@ -94,22 +94,37 @@ export function LabWorkspace() {
     }
   }
   return (
-    <main className="mx-auto w-full max-w-7xl space-y-6 px-5 py-8 sm:px-8">
+    <main className="mx-auto w-full max-w-7xl space-y-8 px-5 py-8 sm:px-8 lg:px-10">
       <div>
-        <p className="text-sm font-medium text-primary">Quantum playground</p>
-        <h1 className="mt-2 text-3xl font-semibold tracking-tight">
+        <p className="font-mono text-xs font-semibold uppercase tracking-widest text-primary">
+          Quantum playground
+        </p>
+        <h1 className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">
           Build. Run. Understand.
         </h1>
-        <p className="mt-2 text-muted-foreground">
+        <p className="mt-3 max-w-2xl text-muted-foreground">
           Explore up to three qubits with Qiskit Aer, Cirq and PennyLane.
         </p>
       </div>
-      <AIPanel key={challengeId} context={{ surface: "lab", challengeId, engine, circuit, code, codeDirty, error, results }} label="Ask about this experiment" />
+      <AIPanel
+        key={challengeId}
+        context={{
+          surface: "lab",
+          challengeId,
+          engine,
+          circuit,
+          code,
+          codeDirty,
+          error,
+          results,
+        }}
+        label="Ask about this experiment"
+      />
       <fieldset
         disabled={Boolean(busy)}
         className="space-y-6 disabled:opacity-80"
       >
-        <div className="flex flex-wrap items-end gap-3">
+        <div className="flex flex-wrap items-end gap-4">
           <div className="flex min-w-0 flex-col gap-2">
             <Label htmlFor="challenge">Experiment</Label>
             <select
@@ -163,12 +178,15 @@ export function LabWorkspace() {
               ))}
             </select>
           </div>
-          <Button onClick={() => run("simulate")}>Run circuit</Button>
-          <Button variant="outline" onClick={() => reset()}>
+          <Button className="rounded-xl" onClick={() => run("simulate")}>
+            Run circuit
+          </Button>
+          <Button variant="outline" className="rounded-xl" onClick={() => reset()}>
             Reset
           </Button>
           <Button
             variant="outline"
+            className="rounded-xl"
             disabled={tab === "code"}
             onClick={() => run("simulate", true)}
           >
@@ -176,7 +194,7 @@ export function LabWorkspace() {
           </Button>
         </div>
         <div className="grid items-start gap-5 lg:grid-cols-[1fr_3fr]">
-          <Card className="bg-white/85 shadow-none">
+          <Card className="rounded-2xl border-border/80">
             <CardContent className="space-y-4 p-5">
               <p className="text-xs font-medium text-primary">
                 {challenge?.difficulty || "Open exploration"}
@@ -199,7 +217,7 @@ export function LabWorkspace() {
                       Read the lesson →
                     </Link>
                   </Button>
-                  <details className="rounded-lg border p-3 text-sm">
+                  <details className="rounded-xl border border-border/70 bg-secondary/30 p-3 text-sm">
                     <summary className="cursor-pointer font-medium">
                       Need a hint?
                     </summary>
@@ -215,7 +233,7 @@ export function LabWorkspace() {
               </p>
             </CardContent>
           </Card>
-          <Card className="min-w-0 bg-white/90 shadow-none">
+          <Card className="min-w-0 rounded-2xl border-border/80">
             <CardContent className="p-5">
               <Tabs
                 value={tab}
@@ -228,7 +246,9 @@ export function LabWorkspace() {
               >
                 <div className="flex flex-wrap items-center justify-between gap-3">
                   <TabsList>
-                    <TabsTrigger value="circuit" disabled={codeDirty}>Circuit builder</TabsTrigger>
+                    <TabsTrigger value="circuit" disabled={codeDirty}>
+                      Circuit builder
+                    </TabsTrigger>
                     <TabsTrigger value="code">Python code</TabsTrigger>
                   </TabsList>
                   <div className="flex items-center gap-2">
@@ -265,7 +285,7 @@ export function LabWorkspace() {
                     pi. Run edited code to validate it and unlock the builder
                     and engine selector. Reset discards edits.
                   </p>
-                  <div className="overflow-hidden rounded-lg border">
+                  <div className="overflow-hidden rounded-xl border border-border/70">
                     <CodeMirror
                       editable={!busy}
                       value={code}
@@ -294,7 +314,7 @@ export function LabWorkspace() {
           </Card>
         </div>
         {challenge && (
-          <Card className="bg-white/85 shadow-none">
+          <Card className="rounded-2xl border-border/80">
             <CardContent className="flex flex-wrap items-center justify-between gap-4 p-5">
               <div>
                 <h2 className="font-semibold">Check your solution</h2>
@@ -313,20 +333,23 @@ export function LabWorkspace() {
         {error && (
           <p
             role="alert"
-            className="rounded-lg border border-primary/30 bg-white p-4 text-sm"
+            className="rounded-xl border border-primary/30 bg-card p-4 text-sm"
           >
             {error}
           </p>
         )}
         {assessment && (
-          <Card className="border-primary/30 bg-white">
+          <Card className="rounded-2xl border-primary/30 bg-secondary/50">
             <CardContent className="space-y-2 p-5">
               <p className="font-semibold">
                 {assessment.passed ? "Completed" : "Keep practising"} ·{" "}
                 {assessment.score}% target match
               </p>
               <p className="text-sm">{assessment.feedback}</p>
-              <Link href="/progress" className="text-sm text-primary underline">
+              <Link
+                href="/progress"
+                className="text-sm text-primary underline underline-offset-4 transition-colors duration-300 hover:text-primary/80"
+              >
                 View saved progress
               </Link>
             </CardContent>
@@ -334,7 +357,7 @@ export function LabWorkspace() {
         )}
       </div>
       {results.length >= 2 && (
-        <p className="rounded-lg border bg-white p-4 text-sm">
+        <p className="rounded-xl border border-border/70 bg-card p-4 text-sm">
           Maximum exact probability difference across engines:{" "}
           {Math.max(
             ...results[0].statevector.map((v, i) =>
@@ -353,7 +376,7 @@ export function LabWorkspace() {
           <Results key={result.engine} result={result} />
         ))}
         {!results.length && !busy && (
-          <div className="rounded-xl border border-dashed border-primary/25 p-10 text-center text-muted-foreground">
+          <div className="rounded-2xl border border-dashed border-primary/25 p-10 text-center text-muted-foreground">
             Run your circuit to explore its histogram, amplitudes, Bloch spheres
             and diagram.
           </div>

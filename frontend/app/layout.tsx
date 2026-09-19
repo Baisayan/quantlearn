@@ -78,7 +78,7 @@ function SiteHeader() {
           <Button
             asChild
             variant="outline"
-            className="rounded-xl border-primary/30 bg-white/70 text-primary shadow-sm hover:bg-primary-soft hover:text-primary"
+            className="rounded-xl border-primary/30 bg-card text-primary shadow-sm hover:bg-primary-soft hover:text-primary"
           >
             <Link href="/">Home</Link>
           </Button>

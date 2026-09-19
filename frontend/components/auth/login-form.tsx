@@ -71,7 +71,7 @@ export function LoginForm() {
   }
 
   return (
-    <Card className="w-full max-w-md border-white/70 bg-white/65 shadow-2xl shadow-primary/10 backdrop-blur-xl">
+    <Card className="w-full max-w-md rounded-2xl border-border/70 bg-card shadow-xl">
       <CardHeader className="space-y-3 px-6 pb-5 pt-7 text-center sm:px-8 sm:pt-8">
         <CardTitle className="text-2xl tracking-tight sm:text-3xl">
           {mode === "login" ? "Welcome back" : "Join QuantLearn"}
@@ -85,7 +85,7 @@ export function LoginForm() {
 
       <CardContent className="px-6 pb-7 sm:px-8 sm:pb-8">
         <div
-          className="grid grid-cols-2 rounded-full bg-secondary/80 p-1"
+          className="grid grid-cols-2 rounded-xl bg-secondary/80 p-1"
           role="tablist"
           aria-label="Authentication mode"
         >
@@ -94,7 +94,7 @@ export function LoginForm() {
             role="tab"
             aria-selected={mode === "login"}
             variant={mode === "login" ? "default" : "ghost"}
-            className="rounded-full"
+            className="rounded-lg"
             onClick={() => changeMode("login")}
           >
             Sign in
@@ -104,7 +104,7 @@ export function LoginForm() {
             role="tab"
             aria-selected={mode === "register"}
             variant={mode === "register" ? "default" : "ghost"}
-            className="rounded-full"
+            className="rounded-lg"
             onClick={() => changeMode("register")}
           >
             Create account
@@ -126,7 +126,7 @@ export function LoginForm() {
                 pattern="[A-Za-z0-9_]+"
                 disabled={isSubmitting}
                 required
-                className="h-11 rounded-xl border-primary/20 bg-white/70"
+                className="h-11 rounded-xl border-border/80 bg-background"
               />
             </div>
           ) : null}
@@ -141,7 +141,7 @@ export function LoginForm() {
               placeholder="you@example.com"
               disabled={isSubmitting}
               required
-              className="h-11 rounded-xl border-primary/20 bg-white/70"
+              className="h-11 rounded-xl border-border/80 bg-background"
             />
           </div>
 
@@ -156,18 +156,18 @@ export function LoginForm() {
               minLength={6}
               disabled={isSubmitting}
               required
-              className="h-11 rounded-xl border-primary/20 bg-white/70"
+              className="h-11 rounded-xl border-border/80 bg-background"
             />
           </div>
 
           <div aria-live="polite" className="min-h-6 text-sm leading-6">
-            {error ? <p className="text-primary">{error}</p> : null}
+            {error ? <p className="text-destructive">{error}</p> : null}
           </div>
 
           <Button
             type="submit"
             size="lg"
-            className="h-11 w-full rounded-full text-base shadow-lg shadow-primary/25"
+            className="h-11 w-full rounded-xl text-base shadow-lg shadow-primary/20"
             disabled={isSubmitting}
           >
             {isSubmitting ? (

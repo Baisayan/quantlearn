@@ -42,7 +42,7 @@ function GateButton({
       {...listeners}
       onClick={onClick}
       variant={selected ? "default" : "outline"}
-      className={`touch-none ${isDragging ? "opacity-40" : ""}`}
+      className={`touch-none rounded-xl ${isDragging ? "opacity-40" : ""}`}
       aria-label={`Select or drag ${gate.toUpperCase()} gate`}
     >
       {gate.toUpperCase()}
@@ -80,7 +80,7 @@ function Cell({
       {...(here?.targets[0] === row ? drag.listeners : {})}
       variant={here ? "secondary" : "ghost"}
       onClick={onClick}
-      className={`m-1 min-w-14 font-mono ${isOver ? "ring-2 ring-primary" : ""}`}
+      className={`m-1 min-w-14 rounded-lg font-mono ${isOver ? "ring-2 ring-primary" : ""}`}
       aria-label={`q${row}, step ${column + 1}${here ? `, ${here.gate.toUpperCase()}` : ", empty"}`}
     >
       {label}
@@ -177,7 +177,13 @@ export function CircuitEditor({
   return (
     <div className="space-y-4">
       <DndContext sensors={sensors} onDragEnd={dropped} onDragStart={event => setDragLabel(String(event.active.data.current?.gate || event.active.id).toUpperCase())} onDragCancel={() => setDragLabel(null)}>
-        <DragOverlay>{dragLabel && <div className="rounded-md border border-primary bg-white px-4 py-2 text-sm font-medium text-primary shadow-lg">{dragLabel}</div>}</DragOverlay>
+        <DragOverlay>
+          {dragLabel && (
+            <div className="rounded-xl border border-primary bg-card px-4 py-2 text-sm font-medium text-primary shadow-lg">
+              {dragLabel}
+            </div>
+          )}
+        </DragOverlay>
         <div className="flex flex-wrap gap-2">
           {gates.map((g) => (
             <GateButton
@@ -224,7 +230,7 @@ export function CircuitEditor({
         <p className="text-sm text-primary" role="status">
           {message}
         </p>
-        <div className="overflow-x-auto rounded-lg border bg-white p-3">
+        <div className="overflow-x-auto rounded-xl border border-border/70 bg-card p-3">
           {Array.from({ length: circuit.qubits }, (_, row) => (
             <div key={row} className="flex w-max items-center">
               <span className="w-14 font-mono text-sm">q{row} |0⟩</span>
