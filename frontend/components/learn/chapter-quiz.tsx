@@ -191,7 +191,7 @@ export function ChapterQuiz({
                       <Label
                         key={option.id}
                         htmlFor={`${question.id}-${option.id}`}
-                        className="flex cursor-pointer items-start gap-3 rounded-lg border border-border/70 px-4 py-3 text-sm font-normal leading-relaxed transition-[border-color,background-color] duration-300 hover:border-primary/40 has-[[data-state=checked]]:border-primary has-[[data-state=checked]]:bg-secondary/70"
+                        className="flex cursor-pointer items-start gap-3 rounded-md border border-border/70 px-4 py-3 text-sm font-normal leading-relaxed transition-[border-color,background-color] duration-300 hover:border-primary/40 has-[[data-state=checked]]:border-primary has-[[data-state=checked]]:bg-secondary/70"
                       >
                         <RadioGroupItem
                           id={`${question.id}-${option.id}`}
@@ -209,8 +209,16 @@ export function ChapterQuiz({
                   </RadioGroup>
                 </fieldset>
                 {feedback && (
-                  <div className="mt-4 space-y-2 rounded-lg bg-secondary/60 p-4 text-sm leading-relaxed">
-                    <p className="font-semibold">
+                  <div
+                    className={`mt-4 space-y-2 rounded-md p-4 text-sm leading-relaxed ${correct ? "bg-success/10" : "bg-accent/60"}`}
+                  >
+                    <p
+                      className={
+                        correct
+                          ? "font-semibold text-success"
+                          : "font-semibold text-accent-foreground"
+                      }
+                    >
                       {correct
                         ? "Correct"
                         : `Review this one. Correct answer: ${feedback.correctOptionId.toUpperCase()}`}
@@ -255,7 +263,6 @@ export function ChapterQuiz({
                 !read ||
                 Object.keys(answers).length !== questions.length
               }
-              className="rounded-xl"
             >
               {pending ? "Saving your result…" : "Submit quiz"}
             </Button>
@@ -279,7 +286,7 @@ export function ChapterQuiz({
               ? "You answered every question correctly."
               : "Read the explanations above and revisit any ideas that need more practice."}
           </p>
-          <Button variant="outline" onClick={retry} className="rounded-xl">
+          <Button variant="outline" onClick={retry}>
             Try again
           </Button>
         </div>

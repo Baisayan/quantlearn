@@ -15,11 +15,11 @@ function Bloch({ point }: { point: Result["bloch"][number] }) {
   const end = project(point.x, point.y, point.z);
   const length = Math.hypot(point.x, point.y, point.z);
   return (
-    <div className="space-y-2 rounded-xl bg-secondary/30 p-3 text-center">
+    <div className="space-y-2 rounded-xl bg-secondary/30 p-3 text-center text-secondary-foreground">
       <p className="font-medium">Qubit {point.qubit}</p>
       <svg
         viewBox="0 0 280 280"
-        className="mx-auto w-full max-w-64 text-primary"
+        className="mx-auto w-full max-w-64 text-teal"
         role="img"
         aria-label={`Bloch vector for q${point.qubit}: x ${point.x.toFixed(3)}, y ${point.y.toFixed(3)}, z ${point.z.toFixed(3)}`}
       >

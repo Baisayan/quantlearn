@@ -63,15 +63,15 @@ function CircuitPreview() {
       <div className="relative overflow-hidden rounded-3xl border border-border bg-card p-3 shadow-2xl sm:p-4">
         <div className="flex items-center justify-between border-b border-border/70 px-1 pb-2.5 sm:px-2">
           <div className="flex items-center gap-1.5" aria-hidden="true">
-            <span className="size-2 rounded-full bg-red-400" />
-            <span className="size-2 rounded-full bg-amber-400" />
-            <span className="size-2 rounded-full bg-emerald-400" />
+            <span className="size-2 rounded-full bg-destructive" />
+            <span className="size-2 rounded-full bg-amber" />
+            <span className="size-2 rounded-full bg-success" />
           </div>
           <span className="font-mono text-xs font-medium text-muted-foreground">
             Quantum Circuit Lab
           </span>
           <div className="flex items-center gap-2" aria-hidden="true">
-            <span className="inline-flex items-center gap-1 rounded-md bg-primary px-2.5 py-0.5 font-mono text-xs font-medium text-white shadow-sm">
+            <span className="inline-flex items-center gap-1 rounded-md bg-primary px-2.5 py-0.5 font-mono text-xs font-medium text-primary-foreground shadow-sm">
               <span className="text-xs">▶</span>
               Run
             </span>
@@ -91,42 +91,44 @@ function CircuitPreview() {
               <title>Bell state circuit</title>
               <defs>
                 <pattern id="hero-grid" width="24" height="24" patternUnits="userSpaceOnUse">
-                  <path d="M 24 0 L 0 0 0 24" fill="none" stroke="#DCE6F4" strokeWidth="1" />
+                  <path d="M 24 0 L 0 0 0 24" fill="none" stroke="var(--border)" strokeOpacity="0.55" strokeWidth="1" />
                 </pattern>
               </defs>
               <rect width="620" height="190" rx="12" fill="url(#hero-grid)" />
-              <g fill="#152235" fontFamily="IBM Plex Mono, monospace" fontSize="16">
+              <g fill="var(--foreground)" fontFamily="IBM Plex Mono, monospace" fontSize="16">
                 <text x="18" y="64">q0</text>
                 <text x="18" y="132">q1</text>
                 <text x="56" y="64">|0⟩</text>
                 <text x="56" y="132">|0⟩</text>
               </g>
-              <g stroke="#152235" strokeWidth="2" fill="none">
-                <path d="M 100 59 H 550" />
-                <path d="M 100 127 H 550" />
+              <g stroke="var(--foreground)" strokeWidth="2" fill="none">
+                <path d="M 100 59 H 440" />
+                <path d="M 494 59 H 522" />
+                <path d="M 100 127 H 440" />
+                <path d="M 494 127 H 522" />
                 <path d="M 318 59 V 127" />
               </g>
-              <g fill="#E6EEFF" stroke="#2357D9" strokeWidth="2">
+              <g fill="var(--primary-soft)" stroke="var(--primary)" strokeWidth="2">
                 <rect x="150" y="32" width="54" height="54" rx="8" />
               </g>
-              <text x="170" y="67" fill="#2357D9" fontFamily="IBM Plex Mono, monospace" fontSize="22" fontWeight="600">H</text>
-              <circle cx="318" cy="59" r="8" fill="#2357D9" />
-              <circle cx="318" cy="127" r="20" fill="#FFFFFF" stroke="#0D8F83" strokeWidth="2" />
-              <path d="M 306 127 H 330 M 318 115 V 139" stroke="#0D8F83" strokeWidth="2" />
-              <g stroke="#B7791F" strokeWidth="2" fill="#FFF7E6">
+              <text x="170" y="67" fill="var(--primary)" fontFamily="IBM Plex Mono, monospace" fontSize="22" fontWeight="600">H</text>
+              <circle cx="318" cy="59" r="8" fill="var(--primary)" />
+              <circle cx="318" cy="127" r="20" fill="var(--card)" stroke="var(--teal)" strokeWidth="2" />
+              <path d="M 306 127 H 330 M 318 115 V 139" stroke="var(--teal)" strokeWidth="2" />
+              <g stroke="var(--amber)" strokeWidth="2" fill="var(--accent)">
                 <rect x="440" y="32" width="54" height="54" rx="8" />
                 <rect x="440" y="100" width="54" height="54" rx="8" />
               </g>
-              <g stroke="#B7791F" strokeWidth="2" fill="none">
+              <g stroke="var(--amber)" strokeWidth="2" fill="none">
                 <path d="M 453 70 A 17 17 0 0 1 481 70" />
                 <path d="M 467 70 L 477 55" />
                 <path d="M 453 138 A 17 17 0 0 1 481 138" />
                 <path d="M 467 138 L 477 123" />
               </g>
-              <g fill="#637083" fontFamily="IBM Plex Mono, monospace" fontSize="12">
+              <g fill="var(--muted-foreground)" fontFamily="IBM Plex Mono, monospace" fontSize="12">
                 <text x="438" y="18">measure</text>
-                <text x="538" y="64">m0</text>
-                <text x="538" y="132">m1</text>
+                <text x="534" y="64">m0</text>
+                <text x="534" y="132">m1</text>
               </g>
             </svg>
           </div>
@@ -183,13 +185,13 @@ function CircuitPreview() {
                   <title>Maximally mixed reduced Bloch state</title>
                   <defs>
                     <radialGradient id="bloch-fill" cx="34%" cy="28%" r="76%">
-                      <stop offset="0" stopColor="#FFFFFF" stopOpacity="0.96" />
-                      <stop offset="0.48" stopColor="#37C2B3" stopOpacity="0.18" />
-                      <stop offset="1" stopColor="#0D8F83" stopOpacity="0.28" />
+                      <stop offset="0" stopColor="var(--card)" stopOpacity="0.96" />
+                      <stop offset="0.48" stopColor="var(--teal)" stopOpacity="0.18" />
+                      <stop offset="1" stopColor="var(--teal)" stopOpacity="0.28" />
                     </radialGradient>
                   </defs>
-                  <circle cx="88" cy="88" r="56" fill="url(#bloch-fill)" stroke="#0D8F83" strokeOpacity="0.38" />
-                  <g fill="none" stroke="#0D8F83" strokeOpacity="0.38" strokeWidth="1">
+                  <circle cx="88" cy="88" r="56" fill="url(#bloch-fill)" stroke="var(--teal)" strokeOpacity="0.38" />
+                  <g fill="none" stroke="var(--teal)" strokeOpacity="0.38" strokeWidth="1">
                     <ellipse cx="88" cy="88" rx="56" ry="16" />
                     <ellipse cx="88" cy="88" rx="20" ry="56" />
                     <ellipse cx="88" cy="88" rx="42" ry="56" transform="rotate(-48 88 88)" />
@@ -197,8 +199,8 @@ function CircuitPreview() {
                     <line x1="88" y1="32" x2="88" y2="144" />
                     <line x1="43" y1="126" x2="133" y2="50" />
                   </g>
-                  <circle cx="88" cy="88" r="7" fill="#0D8F83" stroke="#FFFFFF" strokeWidth="3" />
-                  <g fill="#0D7068" fontFamily="IBM Plex Mono, monospace" fontSize="10">
+                  <circle cx="88" cy="88" r="7" fill="var(--teal)" stroke="var(--card)" strokeWidth="3" />
+                  <g fill="var(--secondary-foreground)" fontFamily="IBM Plex Mono, monospace" fontSize="10">
                     <text x="85" y="22">z</text>
                     <text x="151" y="92">x</text>
                     <text x="136" y="46">y</text>
@@ -252,7 +254,7 @@ export default function Home() {
               <Button
                 asChild
                 size="lg"
-                className="h-auto rounded-xl bg-primary px-6 py-3 text-base shadow-lg shadow-primary/20 hover:bg-primary/90 sm:px-7"
+                className="h-auto px-6 py-3 text-base shadow-lg shadow-primary/20 sm:px-7"
               >
                 <Link href="/learn">
                   Getting started
@@ -263,7 +265,7 @@ export default function Home() {
                 asChild
                 size="lg"
                 variant="outline"
-                className="h-auto rounded-xl border-primary/30 bg-white/70 px-6 py-3 text-base text-primary hover:border-primary/50 hover:bg-primary-soft hover:text-primary sm:px-7"
+                className="h-auto border-primary/30 bg-card/80 px-6 py-3 text-base text-primary hover:border-primary/50 hover:bg-primary-soft hover:text-primary sm:px-7"
               >
                 <a href="#features">
                   Explore features
@@ -366,13 +368,13 @@ export default function Home() {
             Start from your first qubit or jump directly into the playground.
           </p>
           <div className="mt-6 flex flex-col justify-center gap-3 sm:flex-row">
-            <Button asChild size="lg" className="h-auto rounded-xl px-6 py-3 text-base shadow-lg shadow-primary/20">
+            <Button asChild size="lg" className="h-auto px-6 py-3 text-base shadow-lg shadow-primary/20">
               <Link href="/learn">
                 Start learning
                 <ArrowRight className="size-5" aria-hidden="true" />
               </Link>
             </Button>
-            <Button asChild size="lg" variant="outline" className="h-auto rounded-xl border-primary/30 bg-white/70 px-6 py-3 text-base text-primary hover:bg-white hover:text-primary">
+            <Button asChild size="lg" variant="outline" className="h-auto border-primary/30 bg-card/80 px-6 py-3 text-base text-primary hover:bg-card hover:text-primary">
               <Link href="/lab">
                 Explore the lab
                 <ArrowRight className="size-5" aria-hidden="true" />

@@ -85,7 +85,7 @@ export function LoginForm() {
 
       <CardContent className="px-6 pb-7 sm:px-8 sm:pb-8">
         <div
-          className="grid grid-cols-2 rounded-xl bg-secondary/80 p-1"
+          className="grid grid-cols-2 rounded-md bg-secondary/80 p-1"
           role="tablist"
           aria-label="Authentication mode"
         >
@@ -94,7 +94,7 @@ export function LoginForm() {
             role="tab"
             aria-selected={mode === "login"}
             variant={mode === "login" ? "default" : "ghost"}
-            className="rounded-lg"
+            className="rounded-md"
             onClick={() => changeMode("login")}
           >
             Sign in
@@ -104,7 +104,7 @@ export function LoginForm() {
             role="tab"
             aria-selected={mode === "register"}
             variant={mode === "register" ? "default" : "ghost"}
-            className="rounded-lg"
+            className="rounded-md"
             onClick={() => changeMode("register")}
           >
             Create account
@@ -126,7 +126,7 @@ export function LoginForm() {
                 pattern="[A-Za-z0-9_]+"
                 disabled={isSubmitting}
                 required
-                className="h-11 rounded-xl border-border/80 bg-background"
+                className="h-11 rounded-md border-border/80 bg-background"
               />
             </div>
           ) : null}
@@ -141,7 +141,7 @@ export function LoginForm() {
               placeholder="you@example.com"
               disabled={isSubmitting}
               required
-              className="h-11 rounded-xl border-border/80 bg-background"
+              className="h-11 rounded-md border-border/80 bg-background"
             />
           </div>
 
@@ -156,7 +156,7 @@ export function LoginForm() {
               minLength={6}
               disabled={isSubmitting}
               required
-              className="h-11 rounded-xl border-border/80 bg-background"
+              className="h-11 rounded-md border-border/80 bg-background"
             />
           </div>
 
@@ -167,7 +167,7 @@ export function LoginForm() {
           <Button
             type="submit"
             size="lg"
-            className="h-11 w-full rounded-xl text-base shadow-lg shadow-primary/20"
+            className="h-11 w-full rounded-md text-base shadow-lg shadow-primary/20"
             disabled={isSubmitting}
           >
             {isSubmitting ? (

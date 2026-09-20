@@ -52,7 +52,7 @@ export default async function LearnPage() {
                 {next?.summary ??
                   "Revisit a lesson, retry a quiz or review how your scores have changed."}
               </p>
-              <Button asChild className="rounded-xl">
+              <Button asChild>
                 <Link href={next ? `/learn/${next.id}` : "/progress"}>
                   {next ? "Open chapter" : "Review progress"}
                   <ArrowRight aria-hidden="true" />
@@ -135,7 +135,9 @@ export default async function LearnPage() {
                           <span className="font-medium text-muted-foreground">
                             Chapter {String(chapter.order).padStart(2, "0")}
                           </span>
-                          <span className="inline-flex items-center gap-1 rounded-full bg-secondary px-2 py-1 text-secondary-foreground">
+                          <span
+                            className={`inline-flex items-center gap-1 rounded-full px-2 py-1 ${done ? "bg-success/10 text-success" : "bg-secondary text-secondary-foreground"}`}
+                          >
                             {done && (
                               <Check className="size-3" aria-hidden="true" />
                             )}

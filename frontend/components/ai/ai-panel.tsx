@@ -140,14 +140,14 @@ export function AIPanel({
       <SheetTrigger asChild>
         <Button
           variant="outline"
-          className="rounded-xl border-primary/30 bg-card text-primary hover:bg-primary-soft hover:text-primary"
+          className="rounded-md border-violet/30 bg-card text-violet-foreground hover:bg-violet-soft hover:text-violet-foreground"
         >
           <Sparkles className="size-4" aria-hidden="true" />
           {label}
         </Button>
       </SheetTrigger>
       <SheetContent className="flex w-full flex-col bg-card p-0 sm:max-w-lg">
-        <SheetHeader className="border-b border-border/70 bg-secondary/40 pr-12">
+        <SheetHeader className="border-b border-border/70 bg-violet-soft/60 pr-12">
           <SheetTitle>{title}</SheetTitle>
           <SheetDescription>
             {plan
@@ -225,7 +225,7 @@ export function AIPanel({
               </div>
             ))}
           {pending && (
-            <p role="status" className="text-sm text-primary">
+            <p role="status" className="text-sm text-violet">
               Thinking through your question…
             </p>
           )}
@@ -249,7 +249,7 @@ export function AIPanel({
         </div>
         <div className="space-y-3 border-t p-5">
           {selection && context.surface === "learn" && (
-            <div className="rounded-lg border border-border/70 bg-secondary/50 p-3 text-xs">
+            <div className="rounded-md border border-violet/20 bg-violet-soft/60 p-3 text-xs">
               <p className="line-clamp-3">Selected text: {selection}</p>
               <Button
                 size="sm"
@@ -275,7 +275,7 @@ export function AIPanel({
                 key={p}
                 size="sm"
                 variant="outline"
-                className="h-auto whitespace-normal text-left"
+                className="h-auto whitespace-normal border-violet/20 text-violet-foreground hover:bg-violet-soft hover:text-violet-foreground"
                 disabled={pending}
                 onClick={() => ask(p)}
               >

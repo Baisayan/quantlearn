@@ -17,7 +17,7 @@ const CodeMirror = dynamic(() => import("@uiw/react-codemirror"), {
   loading: () => <p>Loading editor…</p>,
 });
 const selectClass =
-  "h-10 max-w-full rounded-xl border border-border/80 bg-card px-3 text-sm outline-none transition-[border-color,box-shadow] duration-300 focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/50";
+  "h-10 max-w-full rounded-md border border-border/80 bg-card px-3 text-sm outline-none transition-[border-color,box-shadow] duration-300 focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/50";
 
 export function LabWorkspace() {
   const [challengeId, setChallengeId] = useState("bell");
@@ -94,7 +94,7 @@ export function LabWorkspace() {
     }
   }
   return (
-    <main className="mx-auto w-full max-w-7xl space-y-8 px-5 py-8 sm:px-8 lg:px-10">
+    <main className="lab-shell mx-auto w-full max-w-7xl space-y-8 px-5 py-8 sm:px-8 lg:px-10">
       <div>
         <p className="font-mono text-xs font-semibold uppercase tracking-widest text-primary">
           Quantum playground
@@ -178,15 +178,14 @@ export function LabWorkspace() {
               ))}
             </select>
           </div>
-          <Button className="rounded-xl" onClick={() => run("simulate")}>
+          <Button onClick={() => run("simulate")}>
             Run circuit
           </Button>
-          <Button variant="outline" className="rounded-xl" onClick={() => reset()}>
+          <Button variant="outline" onClick={() => reset()}>
             Reset
           </Button>
           <Button
             variant="outline"
-            className="rounded-xl"
             disabled={tab === "code"}
             onClick={() => run("simulate", true)}
           >
@@ -217,8 +216,8 @@ export function LabWorkspace() {
                       Read the lesson →
                     </Link>
                   </Button>
-                  <details className="rounded-xl border border-border/70 bg-secondary/30 p-3 text-sm">
-                    <summary className="cursor-pointer font-medium">
+                  <details className="rounded-md border border-accent-foreground/20 bg-accent/60 p-3 text-sm">
+                    <summary className="cursor-pointer font-medium text-accent-foreground">
                       Need a hint?
                     </summary>
                     <p className="mt-3 leading-relaxed text-muted-foreground">
@@ -333,15 +332,27 @@ export function LabWorkspace() {
         {error && (
           <p
             role="alert"
-            className="rounded-xl border border-primary/30 bg-card p-4 text-sm"
+            className="rounded-xl border border-destructive/25 bg-card p-4 text-sm"
           >
             {error}
           </p>
         )}
         {assessment && (
-          <Card className="rounded-2xl border-primary/30 bg-secondary/50">
+          <Card
+            className={
+              assessment.passed
+                ? "rounded-2xl border-success/30 bg-success/10"
+                : "rounded-2xl border-accent-foreground/30 bg-accent/60"
+            }
+          >
             <CardContent className="space-y-2 p-5">
-              <p className="font-semibold">
+              <p
+                className={
+                  assessment.passed
+                    ? "font-semibold text-success"
+                    : "font-semibold text-accent-foreground"
+                }
+              >
                 {assessment.passed ? "Completed" : "Keep practising"} ·{" "}
                 {assessment.score}% target match
               </p>

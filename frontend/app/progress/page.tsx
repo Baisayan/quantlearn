@@ -60,7 +60,7 @@ export default async function ProgressPage() {
           value={(completed.size / course.chapters.length) * 100}
           aria-label="Course completion"
         />
-        <Button asChild className="rounded-xl">
+        <Button asChild>
           <Link href={next ? `/learn/${next.id}` : "/learn"}>
             {next ? "Continue learning" : "Revisit the course"}
           </Link>
@@ -84,7 +84,9 @@ export default async function ProgressPage() {
                 <span className="font-medium">
                   {chapter.order}. {chapter.title}
                 </span>
-                <span className="shrink-0 text-sm text-muted-foreground">
+                <span
+                  className={count ? "shrink-0 text-sm text-success" : "shrink-0 text-sm text-muted-foreground"}
+                >
                   {count
                     ? `Best ${bestScore}/10 · ${count} attempt${count === 1 ? "" : "s"}`
                     : status}
@@ -115,7 +117,9 @@ export default async function ProgressPage() {
                 className="flex flex-wrap justify-between gap-2 p-5 transition-colors duration-300 hover:bg-secondary/50"
               >
                 <span className="font-medium">{challenge.title}</span>
-                <span className="text-sm text-muted-foreground">
+                <span
+                  className={results.some((a) => a.passed) ? "text-sm text-success" : "text-sm text-muted-foreground"}
+                >
                   {results.length
                     ? `${results.some((a) => a.passed) ? "Completed" : "In progress"} · Best ${Math.max(...results.map((a) => a.score))}% · ${results.length} attempts`
                     : "Not started"}
@@ -124,7 +128,7 @@ export default async function ProgressPage() {
             );
           })}
         </div>
-        <Button asChild variant="outline" className="rounded-xl">
+        <Button asChild variant="outline">
           <Link href="/lab">Open Lab</Link>
         </Button>
         {labAttempts.length > 0 && (

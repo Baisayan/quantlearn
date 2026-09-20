@@ -14,16 +14,19 @@
   --muted: #edf2f7;
   --muted-foreground: #637083;
   --accent: #fff7e6;
-  --accent-foreground: #94600d;
+  --accent-foreground: #7a4a08;
   --border: rgba(21, 34, 53, 0.12);
   --input: rgba(21, 34, 53, 0.18);
   --ring: #2357d9;
   --destructive: #c44753;
   --destructive-foreground: #ffffff;
+  --success: #21845b;
+  --success-foreground: #ffffff;
   --teal: #0d8f83;
-  --amber: #e0a72f;
+  --amber: #b7791f;
   --violet: #6d5ce7;
   --violet-soft: #f0edff;
+  --violet-foreground: #4b3bb8;
   --grid-line: rgba(35, 87, 217, 0.055);
   --surface-alt: #edf2f7;
   --font-quant-display: "Sora", "Avenir Next", "Segoe UI", sans-serif;
@@ -51,10 +54,13 @@
   --color-ring: var(--ring);
   --color-destructive: var(--destructive);
   --color-destructive-foreground: var(--destructive-foreground);
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
   --color-teal: var(--teal);
   --color-amber: var(--amber);
   --color-violet: var(--violet);
   --color-violet-soft: var(--violet-soft);
+  --color-violet-foreground: var(--violet-foreground);
   --color-surface-alt: var(--surface-alt);
   --radius-sm: calc(var(--radius) - 6px);
   --radius-md: calc(var(--radius) - 4px);
@@ -95,7 +101,7 @@
   }
 }
 
-.landing-shell {
+.lab-shell {
   background-color: var(--background);
   background-image: linear-gradient(var(--grid-line) 1px, transparent 1px),
     linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);

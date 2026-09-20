@@ -65,7 +65,7 @@ function SiteHeader() {
           <Button
             asChild
             size="default"
-            className="h-auto rounded-xl px-4 py-2 font-medium shadow-md sm:px-5"
+            className="h-auto rounded-md px-4 py-2 font-medium shadow-md sm:px-5"
           >
             <Link href="/learn">
               Getting started
@@ -78,7 +78,7 @@ function SiteHeader() {
           <Button
             asChild
             variant="outline"
-            className="rounded-xl border-primary/30 bg-card text-primary shadow-sm hover:bg-primary-soft hover:text-primary"
+            className="rounded-md border-primary/30 bg-card text-primary shadow-sm hover:bg-primary-soft hover:text-primary"
           >
             <Link href="/">Home</Link>
           </Button>
@@ -99,7 +99,7 @@ function SiteHeader() {
                     asChild
                     size="sm"
                     variant={active ? "default" : "ghost"}
-                    className="rounded-xl px-4"
+                    className="rounded-md px-4"
                   >
                     <Link href={href} aria-current={active ? "page" : undefined}>
                       {label}
@@ -115,7 +115,7 @@ function SiteHeader() {
                   type="button"
                   variant="outline"
                   size="sm"
-                  className="rounded-xl"
+                  className="rounded-md"
                   onClick={handleSignOut}
                   disabled={isSigningOut}
                 >
@@ -127,7 +127,7 @@ function SiteHeader() {
                   Sign out
                 </Button>
               ) : (
-                <Button asChild variant="ghost" size="icon" className="rounded-xl">
+                <Button asChild variant="ghost" size="icon" className="rounded-md">
                   <Link href="/progress" aria-label="Open profile and progress">
                     <CircleUserRound className="size-5" aria-hidden="true" />
                   </Link>
@@ -150,7 +150,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
   const pathname = usePathname() ?? "/";
   const isHome = pathname === "/";
   const contentTop = isHome ? "pt-16" : "pt-20 md:pt-16";
-  const shellBackground = isHome ? "landing-shell" : "bg-background";
+  const shellBackground = "bg-background";
 
   return (
     <html lang="en">

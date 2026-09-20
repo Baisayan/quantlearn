@@ -9,7 +9,7 @@ export default function ProgressError({ reset }: { reset: () => void }) {
       <p className="text-muted-foreground">
         Check your connection and try again.
       </p>
-      <Button onClick={reset} className="rounded-xl">
+      <Button onClick={reset}>
         Try again
       </Button>
     </main>

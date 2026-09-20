@@ -42,7 +42,7 @@ function GateButton({
       {...listeners}
       onClick={onClick}
       variant={selected ? "default" : "outline"}
-      className={`touch-none rounded-xl ${isDragging ? "opacity-40" : ""}`}
+      className={`touch-none rounded-md ${isDragging ? "opacity-40" : ""}`}
       aria-label={`Select or drag ${gate.toUpperCase()} gate`}
     >
       {gate.toUpperCase()}
@@ -80,7 +80,7 @@ function Cell({
       {...(here?.targets[0] === row ? drag.listeners : {})}
       variant={here ? "secondary" : "ghost"}
       onClick={onClick}
-      className={`m-1 min-w-14 rounded-lg font-mono ${isOver ? "ring-2 ring-primary" : ""}`}
+      className={`m-1 min-w-14 rounded-md font-mono ${isOver ? "ring-2 ring-primary" : ""}`}
       aria-label={`q${row}, step ${column + 1}${here ? `, ${here.gate.toUpperCase()}` : ", empty"}`}
     >
       {label}

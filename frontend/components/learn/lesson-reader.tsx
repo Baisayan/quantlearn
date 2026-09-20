@@ -74,7 +74,7 @@ export function LessonReader({ markdown }: { markdown: string }) {
             <td className="border-b px-4 py-3">{children}</td>
           ),
           blockquote: ({ children }) => (
-            <blockquote className="border-l-2 border-primary bg-secondary/40 px-5 py-3">
+            <blockquote className="border-l-2 border-accent-foreground bg-accent/60 px-5 py-3">
               {children}
             </blockquote>
           ),

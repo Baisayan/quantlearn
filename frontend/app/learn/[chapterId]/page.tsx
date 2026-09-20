@@ -57,7 +57,9 @@ export default async function ChapterPage({
           {chapter.summary}
         </p>
         <div className="flex flex-wrap items-center gap-4 text-sm">
-          <span className="rounded-full bg-secondary px-3 py-1 text-secondary-foreground">
+          <span
+            className={`rounded-full px-3 py-1 ${progress.count ? "bg-success/10 text-success" : "bg-secondary text-secondary-foreground"}`}
+          >
             {progress.count
               ? `Completed · Best ${progress.bestScore}/10`
               : "In progress"}
@@ -113,13 +115,13 @@ export default async function ChapterPage({
         aria-label="Chapter navigation"
         className="flex flex-wrap justify-between gap-4 border-t border-border/70 pt-6"
       >
-        <Button asChild variant="outline" className="rounded-xl">
+        <Button asChild variant="outline">
           <Link href={previous ? `/learn/${previous.id}` : "/learn"}>
             <ArrowLeft aria-hidden="true" />
             {previous ? "Previous chapter" : "All chapters"}
           </Link>
         </Button>
-        <Button asChild className="rounded-xl">
+        <Button asChild>
           <Link href={next ? `/learn/${next.id}` : "/progress"}>
             {next ? "Next chapter" : "Review progress"}
             <ArrowRight aria-hidden="true" />
