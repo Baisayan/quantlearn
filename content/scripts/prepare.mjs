@@ -12,6 +12,7 @@ const readJson = async (path) => JSON.parse(await readFile(resolve(root, path), 
 const catalog = await readJson("catalog.json");
 const sources = await readJson("sources.json");
 const { circuits } = await readJson("examples/circuits.json");
+catalog.chapters.sort((a, b) => a.order - b.order);
 const unique = (values, label) => assert.equal(new Set(values).size, values.length, "Duplicate " + label);
 unique(sources.map((s) => s.id), "source IDs");
 unique(catalog.chapters.map((c) => c.id), "chapter IDs");
@@ -19,12 +20,17 @@ unique(catalog.modules.map((m) => m.id), "module IDs");
 assert.ok(catalog.modules.every((m) => m.description), "Missing module description");
 unique(circuits.map((c) => c.id), "circuit IDs");
 assert.deepEqual(catalog.engines, ["aer", "cirq", "pennylane"]);
-assert.equal(catalog.chapters.length, 14);
-assert.equal(catalog.chapterQuiz.questions, 10);
+assert.equal(catalog.chapters.length, 16);
+assert.ok(catalog.chapterQuiz.minQuestions > 0);
+assert.ok(catalog.chapterQuiz.maxQuestions >= catalog.chapterQuiz.minQuestions);
 assert.deepEqual(catalog.chapterQuiz.difficultyOrder, ["easy", "medium", "hard"]);
-assert.deepEqual(catalog.chapterQuiz.difficultyCounts, { easy: 3, medium: 4, hard: 3 });
-const expectedDifficulty = catalog.chapterQuiz.difficultyOrder.flatMap((level) =>
-  Array(catalog.chapterQuiz.difficultyCounts[level]).fill(level));
+const allowedInteractiveWidgets = new Set([
+  "information-basics",
+  "normalization",
+  "bloch-state",
+  "measurement-shots",
+  "phase-interference",
+]);
 for (const source of sources) {
   assert.ok(source.title && source.publisher && source.supports && source.reuse);
   assert.equal(new URL(source.url).protocol, "https:");
@@ -62,18 +68,23 @@ for (const [index, chapter] of catalog.chapters.entries()) {
   assert.ok(markdown.trim().split(/\s+/).length >= 250, "Lesson too short: " + chapter.id);
   assert.equal((markdown.match(new RegExp("^" + String.fromCharCode(96).repeat(3), "gm")) ?? []).length % 2, 0, "Unclosed code fence");
   assert.equal((markdown.match(/^\$\$/gm) ?? []).length % 2, 0, "Unclosed display math");
+  const interactiveBlocks = [...markdown.matchAll(/```interactive\r?\n([\s\S]*?)\r?\n```/g)];
+  for (const block of interactiveBlocks) {
+    const spec = JSON.parse(block[1]);
+    assert.ok(allowedInteractiveWidgets.has(spec.widget), "Unknown interactive widget in " + chapter.id);
+  }
   const refs = [...markdown.matchAll(/!\[([^\]]+)\]\(\/learn\/visuals\/([a-z0-9-]+)\.svg\)/g)];
   assert.deepEqual(refs.map((r) => r[2]).sort(), [...chapter.visualIds].sort(), "Figure references differ in " + chapter.id);
   refs.forEach((r) => { assert.ok(r[1].length >= 20, "Missing descriptive alt text"); usedFigures.add(r[2]); });
   chapter.sourceIds.forEach((id) => assert.ok(markdown.includes(sources.find((s) => s.id === id).url), "Missing chapter citation"));
   const quiz = await readJson(chapter.quiz);
   assert.equal(quiz.chapterId, chapter.id);
-  assert.equal(quiz.questions.length, catalog.chapterQuiz.questions);
+  assert.ok(quiz.questions.length >= catalog.chapterQuiz.minQuestions && quiz.questions.length <= catalog.chapterQuiz.maxQuestions, "Quiz length outside policy in " + chapter.id);
     assert.ok(Number.isInteger(quiz.version) && quiz.version > 0 && quiz.version <= 2147483647, "Quiz version must be a positive PostgreSQL integer");
-  assert.deepEqual(quiz.questions.map((q) => q.difficulty), expectedDifficulty, "Quiz difficulty order differs in " + chapter.id);
+  assert.ok(catalog.chapterQuiz.difficultyOrder.every((level) => quiz.questions.some((q) => q.difficulty === level)), "Quiz is missing a difficulty level in " + chapter.id);
   unique(quiz.questions.map((q) => q.prompt.trim().toLowerCase()), "question prompts");
   assert.ok(!/[\u2014]/.test(markdown + JSON.stringify(quiz)), "Em dash in " + chapter.id);
-  assert.ok(markdown.includes("Answer all 10 questions"), "Outdated quiz instructions in " + chapter.id);
+  if (chapter.module === "foundations") assert.ok(markdown.includes("Answer every question"), "Outdated quiz instructions in " + chapter.id);
   unique(quiz.questions.map((q) => q.id), "question IDs");
   for (const q of quiz.questions) {
     assert.equal(q.options.length, 4);

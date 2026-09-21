@@ -1,0 +1,14 @@
+{
+  "chapterId": "math-toolkit",
+  "version": 1,
+  "questions": [
+    {"id":"math-toolkit-q1","difficulty":"easy","prompt":"What is |i/2|^2?","options":[{"id":"a","text":"-1/4"},{"id":"b","text":"1/4"},{"id":"c","text":"i/4"},{"id":"d","text":"1/2"}],"correctOptionId":"b","explanation":"Squared magnitude is z* z, so |i/2|^2 = 1/4."},
+    {"id":"math-toolkit-q2","difficulty":"easy","prompt":"What is the norm squared of [1/2, 1/2]^T?","options":[{"id":"a","text":"1/4"},{"id":"b","text":"1/2"},{"id":"c","text":"1"},{"id":"d","text":"2"}],"correctOptionId":"b","explanation":"Add the squared magnitudes: 1/4 + 1/4 = 1/2."},
+    {"id":"math-toolkit-q3","difficulty":"medium","prompt":"How do you normalize [1/2, 1/2]^T?","options":[{"id":"a","text":"Multiply both entries by sqrt(2)"},{"id":"b","text":"Square each entry and stop"},{"id":"c","text":"Add the entries to get a probability"},{"id":"d","text":"Set the second entry to zero"}],"correctOptionId":"a","explanation":"The norm is 1/sqrt(2), so dividing by it multiplies both entries by sqrt(2)."},
+    {"id":"math-toolkit-q4","difficulty":"medium","prompt":"What does H|0> equal?","options":[{"id":"a","text":"|0>"},{"id":"b","text":"|1>"},{"id":"c","text":"(|0> + |1>)/sqrt(2)"},{"id":"d","text":"(|0> - |1>)/2"}],"correctOptionId":"c","explanation":"The first column of H is [1,1]^T/sqrt(2), which is |+>."},
+    {"id":"math-toolkit-q5","difficulty":"medium","prompt":"What does H do to |+>?","options":[{"id":"a","text":"It returns |0>"},{"id":"b","text":"It returns |1>"},{"id":"c","text":"It makes the norm zero"},{"id":"d","text":"It measures the state"}],"correctOptionId":"a","explanation":"Multiplying H by the plus vector adds in the first output and cancels in the second, giving |0>."},
+    {"id":"math-toolkit-q6","difficulty":"hard","prompt":"What is the inner product of |0> and |1>?","options":[{"id":"a","text":"1"},{"id":"b","text":"-1"},{"id":"c","text":"0"},{"id":"d","text":"i"}],"correctOptionId":"c","explanation":"The basis vectors are orthogonal, so their inner product is zero."},
+    {"id":"math-toolkit-q7","difficulty":"hard","prompt":"Why must an ideal quantum gate preserve a vector's norm?","options":[{"id":"a","text":"To keep total probability equal to one"},{"id":"b","text":"To make every output equal"},{"id":"c","text":"To remove all phase"},{"id":"d","text":"To force a measurement"}],"correctOptionId":"a","explanation":"A valid state must remain normalized, so a valid ideal gate must preserve norm."},
+    {"id":"math-toolkit-q8","difficulty":"hard","prompt":"What does the angle of a complex amplitude represent?","options":[{"id":"a","text":"Its phase"},{"id":"b","text":"Its probability directly"},{"id":"c","text":"The number of shots"},{"id":"d","text":"Its basis index"}],"correctOptionId":"a","explanation":"On the complex plane, angle represents phase and distance represents magnitude."}
+  ]
+}

@@ -41,12 +41,20 @@ export async function getProgress(chapterId?: string) {
         const results = attempts.filter(
           (attempt) => attempt.chapter_id === chapter.id,
         );
+        const best = results.reduce<QuizAttempt | undefined>(
+          (current, attempt) =>
+            !current || attempt.score / attempt.total > current.score / current.total
+              ? attempt
+              : current,
+          undefined,
+        );
         return [chapter.id, {
           count: results.length,
-          bestScore: results.length
-            ? results.reduce((best, attempt) => Math.max(best, attempt.score), 0)
-            : undefined,
+          bestScore: best?.score,
+          bestTotal: best?.total,
+          bestPercent: best ? Math.round((best.score / best.total) * 100) : undefined,
           lastScore: results[0]?.score,
+          lastTotal: results[0]?.total,
           status: results.length
             ? "Completed"
             : lessons.data.some((lesson) => lesson.chapter_id === chapter.id)

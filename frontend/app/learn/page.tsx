@@ -122,7 +122,7 @@ export default async function LearnPage() {
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
               {chapters.map((chapter) => {
                 const done = completed.has(chapter.id);
-                const { status, count, bestScore } = chapterProgress[chapter.id];
+                const { status, count, bestScore, bestTotal } = chapterProgress[chapter.id];
                 return (
                   <Link
                     key={chapter.id}
@@ -155,8 +155,7 @@ export default async function LearnPage() {
                           {count > 0 && (
                             <span>
                               Best{" "}
-                              {bestScore}
-                              /10
+                              {bestScore}/{bestTotal}
                             </span>
                           )}
                           <ArrowRight

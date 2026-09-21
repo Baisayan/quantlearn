@@ -51,7 +51,7 @@ export async function POST(request: Request) {
     return NextResponse.json(
       {
         error:
-          "Answer all ten questions and confirm you have read the lesson. Reload if the quiz has changed.",
+          "Answer every quiz question and confirm you have read the lesson. Reload if the quiz has changed.",
       },
       { status: 400 },
     );

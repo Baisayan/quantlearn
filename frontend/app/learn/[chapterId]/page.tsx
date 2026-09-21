@@ -7,6 +7,7 @@ import { ChapterQuiz } from "@/components/learn/chapter-quiz";
 import { course, getChapter, getQuizQuestions } from "@/lib/learn/content";
 import { getProgress } from "@/lib/learn/progress";
 import { AIPanel } from "@/components/ai/ai-panel";
+import challenges from "@/.generated/lab.json";
 
 export default async function ChapterPage({
   params,
@@ -21,6 +22,14 @@ export default async function ChapterPage({
   )!;
   const previous = course.chapters[chapter.order - 2];
   const next = course.chapters[chapter.order];
+  const labChallenges = challenges
+    .filter((challenge) => challenge.chapterId === chapter.id)
+    .map(({ id, title, objective, difficulty }) => ({
+      id,
+      title,
+      objective,
+      difficulty,
+    }));
   // The template supplies the title, objectives and quiz; all study sections remain authored Markdown.
   const markdown = chapter.markdown
     .replace(/^# .+\r?\n/, "")
@@ -61,7 +70,7 @@ export default async function ChapterPage({
             className={`rounded-full px-3 py-1 ${progress.count ? "bg-success/10 text-success" : "bg-secondary text-secondary-foreground"}`}
           >
             {progress.count
-              ? `Completed · Best ${progress.bestScore}/10`
+              ? `Completed · Best ${progress.bestScore}/${progress.bestTotal}`
               : "In progress"}
           </span>
           <a
@@ -110,6 +119,8 @@ export default async function ChapterPage({
         version={chapter.quiz.version}
         questions={getQuizQuestions(chapter)}
         previousScore={progress.lastScore}
+        previousTotal={progress.lastTotal}
+        labChallenges={labChallenges}
       />
       <nav
         aria-label="Chapter navigation"

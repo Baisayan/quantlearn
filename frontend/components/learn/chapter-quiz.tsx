@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { AIPanel } from "@/components/ai/ai-panel";
+import { LabHandoff, type LabHandoffChallenge } from "@/components/learn/lab-handoff";
 
 type Question = {
   id: string;
@@ -27,11 +28,15 @@ export function ChapterQuiz({
   version,
   questions,
   previousScore,
+  previousTotal,
+  labChallenges = [],
 }: {
   chapterId: string;
   version: number;
   questions: Question[];
   previousScore?: number;
+  previousTotal?: number;
+  labChallenges?: LabHandoffChallenge[];
 }) {
   const router = useRouter();
   const [answers, setAnswers] = useState<Record<string, string>>({});
@@ -130,13 +135,13 @@ export function ChapterQuiz({
           Chapter quiz
         </h2>
         <p className="leading-relaxed text-muted-foreground">
-          Ten questions, from quick checks to deeper reasoning. Answer them all,
-          then review the explanations. There is no pass threshold, and you can
-          retry as often as you like.
+          {questions.length} questions, from quick checks to deeper reasoning.
+          Answer them all, then review the explanations. There is no pass
+          threshold, and you can retry as often as you like.
         </p>
-        {previousScore !== undefined && (
+        {previousScore !== undefined && previousTotal !== undefined && (
           <p className="text-sm text-secondary-foreground">
-            Last saved score: {previousScore}/10
+            Last saved score: {previousScore}/{previousTotal}
           </p>
         )}
       </div>
@@ -291,6 +296,7 @@ export function ChapterQuiz({
           </Button>
         </div>
       )}
+      {result && <LabHandoff challenges={labChallenges} />}
     </section>
   );
 }

@@ -1,5 +1,5 @@
 {
-  "version": 2,
+  "version": 3,
   "title": "Quantum computing with QuantLearn",
   "audience": "Beginners with basic algebra. Worked refreshers explain complex magnitudes, normalization, matrix action, tensor products and expectations. Advanced chapters introduce small examples, not expert-level mastery.",
   "engines": [
@@ -8,20 +8,17 @@
     "pennylane"
   ],
   "chapterQuiz": {
-    "questions": 10,
+    "minQuestions": 6,
+    "maxQuestions": 10,
     "options": 4,
     "scoring": "One point per correct answer; no negative marking; show explanations after submission; unlimited retries.",
-    "completion": "Read the lesson and submit its quiz. Record score separately; no pass threshold or prerequisite lock in this demo.",
+    "completion": "Read the lesson and submit the chapter quiz. Record the score separately; quiz length follows the chapter and there is no pass threshold or prerequisite lock.",
     "difficultyOrder": [
       "easy",
       "medium",
       "hard"
     ],
-    "difficultyCounts": {
-      "easy": 3,
-      "medium": 4,
-      "hard": 3
-    }
+    "difficultyPolicy": "Each quiz includes easy, medium and hard questions; the chapter determines the total."
   },
   "basisConvention": "q0 is the top circuit wire and least significant bit. Display bitstrings and statevector entries as |q(n-1)...q0>. Cirq examples explicitly reverse qubit_order and measurement order to match; PennyLane integer wires are normalized to the same display order.",
   "modules": [
@@ -53,13 +50,68 @@
   ],
   "chapters": [
     {
+      "id": "classical-information",
+      "summary": "Separate bits, probabilities, amplitudes and the limits of one measurement.",
+      "difficulty": "Beginner",
+      "title": "Classical and quantum information",
+      "module": "foundations",
+      "order": 1,
+      "prerequisites": [],
+      "objectives": [
+        "Distinguish a classical bit, a probability distribution and a qubit state.",
+        "Explain why a qubit is not simply a hidden pair of classical bits.",
+        "Describe what one measurement can and cannot reveal."
+      ],
+      "sourceIds": [
+        "ibm-single",
+        "q12"
+      ],
+      "visualIds": [
+        "information-models",
+        "amplitude-probability",
+        "one-shot"
+      ],
+      "lesson": "lessons/classical-information.md",
+      "quiz": "quizzes/classical-information.json"
+    },
+    {
+      "id": "math-toolkit",
+      "summary": "Build the small mathematical toolkit needed to read quantum states and gates.",
+      "difficulty": "Beginner",
+      "title": "The mathematics toolkit",
+      "module": "foundations",
+      "order": 2,
+      "prerequisites": [
+        "classical-information"
+      ],
+      "objectives": [
+        "Use complex magnitudes and squared magnitudes as probabilities.",
+        "Normalize a statevector and explain why its norm matters.",
+        "Read a matrix as a transformation of a vector."
+      ],
+      "sourceIds": [
+        "ibm-single",
+        "ibm-quantum-info",
+        "q12"
+      ],
+      "visualIds": [
+        "complex-plane",
+        "normalization",
+        "matrix-action"
+      ],
+      "lesson": "lessons/math-toolkit.md",
+      "quiz": "quizzes/math-toolkit.json"
+    },
+    {
       "id": "qubits",
       "summary": "Read state notation and turn complex amplitudes into probabilities.",
       "difficulty": "Beginner",
       "title": "Quantum bits and state notation",
       "module": "foundations",
-      "order": 1,
-      "prerequisites": [],
+      "order": 3,
+      "prerequisites": [
+        "math-toolkit"
+      ],
       "objectives": [
         "Read a two-entry statevector.",
         "Convert amplitudes into probabilities.",
@@ -72,7 +124,8 @@
       ],
       "visualIds": [
         "qubit-state",
-        "statevector"
+        "statevector",
+        "qubit-phase"
       ],
       "lesson": "lessons/qubits.md",
       "quiz": "quizzes/qubits.json"
@@ -83,9 +136,9 @@
       "difficulty": "Beginner",
       "title": "Superposition, phase and interference",
       "module": "foundations",
-      "order": 2,
+      "order": 5,
       "prerequisites": [
-        "qubits"
+        "measurement"
       ],
       "objectives": [
         "Distinguish global and relative phase.",
@@ -98,7 +151,8 @@
       ],
       "visualIds": [
         "interference",
-        "phase-comparison"
+        "phase-comparison",
+        "interference-amplitudes"
       ],
       "lesson": "lessons/superposition-and-phase.md",
       "quiz": "quizzes/superposition-and-phase.json"
@@ -109,9 +163,9 @@
       "difficulty": "Beginner",
       "title": "Measurement and repeated shots",
       "module": "foundations",
-      "order": 3,
+      "order": 4,
       "prerequisites": [
-        "superposition-and-phase"
+        "qubits"
       ],
       "objectives": [
         "Apply the Born rule.",
@@ -125,7 +179,8 @@
       ],
       "visualIds": [
         "measurement",
-        "measurement-bases"
+        "measurement-bases",
+        "measurement-sampling"
       ],
       "lesson": "lessons/measurement.md",
       "quiz": "quizzes/measurement.json"
@@ -136,9 +191,9 @@
       "difficulty": "Beginner",
       "title": "Single-qubit gates",
       "module": "gates",
-      "order": 4,
+      "order": 6,
       "prerequisites": [
-        "measurement"
+        "superposition-and-phase"
       ],
       "objectives": [
         "Use I, X, Y, Z and H.",
@@ -162,7 +217,7 @@
       "difficulty": "Intermediate",
       "title": "Phase and rotation gates",
       "module": "gates",
-      "order": 5,
+      "order": 7,
       "prerequisites": [
         "single-qubit-gates"
       ],
@@ -188,7 +243,7 @@
       "difficulty": "Intermediate",
       "title": "Multi-qubit states and circuit notation",
       "module": "gates",
-      "order": 6,
+      "order": 8,
       "prerequisites": [
         "phase-and-rotation-gates"
       ],
@@ -215,7 +270,7 @@
       "difficulty": "Intermediate",
       "title": "Entanglement and Bell states",
       "module": "entanglement",
-      "order": 7,
+      "order": 9,
       "prerequisites": [
         "multi-qubit-circuits"
       ],
@@ -241,7 +296,7 @@
       "difficulty": "Intermediate",
       "title": "Teleportation and classical control",
       "module": "entanglement",
-      "order": 8,
+      "order": 10,
       "prerequisites": [
         "entanglement"
       ],
@@ -267,7 +322,7 @@
       "difficulty": "Intermediate",
       "title": "Deutsch-Jozsa and phase kickback",
       "module": "algorithms",
-      "order": 9,
+      "order": 11,
       "prerequisites": [
         "teleportation"
       ],
@@ -293,7 +348,7 @@
       "difficulty": "Intermediate",
       "title": "Grover search and amplitude amplification",
       "module": "algorithms",
-      "order": 10,
+      "order": 12,
       "prerequisites": [
         "deutsch-jozsa"
       ],
@@ -319,7 +374,7 @@
       "difficulty": "Advanced",
       "title": "QAOA and combinatorial optimization",
       "module": "algorithms",
-      "order": 11,
+      "order": 13,
       "prerequisites": [
         "grover"
       ],
@@ -346,7 +401,7 @@
       "difficulty": "Advanced",
       "title": "VQE and energy estimation",
       "module": "algorithms",
-      "order": 12,
+      "order": 14,
       "prerequisites": [
         "qaoa"
       ],
@@ -373,7 +428,7 @@
       "difficulty": "Intermediate",
       "title": "Simulation, noise and result displays",
       "module": "execution",
-      "order": 13,
+      "order": 15,
       "prerequisites": [
         "vqe"
       ],
@@ -400,7 +455,7 @@
       "difficulty": "Intermediate",
       "title": "The same circuit in Qiskit Aer, Cirq and PennyLane",
       "module": "execution",
-      "order": 14,
+      "order": 16,
       "prerequisites": [
         "simulation-and-noise"
       ],

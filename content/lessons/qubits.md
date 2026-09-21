@@ -2,71 +2,154 @@
 
 ## Learning objectives
 
-Read a statevector, calculate measurement probabilities, and explain what one qubit can reveal.
+By the end of this lesson, you should be able to:
 
-## Reading the notation
+- read ket notation and a two-entry statevector;
+- turn complex amplitudes into Z-basis probabilities;
+- distinguish global phase from relative phase; and
+- use the Bloch sphere as a picture of one pure qubit.
 
-Read $|\psi\rangle$ aloud as "the state psi." The vertical line and bracket are notation, not an absolute-value calculation. By contrast, $|\alpha|$ means the magnitude of a number. The superscript T turns a written row into a column. You only need to track two entries at this stage.
+## Why the concept matters
 
-The symbol $i$ satisfies $i^2=-1$. Its magnitude is one. This explains why an imaginary amplitude can give a positive probability. A square root reverses squaring: $(\sqrt3/2)^2=3/4$.
+Every Lab circuit begins with a state. Before discussing gates, entanglement or algorithms, you need to know what a simulator is describing when it prints $[\alpha,\beta]^T$. A statevector is not a log of classical values and not a list of probabilities. It is a compact mathematical description that lets us predict the result of many possible measurements.
 
-## From a bit to a qubit
+The distinction becomes especially important when two states produce the same immediate Z histogram but respond differently to a later gate. Learning to read the state first gives you a reliable way to debug circuits. It also explains why the Lab can show a statevector and a histogram without those panels being redundant.
 
-A classical bit has a value of 0 or 1. A qubit is a physical system with two distinguishable basis states, written $|0\rangle$ and $|1\rangle$. A pure qubit state is described by two complex amplitudes:
+## Prerequisite recap
+
+From the previous lesson, amplitudes become probabilities through squared magnitude and a valid state has total squared norm one. From the math toolkit, you can read a complex number $a+bi$ and understand a two-entry column vector. The computational basis is the pair $|0\rangle,|1\rangle$.
+
+## Notation and vocabulary
+
+Read $|\psi\rangle$ as “the state psi.” A pure qubit can be written in ket form or column form:
 
 $$
-|\psi\rangle=\alpha|0\rangle+\beta|1\rangle,\qquad |\alpha|^2+|\beta|^2=1.
+|\psi\rangle=\alpha|0\rangle+\beta|1\rangle
+\quad\longleftrightarrow\quad
+\begin{bmatrix}\alpha\\\beta\end{bmatrix},
+\qquad |\alpha|^2+|\beta|^2=1.
 $$
 
-The column vector $[\alpha,\beta]^T$ and the ket describe the same state. Amplitudes can carry phase; probabilities are nonnegative real numbers. A measurement in this basis returns one classical outcome. It does not print both amplitudes.
+The first entry belongs to $|0\rangle$ and the second to $|1\rangle$. A Z-basis measurement returns 0 with probability $|\alpha|^2$ and 1 with probability $|\beta|^2$. A pure state has enough information to predict any ideal measurement, although a physical experiment needs repeated preparations to estimate those predictions.
 
-## A small math refresher
+## Visual explanation before equations
 
-For a complex number $a+bi$, its squared magnitude is $a^2+b^2$. For example, $|i/2|^2=1/4$, not $-1/4$. A vector is an ordered list. Its order matters: the first entry below belongs to $|0\rangle$, the second to $|1\rangle$.
-
-For example:
+Consider
 
 $$
 |\psi\rangle=\frac{\sqrt3}{2}|0\rangle+\frac{i}{2}|1\rangle.
 $$
 
-The squared magnitudes are $3/4$ and $1/4$, which sum to one. If many independent copies are measured in the Z basis, approximately 75% return 0. This is a prediction about a distribution, not a promise about the next four outcomes.
+The amplitudes are $\sqrt3/2$ and $i/2$. Their probabilities are $3/4$ and $1/4$. The $i$ does not create a negative probability because $|i/2|^2=1/4$.
 
 ![Two complex amplitudes, their squared magnitudes and labeled basis states.](/learn/visuals/statevector.svg)
 
-## Check normalization yourself
+The second figure shows how the same single-qubit state can be located on a sphere. This is a coordinate picture, not a claim that the qubit is a tiny ball travelling around a globe.
 
-Try the vector $[3/5,4/5]^T$. Its squared magnitudes are $9/25$ and $16/25$, which add to one. Its probability of zero is therefore $9/25$, not $3/5$.
+![A Bloch sphere with a single-qubit state at theta pi over three and phi pi over two.](/learn/visuals/qubit-state.svg)
 
-Now try $[1/2,1/2]^T$. The total is only $1/2$, so this is not yet a normalized state. To normalize a nonzero vector, divide each entry by the square root of its total squared magnitude. Here that means multiplying each entry by $\sqrt2$, giving $[1/\sqrt2,1/\sqrt2]^T$. The zero vector cannot be normalized.
+## From amplitudes to the Bloch sphere
 
-For the sphere formula below, first check the poles: theta=0 gives zero with certainty and theta=pi gives one with certainty. The longitude phi does not affect direct Z probabilities. You can use these checks before calculating any three-dimensional coordinates.
-
-## The Bloch representation
-
-Ignoring overall phase, every pure qubit can be written as
+Ignoring an overall phase, every pure qubit can be written as
 
 $$
-|\psi\rangle=\cos(\theta/2)|0\rangle+e^{i\phi}\sin(\theta/2)|1\rangle.
+|\psi\rangle=\cos\left(\frac{\theta}{2}\right)|0\rangle
+ +e^{i\phi}\sin\left(\frac{\theta}{2}\right)|1\rangle.
 $$
 
-Its Bloch coordinates are $(\sin\theta\cos\phi,\sin\theta\sin\phi,\cos\theta)$. Our example has $\theta=\pi/3$ and $\phi=\pi/2$. The arrow lies on the surface. Its north/south position determines the Z measurement probabilities; moving around a latitude changes relative phase.
+The corresponding Bloch coordinates are
 
-![Bloch sphere with the example state at theta pi/3 and phi pi/2.](/learn/visuals/qubit-state.svg)
+$$
+(x,y,z)=(\sin\theta\cos\phi,\sin\theta\sin\phi,\cos\theta).
+$$
 
-This sphere is a representation of a state, not a picture of a particle orbit. A strictly mixed qubit lies inside the sphere; pure states lie on its surface. Multi-qubit states need a larger description; one sphere cannot represent all their correlations.
+The north pole is $|0\rangle$ and the south pole is $|1\rangle$. The polar angle $\theta$ controls the Z-basis probabilities:
 
-## Common misconception
+$$
+P(0)=\cos^2(\theta/2),\qquad P(1)=\sin^2(\theta/2).
+$$
 
-A qubit is not a way to read unlimited classical information from one measurement. Algorithms must arrange interference so that useful properties become observable.
+The longitude $\phi$ is relative phase. Moving around a latitude does not change the direct Z probabilities, but it can change the result after an analyzing gate.
 
-## Summary
+## Global phase and relative phase
 
-Keep amplitudes, probabilities and observed outcomes distinct. Normalize with squared magnitudes. Use the Bloch sphere for a single qubit and always label the measurement basis.
+Multiplying the entire state by $e^{i\gamma}$ gives a global phase:
+
+$$
+|\psi\rangle\longrightarrow e^{i\gamma}|\psi\rangle.
+$$
+
+This does not change any measurement probability. The states $|+\rangle$ and $i|+\rangle$ represent the same physical state for ordinary predictions. By contrast, changing the phase of only one basis component changes the relationship between the components. The plus and minus states,
+
+$$
+|+\rangle=\frac{|0\rangle+|1\rangle}{\sqrt2},
+\qquad
+|-\rangle=\frac{|0\rangle-|1\rangle}{\sqrt2},
+$$
+
+have the same Z probabilities but are different states. A final Hadamard maps them to different basis states.
+
+![Bloch-sphere coordinates connect polar angle, relative phase and measurement probability.](/learn/visuals/qubit-phase.svg)
+
+## Worked example: $[\sqrt3/2,i/2]^T$
+
+Step 1: label the basis order. The vector means $\sqrt3/2$ for $|0\rangle$ and $i/2$ for $|1\rangle$.
+
+Step 2: calculate squared magnitudes. $|\sqrt3/2|^2=3/4$ and $|i/2|^2=1/4$.
+
+Step 3: check the total. $3/4+1/4=1$.
+
+Step 4: interpret a Z measurement. A fresh copy returns 0 about three quarters of the time and 1 about one quarter of the time. A particular shot still returns only one outcome.
+
+The phase on the second amplitude does not appear in this Z histogram. It is still part of the state and can appear after a different measurement basis is selected.
+
+## Second example: $\theta=\pi/3,\phi=\pi/2$
+
+For this point, $\sin\theta=\sqrt3/2$, $\cos\phi=0$ and $\sin\phi=1$. Therefore the coordinates are
+
+$$
+(x,y,z)=\left(0,\frac{\sqrt3}{2},\frac12\right).
+$$
+
+The Z probabilities are $P(0)=\cos^2(\pi/6)=3/4$ and $P(1)=1/4$. The vector lies on the surface because it represents a pure state. A mixed single-qubit state would be inside the sphere. A multi-qubit state cannot in general be represented by one sphere because correlations need a joint state description.
+
+The sphere is also a warning about scope. It is excellent for one qubit because three real coordinates are enough after removing global phase. Two qubits need a joint description with four complex amplitudes before constraints, and entangled states cannot be reduced to two independent points without losing information. Use the sphere to build intuition for one local state, then return to the joint statevector when several qubits interact.
+
+## Interactive prediction
+
+Move the polar and azimuthal angles and watch the coordinates and Z probabilities update. This makes the separation visible: changing $\phi$ moves the point around a latitude while leaving the direct Z probabilities unchanged. The activity is a teaching visual, not a backend simulator.
+
+```interactive
+{"widget":"bloch-state","preset":"single-qubit"}
+```
+
+## Transfer problem
+
+Compare $|+\rangle$ and $i|+\rangle$ first, then compare $|+\rangle$ and $|-\rangle$. The first pair differs only by global phase and should behave identically in every measurement. The second pair has a relative sign and should be separated by an H analyzer. If your answer uses only the direct Z histogram, you have not yet used all the state information.
+
+## Lab connection
+
+In the Lab, build $|+\rangle$ with H and inspect the statevector before measuring. Then add a Z gate between two H gates and compare the final result. The Lab's Bloch view is useful for a single-qubit snapshot, while the statevector remains the authoritative representation for complex phase and future multi-qubit lessons.
+
+When reading the panels, follow a fixed order: identify the basis convention, read the amplitudes, square the magnitudes, and only then interpret the histogram. This routine prevents the common mistake of using a probability panel to answer a phase question. It also makes it clear which observation should change when you add an analyzer gate.
+
+## Common mistakes
+
+- Calling the vector entries probabilities. They are amplitudes until squared magnitude is taken.
+- Treating the Bloch sphere as a physical trajectory or a multi-qubit replacement.
+- Confusing global phase, which is unobservable by itself, with relative phase, which can affect interference.
+- Forgetting that the basis order must be stated before reading a statevector.
+- Inferring a full state from one histogram in one basis.
+
+## Summary and glossary
+
+A qubit is a normalized two-entry complex statevector. The Born rule turns amplitudes into probabilities for a selected basis. The Bloch sphere represents one pure qubit up to global phase. Polar angle controls Z probabilities, while relative phase controls how later transformations recombine amplitudes.
+
+**Ket:** notation for a state. **Statevector:** ordered amplitude column. **Global phase:** a common complex phase multiplying the whole state. **Relative phase:** phase difference between components. **Bloch vector:** three real coordinates representing a single-qubit state. **Pure state:** a state represented by a point on the sphere surface.
 
 ## Chapter quiz
 
-Answer all 10 questions in order: 3 easy checks, 4 medium applications and 3 harder reasoning questions. Use the worked examples if you get stuck. After submitting, read the explanations and revisit the relevant section before retrying.
+Answer every question and explain each probability using squared magnitudes. This eight-question check follows the notation, examples and Bloch-sphere activity. There is no pass threshold; use the explanations before retrying.
 
 ## Sources
 

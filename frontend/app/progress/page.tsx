@@ -74,7 +74,7 @@ export default async function ProgressPage() {
         </p>
         <div className="divide-y overflow-hidden rounded-2xl border border-border/70 bg-card">
           {course.chapters.map((chapter) => {
-            const { count, bestScore, status } = chapterProgress[chapter.id];
+            const { count, bestScore, bestTotal, status } = chapterProgress[chapter.id];
             return (
               <Link
                 key={chapter.id}
@@ -88,7 +88,7 @@ export default async function ProgressPage() {
                   className={count ? "shrink-0 text-sm text-success" : "shrink-0 text-sm text-muted-foreground"}
                 >
                   {count
-                    ? `Best ${bestScore}/10 · ${count} attempt${count === 1 ? "" : "s"}`
+                    ? `Best ${bestScore}/${bestTotal} · ${count} attempt${count === 1 ? "" : "s"}`
                     : status}
                 </span>
               </Link>

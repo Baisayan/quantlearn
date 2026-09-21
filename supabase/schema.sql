@@ -24,7 +24,7 @@ create table public.quiz_attempts (
   quiz_version integer not null,
   answers jsonb not null,
   score integer not null,
-  total integer not null check (total = 10),
+  total integer not null check (total > 0 and total <= 20),
   submitted_at timestamptz not null default now(),
   check (score between 0 and total)
 );
@@ -61,13 +61,13 @@ begin
   if p_attempt_id is null or p_answers is null or jsonb_typeof(p_answers) <> 'object' then
     raise exception 'Invalid submission' using errcode = '22023';
   end if;
-  if (select count(*) from jsonb_object_keys(p_answers)) <> 10
+  if (select count(*) from jsonb_object_keys(p_answers)) <> (select count(*) from jsonb_each(quiz.answers))
      or exists (select 1 from jsonb_each_text(quiz.answers) q where not (p_answers ? q.key) or p_answers->>q.key is null or p_answers->>q.key not in ('a','b','c','d')) then
     raise exception 'Answer every question with a valid option' using errcode = '22023';
   end if;
   select count(*) into points from jsonb_each_text(quiz.answers) q where p_answers->>q.key = q.value;
   insert into public.quiz_attempts(id,user_id,chapter_id,quiz_version,answers,score,total)
-    values(p_attempt_id,learner,p_chapter_id,p_version,p_answers,points,10)
+    values(p_attempt_id,learner,p_chapter_id,p_version,p_answers,points,(select count(*) from jsonb_each(quiz.answers)))
     on conflict (id) do nothing;
   select * into attempt from public.quiz_attempts where id = p_attempt_id;
   if attempt.user_id <> learner or attempt.chapter_id <> p_chapter_id or attempt.quiz_version <> p_version or attempt.answers <> p_answers then

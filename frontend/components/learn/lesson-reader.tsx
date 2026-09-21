@@ -1,8 +1,10 @@
 import Image from "next/image";
+import { isValidElement } from "react";
 import Markdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import remarkMath from "remark-math";
 import rehypeKatex from "rehype-katex";
+import { LessonInteractive } from "@/components/learn/lesson-interactive";
 import "katex/dist/katex.min.css";
 
 export function LessonReader({ markdown }: { markdown: string }) {
@@ -42,24 +44,48 @@ export function LessonReader({ markdown }: { markdown: string }) {
               {children}
             </ol>
           ),
-          pre: ({ children }) => (
-            <pre
-              tabIndex={0}
-              aria-label="Read-only code example"
-              className="overflow-x-auto rounded-xl border border-border/70 bg-secondary/50 p-5 text-sm leading-7 focus-visible:outline-2 focus-visible:outline-primary"
-            >
-              {children}
-            </pre>
-          ),
-          code: ({ children, className }) => (
-            <code
-              className={
-                className ?? "rounded bg-secondary px-1 py-0.5 text-sm"
+          pre: ({ children }) => {
+            if (
+              isValidElement(children) &&
+              (children.props as { "data-lesson-interactive"?: boolean })[
+                "data-lesson-interactive"
+              ]
+            ) {
+              return children;
+            }
+            return (
+              <pre
+                tabIndex={0}
+                aria-label="Read-only code example"
+                className="overflow-x-auto rounded-xl border border-border/70 bg-secondary/50 p-5 text-sm leading-7 focus-visible:outline-2 focus-visible:outline-primary"
+              >
+                {children}
+              </pre>
+            );
+          },
+          code: ({ children, className }) => {
+            if (className?.includes("language-interactive")) {
+              try {
+                const spec = JSON.parse(String(children).trim());
+                return (
+                  <div data-lesson-interactive>
+                    <LessonInteractive spec={spec} />
+                  </div>
+                );
+              } catch {
+                return null;
               }
-            >
-              {children}
-            </code>
-          ),
+            }
+            return (
+              <code
+                className={
+                  className ?? "rounded bg-secondary px-1 py-0.5 text-sm"
+                }
+              >
+                {children}
+              </code>
+            );
+          },
           table: ({ children }) => (
             <div className="overflow-x-auto rounded-xl border border-border/70">
               <table className="w-full text-left text-sm">{children}</table>
