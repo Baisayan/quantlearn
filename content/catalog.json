@@ -186,12 +186,40 @@
       "quiz": "quizzes/measurement.json"
     },
     {
+      "id": "quantum-circuit-model",
+      "summary": "Read a circuit as time, transformations, measurements and classical outputs.",
+      "difficulty": "Beginner",
+      "title": "The quantum circuit model",
+      "module": "gates",
+      "order": 6,
+      "prerequisites": [
+        "superposition-and-phase"
+      ],
+      "objectives": [
+        "Read wires, gates, time steps and measurement outputs.",
+        "Distinguish reversible unitary operations from measurement.",
+        "Translate a short circuit between diagram and matrix order."
+      ],
+      "sourceIds": [
+        "ibm-circuits",
+        "cirq-circuits",
+        "q12"
+      ],
+      "visualIds": [
+        "circuit-model",
+        "circuit-stepper",
+        "circuit-matrix"
+      ],
+      "lesson": "lessons/quantum-circuit-model.md",
+      "quiz": "quizzes/quantum-circuit-model.json"
+    },
+    {
       "id": "single-qubit-gates",
       "summary": "Apply the basic gates and work out why their order matters.",
       "difficulty": "Beginner",
       "title": "Single-qubit gates",
       "module": "gates",
-      "order": 6,
+      "order": 7,
       "prerequisites": [
         "superposition-and-phase"
       ],
@@ -206,7 +234,9 @@
       ],
       "visualIds": [
         "gate-reference",
-        "gate-order"
+        "gate-order",
+        "gate-action",
+        "gate-unitarity"
       ],
       "lesson": "lessons/single-qubit-gates.md",
       "quiz": "quizzes/single-qubit-gates.json"
@@ -217,7 +247,7 @@
       "difficulty": "Intermediate",
       "title": "Phase and rotation gates",
       "module": "gates",
-      "order": 7,
+      "order": 8,
       "prerequisites": [
         "single-qubit-gates"
       ],
@@ -232,60 +262,122 @@
       ],
       "visualIds": [
         "rotation-curve",
-        "phase-gates"
+        "phase-gates",
+        "rotation-bloch",
+        "rotation-reference"
       ],
       "lesson": "lessons/phase-and-rotation-gates.md",
       "quiz": "quizzes/phase-and-rotation-gates.json"
     },
     {
-      "id": "multi-qubit-circuits",
-      "summary": "Combine states and read controlled gates with consistent bit ordering.",
+      "id": "multi-qubit-states",
+      "summary": "Build product states, expand tensor products and count amplitudes as registers grow.",
       "difficulty": "Intermediate",
-      "title": "Multi-qubit states and circuit notation",
+      "title": "Multi-qubit states and tensor products",
       "module": "gates",
-      "order": 8,
+      "order": 9,
       "prerequisites": [
         "phase-and-rotation-gates"
       ],
       "objectives": [
         "Form tensor-product states.",
-        "Read CX, CZ and SWAP circuits.",
-        "Separate gate count, circuit depth and bit ordering."
+        "Calculate basis amplitudes and probabilities by hand.",
+        "Explain why n qubits require 2^n amplitudes."
       ],
       "sourceIds": [
         "ibm-multiple",
+        "ibm-quantum-info",
+        "q12"
+      ],
+      "visualIds": [
+        "tensor-products",
+        "basis-growth",
+        "multi-qubit"
+      ],
+      "lesson": "lessons/multi-qubit-states.md",
+      "quiz": "quizzes/multi-qubit-states.json"
+    },
+    {
+      "id": "multi-qubit-circuits",
+      "summary": "Use controlled gates, measure circuit resources and debug bit-order conventions.",
+      "difficulty": "Intermediate",
+      "title": "Controlled gates, circuit resources and bit ordering",
+      "module": "gates",
+      "order": 10,
+      "prerequisites": [
+        "multi-qubit-states"
+      ],
+      "objectives": [
+        "Read CX, CZ and SWAP control and target semantics.",
+        "Separate gate count, circuit depth and hardware connectivity.",
+        "Debug Qiskit, Cirq and QuantLearn bit-order conventions."
+      ],
+      "sourceIds": [
+        "ibm-circuits",
         "ibm-bit-order",
         "cirq-circuits"
       ],
       "visualIds": [
-        "multi-qubit",
-        "bit-order"
+        "controlled-gates",
+        "circuit-resources",
+        "bit-order",
+        "bit-order-debug"
       ],
       "lesson": "lessons/multi-qubit-circuits.md",
       "quiz": "quizzes/multi-qubit-circuits.json"
     },
     {
-      "id": "entanglement",
-      "summary": "Prepare a Bell pair and distinguish entanglement from classical correlation.",
+      "id": "density-matrices",
+      "summary": "Move from pure statevectors to mixed states, reduced states and local Bloch vectors.",
       "difficulty": "Intermediate",
-      "title": "Entanglement and Bell states",
+      "title": "Density matrices and reduced states",
       "module": "entanglement",
-      "order": 9,
+      "order": 11,
       "prerequisites": [
         "multi-qubit-circuits"
       ],
       "objectives": [
-        "Prepare a Bell state.",
-        "Compare a coherent Bell state to a classical mixture.",
-        "Explain why a subsystem needs a density matrix."
+        "Construct a density matrix for a pure state and a classical mixture.",
+        "Read diagonal probabilities and off-diagonal coherence.",
+        "Use a partial trace to explain why local state information can hide joint correlations."
+      ],
+      "sourceIds": [
+        "ibm-multiple",
+        "ibm-quantum-info",
+        "ibm-visualization"
+      ],
+      "visualIds": [
+        "density-matrix-views",
+        "reduced-state",
+        "mixed-bloch"
+      ],
+      "lesson": "lessons/density-matrices.md",
+      "quiz": "quizzes/density-matrices.json"
+    },
+    {
+      "id": "entanglement",
+      "summary": "Select Bell states, compare Z and X correlations and separate coherence from ordinary correlation.",
+      "difficulty": "Intermediate",
+      "title": "Bell states and correlations",
+      "module": "entanglement",
+      "order": 12,
+      "prerequisites": [
+        "density-matrices"
+      ],
+      "objectives": [
+        "Name and prepare the four Bell states.",
+        "Compare Z-basis and X-basis correlations with a classical mixture.",
+        "Explain why the shown comparison is not a universal Bell test."
       ],
       "sourceIds": [
         "ibm-multiple",
         "ibm-quantum-info"
       ],
       "visualIds": [
+        "bell-states",
         "bell-circuit",
-        "bell-correlations"
+        "bell-correlations",
+        "bell-bases"
       ],
       "lesson": "lessons/entanglement.md",
       "quiz": "quizzes/entanglement.json"
@@ -296,7 +388,7 @@
       "difficulty": "Intermediate",
       "title": "Teleportation and classical control",
       "module": "entanglement",
-      "order": 10,
+      "order": 13,
       "prerequisites": [
         "entanglement"
       ],
@@ -311,10 +403,39 @@
       ],
       "visualIds": [
         "teleportation",
-        "teleportation-corrections"
+        "teleportation-corrections",
+        "teleportation-branch"
       ],
       "lesson": "lessons/teleportation.md",
       "quiz": "quizzes/teleportation.json"
+    },
+    {
+      "id": "no-cloning-and-no-signalling",
+      "summary": "Use linearity and reduced states to see what entanglement cannot clone, signal or reveal early.",
+      "difficulty": "Intermediate",
+      "title": "No-cloning, no-signalling and limits of entanglement",
+      "module": "entanglement",
+      "order": 14,
+      "prerequisites": [
+        "teleportation"
+      ],
+      "objectives": [
+        "Explain the no-cloning theorem with linearity and inner products.",
+        "Show why teleportation consumes the input and needs classical communication.",
+        "Distinguish correlation from a controllable faster-than-light message."
+      ],
+      "sourceIds": [
+        "ibm-teleport",
+        "ibm-multiple",
+        "ibm-circuits"
+      ],
+      "visualIds": [
+        "no-cloning",
+        "no-signalling",
+        "teleportation-consumes"
+      ],
+      "lesson": "lessons/no-cloning-and-no-signalling.md",
+      "quiz": "quizzes/no-cloning-and-no-signalling.json"
     },
     {
       "id": "deutsch-jozsa",
@@ -322,9 +443,9 @@
       "difficulty": "Intermediate",
       "title": "Deutsch-Jozsa and phase kickback",
       "module": "algorithms",
-      "order": 11,
+      "order": 15,
       "prerequisites": [
-        "teleportation"
+        "no-cloning-and-no-signalling"
       ],
       "objectives": [
         "State the constant-or-balanced promise.",
@@ -348,7 +469,7 @@
       "difficulty": "Intermediate",
       "title": "Grover search and amplitude amplification",
       "module": "algorithms",
-      "order": 12,
+      "order": 16,
       "prerequisites": [
         "deutsch-jozsa"
       ],
@@ -374,7 +495,7 @@
       "difficulty": "Advanced",
       "title": "QAOA and combinatorial optimization",
       "module": "algorithms",
-      "order": 13,
+      "order": 17,
       "prerequisites": [
         "grover"
       ],
@@ -401,7 +522,7 @@
       "difficulty": "Advanced",
       "title": "VQE and energy estimation",
       "module": "algorithms",
-      "order": 14,
+      "order": 18,
       "prerequisites": [
         "qaoa"
       ],
@@ -428,7 +549,7 @@
       "difficulty": "Intermediate",
       "title": "Simulation, noise and result displays",
       "module": "execution",
-      "order": 15,
+      "order": 19,
       "prerequisites": [
         "vqe"
       ],
@@ -455,7 +576,7 @@
       "difficulty": "Intermediate",
       "title": "The same circuit in Qiskit Aer, Cirq and PennyLane",
       "module": "execution",
-      "order": 16,
+      "order": 20,
       "prerequisites": [
         "simulation-and-noise"
       ],

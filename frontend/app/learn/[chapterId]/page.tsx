@@ -24,11 +24,12 @@ export default async function ChapterPage({
   const next = course.chapters[chapter.order];
   const labChallenges = challenges
     .filter((challenge) => challenge.chapterId === chapter.id)
-    .map(({ id, title, objective, difficulty }) => ({
+    .map(({ id, title, objective, difficulty, hint }) => ({
       id,
       title,
       objective,
       difficulty,
+      hint,
     }));
   // The template supplies the title, objectives and quiz; all study sections remain authored Markdown.
   const markdown = chapter.markdown
@@ -110,7 +111,7 @@ export default async function ChapterPage({
           </ul>
         </CardContent>
       </Card>
-      <article aria-label="Study material">
+      <article id="study-material" aria-label="Study material">
         <LessonReader markdown={markdown} />
       </article>
       <ChapterQuiz

@@ -2,29 +2,40 @@
 
 ## Learning objectives
 
-Distinguish S and T from rotations, use radians, and connect rotations to measurable probabilities.
+By the end of this lesson, you should be able to:
 
-## Discrete phase gates
+- distinguish S and T from continuous rotations;
+- use radians and half-angle formulas correctly;
+- explain how phase becomes visible after a basis change; and
+- connect Rx, Ry and Rz to motion on the Bloch sphere.
 
-The S gate is $\mathrm{diag}(1,i)$ and T is $\mathrm{diag}(1,e^{i\pi/4})$. S adds a relative phase of $\pi/2$ to the 1 amplitude; T adds $\pi/4$. Therefore $S^2=Z$ and $T^2=S$. Neither changes Z probabilities immediately.
+## Why the concept matters
 
-Start in 0 and apply H, S, H. The result has probabilities 1/2 and 1/2. Replacing S with T gives $P(0)=(1+1/\sqrt2)/2$, about 0.854. The final H converts phase differences into probability differences.
+The Pauli and Hadamard gates provide a small discrete vocabulary. Phase and rotation gates make that vocabulary continuous. They let an algorithm choose an angle, prepare a family of states, and search for a parameter that produces a useful probability or expectation value. This is the mathematical foundation for later variational circuits.
 
-![Phase-gate sequences and their exact output probabilities.](/learn/visuals/phase-gates.svg)
+These gates also expose a subtle boundary. Two isolated gates can differ only by global phase and therefore have the same measurement predictions, yet their controlled versions can behave differently because the phase becomes relative between control branches. Treating all phase as invisible is just as dangerous as treating all phase as directly measurable.
 
-## Angles without a new mathematics course
+## Plain-language intuition
 
-A full turn is 360 degrees, or $2\pi$ radians. A half turn is $\pi$ radians and a quarter turn is $\pi/2$. To convert degrees to radians, multiply by $\pi/180$. The half angle in the rotation formula matters: for $R_y(\pi/2)$, calculate sine and cosine at $\pi/4$, not at $\pi/2$.
+S and T are fixed phase steps. They rotate an amplitude in the complex plane without changing its magnitude. Rx, Ry and Rz are adjustable rotations. A Y rotation moves probability between the north and south poles of the Bloch sphere. A Z rotation moves a state around a latitude and changes relative phase without directly changing Z probabilities.
 
-The notation diag lists the diagonal entries of a matrix; all other entries are zero. It makes S and T easy to apply: multiply the first amplitude by the first entry and the second amplitude by the second entry. The factor $e^{i\phi}$ has magnitude one, so this multiplication changes phase without changing magnitude.
+The practical question is always: relative to which basis, and before or after which analyzer? A phase gate can look inactive in one histogram and become decisive after H.
 
-The matrix exponential defines continuous rotation. For the calculations in this chapter, use the displayed action of Ry rather than trying to evaluate an infinite series. A useful check is that the two resulting probabilities add to one because $\cos^2(\theta/2)+\sin^2(\theta/2)=1$.
+## Prerequisite recap
 
-For a controlled gate, consider a control qubit in a superposition of zero and one. The zero branch applies I while the one branch applies the selected operation. Multiplying only that second branch by a phase is no longer an overall phase of the joint state. This is why isolated-gate equivalence needs care when adding a control.
+You know that H creates $|+\rangle$ and $|-\rangle$, that relative phase can affect interference, and that a gate acts by matrix multiplication. You also know that the Bloch sphere uses polar angle for Z probabilities and azimuthal angle for relative phase.
 
-## Continuous rotations
+## Notation and vocabulary
 
-Rotations are defined by
+The discrete phase gates are
+
+$$
+S=\begin{bmatrix}1&0\\0&i\end{bmatrix},
+\qquad
+T=\begin{bmatrix}1&0\\0&e^{i\pi/4}\end{bmatrix}.
+$$
+
+They add $\pi/2$ and $\pi/4$ to the $|1\rangle$ phase. The continuous rotations are
 
 $$
 R_x(\theta)=e^{-i\theta X/2},\quad
@@ -32,29 +43,124 @@ R_y(\theta)=e^{-i\theta Y/2},\quad
 R_z(\theta)=e^{-i\theta Z/2}.
 $$
 
-For example,
+Angles are in radians. A quarter turn is $\pi/2$, a half turn is $\pi$, and a full turn is $2\pi$.
+
+## Visual explanation before equations
+
+The phase-gate comparison shows why S and T need a final H to become visible in Z. The initial H creates equal paths, the phase gate changes their relationship, and the final H recombines them.
+
+![S, T and Z phase sequences with exact final probabilities.](/learn/visuals/phase-gates.svg)
+
+For Y rotations, the important curve is
 
 $$
-R_y(\theta)|0\rangle=\cos(\theta/2)|0\rangle+\sin(\theta/2)|1\rangle.
+R_y(\theta)|0\rangle=\cos(\theta/2)|0\rangle+\sin(\theta/2)|1\rangle,
+\qquad
+P(1)=\sin^2(\theta/2).
 $$
 
-The probability of 1 is $\sin^2(\theta/2)$. At $\theta=0,\pi/2,\pi$, it is respectively 0, 1/2 and 1. A rotation of $\pi$ around Y takes 0 to 1. A full $2\pi$ rotation changes the statevector's overall sign, which does not change an isolated state's measurement probabilities.
+![The exact probability curve for Ry(theta) from zero to two pi.](/learn/visuals/rotation-curve.svg)
 
-![Exact Ry probability curve from zero to two pi with labeled reference angles.](/learn/visuals/rotation-curve.svg)
+The same formula can be read geometrically. The state moves along a great circle, reaches the equator at $\pi/2$, reaches $|1\rangle$ at $\pi$, and returns to $-|0\rangle$ at $2\pi$.
 
-## Conventions worth noticing
+![Reference points connecting Ry angles, Bloch motion and output probabilities.](/learn/visuals/rotation-bloch.svg)
 
-S and $R_z(\pi/2)$ agree up to global phase, rather than as identical matrices. This distinction matters when turning a gate into a controlled operation: a phase that was global for an isolated gate can become relative between control branches.
+![A compact comparison of fixed phase gates and continuous rotation gates.](/learn/visuals/rotation-reference.svg)
 
-Use explicit rotation helpers such as Qiskit's ry(theta, q) and Cirq's ry(theta). Cirq's powered-gate notation often uses an exponent in units of pi and can differ by global phase; it is not a universal substitute for a rotation angle in radians.
+## Worked example: H-S-H and H-T-H
 
-## Summary
+Start with $|0\rangle$. After H, the state is $|+\rangle$. S changes the second amplitude by $i$, producing
 
-S and T supply fixed phase increments. Rotation gates supply adjustable angles. State clearly which units and matrix convention are being used, especially for later variational circuits.
+$$
+\frac{|0\rangle+i|1\rangle}{\sqrt2}.
+$$
+
+The final H turns the relative phase $\phi=\pi/2$ into
+
+$$
+P(0)=\frac{1+\cos(\pi/2)}2=\frac12,
+\qquad P(1)=\frac12.
+$$
+
+For T, the relative phase is $\pi/4$:
+
+$$
+P(0)=\frac{1+\cos(\pi/4)}2=\frac{1+1/\sqrt2}2\approx0.854,
+$$
+
+and $P(1)\approx0.146$. Neither phase gate changes the direct Z probabilities before the final H. The analyzer changes what is observable.
+
+## Second example: Ry at four angles
+
+Use $P(1)=\sin^2(\theta/2)$.
+
+- At $\theta=0$, $R_y(0)|0\rangle=|0\rangle$, so $P(1)=0$.
+- At $\theta=\pi/2$, the state is $(|0\rangle+|1\rangle)/\sqrt2$, so $P(1)=1/2$.
+- At $\theta=\pi$, the state is $|1\rangle$, so $P(1)=1$.
+- At $\theta=2\pi$, the state is $-|0\rangle$, so $P(1)=0$ and the isolated global sign is unobservable.
+
+The final case is a useful warning. The statevector changes sign, but the measurement probabilities do not. If the rotated qubit later participates in a controlled operation, however, an apparently global phase may become relative to a branch that did not receive the rotation.
+
+## Rx, Ry and Rz as complementary controls
+
+The three rotation families are easiest to remember by the axis they turn around on the Bloch sphere. $R_x$ rotates around the x-axis, $R_y$ around the y-axis, and $R_z$ around the z-axis. Their matrices are
+
+$$
+R_x(\theta)=\begin{bmatrix}\cos(\theta/2)&-i\sin(\theta/2)\\-i\sin(\theta/2)&\cos(\theta/2)\end{bmatrix},
+\quad
+R_y(\theta)=\begin{bmatrix}\cos(\theta/2)&-\sin(\theta/2)\\\sin(\theta/2)&\cos(\theta/2)\end{bmatrix},
+$$
+
+$$
+R_z(\theta)=\begin{bmatrix}e^{-i\theta/2}&0\\0&e^{i\theta/2}\end{bmatrix}.
+$$
+
+Starting from $|0\rangle$, $R_y$ changes the Z-basis probabilities directly because it moves the Bloch vector away from the north pole. $R_z$ leaves those probabilities unchanged because it spins around the measurement axis; its effect appears after a basis-changing gate such as H. $R_x$ can also change the Z probabilities, but it introduces an imaginary relative phase along the way. This gives a practical selection rule: use $R_y$ when you want a real amplitude sweep, use $R_z$ when you want to encode phase, and use $R_x$ when the x-axis rotation itself is the concept being tested.
+
+For a quick check, apply $R_y(\pi/2)$ to $|0\rangle$ and measure in Z: the result is balanced. Apply $R_z(\pi/2)$ to $|0\rangle$ instead: the state receives only a global factor, so the Z result remains 0 with certainty. Apply H before and after that same $R_z$ and the phase is converted into a different population pattern. The gates have not “created probability”; they changed the coordinate basis in which the existing phase can interfere.
+
+## Global phase and controlled gates
+
+$R_z(\pi/2)$ has diagonal entries $e^{-i\pi/4}$ and $e^{i\pi/4}$. Factoring out $e^{-i\pi/4}$ leaves the S matrix, so the two isolated gates differ by global phase. If a control qubit is in a superposition, control 0 may apply I while control 1 applies the selected operation. A phase on only one branch is no longer global for the joint state. This is why controlled constructions must use the full matrix convention rather than a casual “same up to phase” shortcut.
+
+## Interactive prediction
+
+Move a Y-rotation angle and predict whether the state is near $|0\rangle$, balanced, or near $|1\rangle$. Then compare the exact probability. The widget is deliberately local and uses the displayed half-angle formula instead of invoking the Lab simulator.
+
+```interactive
+{"widget":"rotation-explorer","preset":"ry-sweep"}
+```
+
+## Common mistakes
+
+- Entering degrees into a helper that expects radians.
+- Forgetting the half angle in $R_y(\theta)|0\rangle$.
+- Assuming S or T changes a direct Z histogram of $|+\rangle$.
+- Treating $R_y(2\pi)=-I$ as a bit flip.
+- Treating S and $R_z(\pi/2)$ as identical matrices rather than globally equivalent isolated gates.
+- Calling a change of relative phase a global phase when only one branch changed.
+
+## Summary and glossary
+
+S and T add fixed relative phases. Rx, Ry and Rz add adjustable rotations, with angles expressed in radians and half-angle formulas controlling amplitudes. A final basis change can turn phase into probability. Global phase is invisible for an isolated state, but a controlled operation can make that factor relative between branches.
+
+**Phase gate:** a diagonal operation that changes amplitude angles. **Rotation:** a continuous gate family indexed by an angle. **Radian:** the angle unit used by the matrix formulas. **Great circle:** the shortest full circle traced by a pure state under a suitable Bloch rotation.
+
+## Transfer problem
+
+Predict the final Z probabilities for $|0\rangle\to H\to T\to H\to M$, then repeat for $S$. Next, predict $R_y(\pi/2)|0\rangle$ without using a phase analyzer. Your debugging prompt is: did you calculate the phase change and the rotation angle in the same units, and did you apply the final H only when the circuit actually contains it?
+
+## Assessment
+
+Use the rotation slider at $0$, $\pi/2$, $\pi$ and $2\pi$ before starting the quiz. Inline checks should make the half-angle pattern familiar. The ten-question assessment then tests discrete phases, continuous rotations, global phase and controlled-gate caveats.
+
+## Lab connection
+
+In the Lab, compare H-S-H with H-T-H and run Ry at the four reference angles. Inspect the statevector and histogram together. If a phase gate seems to do nothing, add the basis-changing H and check whether your angle is expressed in radians.
 
 ## Chapter quiz
 
-Answer all 10 questions in order: 3 easy checks, 4 medium applications and 3 harder reasoning questions. Use the worked examples if you get stuck. After submitting, read the explanations and revisit the relevant section before retrying.
+Answer every question in order. This ten-question assessment covers S, T, Rx, Ry, Rz, radians, half-angle probabilities, global phase and controlled-gate phase behavior. Review explanations before retrying.
 
 ## Sources
 

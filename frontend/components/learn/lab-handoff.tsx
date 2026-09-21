@@ -7,18 +7,26 @@ export type LabHandoffChallenge = {
   title: string;
   objective: string;
   difficulty?: string;
+  hint?: string;
 };
 
-export function LabHandoff({ challenges }: { challenges: LabHandoffChallenge[] }) {
+export function LabHandoff({
+  chapterId,
+  challenges,
+}: {
+  chapterId: string;
+  challenges: LabHandoffChallenge[];
+}) {
   if (!challenges.length) return null;
   return (
-    <div className="space-y-4 rounded-2xl border border-primary/20 bg-card p-5 sm:p-6">
+    <div id="lab-handoff" className="space-y-4 rounded-2xl border border-primary/20 bg-card p-5 sm:p-6">
       <div className="flex gap-3">
         <FlaskConical className="mt-0.5 size-5 shrink-0 text-primary" aria-hidden="true" />
         <div className="space-y-1">
-          <h3 className="font-semibold">You have the idea. Build it in Lab.</h3>
+          <h3 className="font-semibold">Try this in Lab.</h3>
           <p className="text-sm leading-relaxed text-muted-foreground">
-            Move from the worked example to an open-ended circuit. The Lab runs and grades the challenge separately.
+            You have checked the idea. Now build the open-ended circuit in Lab,
+            where execution, grading and saved attempts are handled separately.
           </p>
         </div>
       </div>
@@ -28,12 +36,20 @@ export function LabHandoff({ challenges }: { challenges: LabHandoffChallenge[] }
             <div className="space-y-1">
               <h4 className="font-medium">{challenge.title}</h4>
               <p className="text-sm leading-relaxed text-muted-foreground">{challenge.objective}</p>
+              <p className="text-xs leading-relaxed text-secondary-foreground">
+                Debugging prompt: {challenge.hint ?? "Compare the statevector, output basis and expected result."}
+              </p>
             </div>
-            <Button asChild variant="outline" size="sm">
-              <Link href={`/lab?challenge=${challenge.id}`}>
-                Try in Lab <ArrowRight aria-hidden="true" />
-              </Link>
-            </Button>
+            <div className="flex flex-wrap gap-2">
+              <Button asChild variant="outline" size="sm">
+                <Link href={`/lab?challenge=${challenge.id}`}>
+                  Open challenge <ArrowRight aria-hidden="true" />
+                </Link>
+              </Button>
+              <Button asChild variant="ghost" size="sm">
+                <Link href={`/learn/${chapterId}#study-material`}>Back to lesson</Link>
+              </Button>
+            </div>
           </div>
         ))}
       </div>

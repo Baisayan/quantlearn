@@ -296,7 +296,7 @@ export function ChapterQuiz({
           </Button>
         </div>
       )}
-      {result && <LabHandoff challenges={labChallenges} />}
+      {result && <LabHandoff chapterId={chapterId} challenges={labChallenges} />}
     </section>
   );
 }

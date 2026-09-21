@@ -5,7 +5,7 @@ Learn quantum computing, build a circuit, and see what it does. The [problem sta
 ## What works
 
 - Email/password login with Supabase and protected application pages.
-- Five Learn modules, sixteen chapters, 37 figures and 150 quiz questions.
+- Five Learn modules, twenty chapters, 58 figures and 187 quiz questions.
 - A Lab with drag-and-drop gate placement, a Python code editor and real Qiskit Aer, Cirq and PennyLane simulation.
 - Histograms, complex statevectors, rotatable reduced Bloch views and circuit diagrams.
 - Eight guided challenges, server grading and saved Learn/Lab results in Progress.

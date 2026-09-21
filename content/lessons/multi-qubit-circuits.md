@@ -1,61 +1,139 @@
-# Multi-qubit states and circuit notation
+# Controlled gates, circuit resources and bit ordering
 
 ## Learning objectives
 
-Build a tensor product, read controlled gates, and track wire order separately from bitstring order.
+By the end of this lesson, you should be able to:
 
-## More qubits mean more amplitudes
+- distinguish control and target semantics for CX, CZ and SWAP;
+- explain why CX does not always create entanglement;
+- separate gate count, circuit depth and hardware routing; and
+- debug bit-order mismatches across QuantLearn, Qiskit, Cirq and PennyLane.
 
-Two qubits use four basis states. Throughout QuantLearn, q0 is the top wire and least significant bit. We write basis strings as $|q_1q_0\rangle$ and order statevector entries as 00, 01, 10, 11.
+## Why the concept matters
 
-If q1 is 0 and q0 is +, the joint state is $|0\rangle\otimes|+\rangle=(|00\rangle+|01\rangle)/\sqrt2$. A product vector $[a,b]^T\otimes[c,d]^T$ is $[ac,ad,bc,bd]^T$. An n-qubit pure state has $2^n$ amplitudes; they are not all separately readable from one measurement.
+Multi-qubit circuits fail in especially frustrating ways because the diagram can look correct while the labels are reversed. A controlled gate might be applied to the wrong target, a simulator might print q0 on the opposite side of a bitstring, or an extra routing operation might change the depth without changing the abstract algorithm.
 
-![X on the top wire prepares bitstring 01, not 10, under the declared convention.](/learn/visuals/bit-order.svg)
+This chapter gives you a repeatable debugging method. First state which wire is the control and which is the target. Then state the displayed basis order. Finally separate the logical circuit from the physical circuit that a hardware compiler may create. These statements are part of the result, not optional comments.
 
-## Work through a product state
+## Plain-language intuition
 
-The tensor-product symbol $\otimes$ means combine the descriptions of separate systems. It does not mean add their vectors. For our ordering, write q1's vector first and q0's second.
+A controlled gate is a conditional operation. The control branch decides whether the target operation runs. In CX, a control of 1 flips the target; the control itself does not flip. In CZ, the 11 branch gets a minus phase. SWAP exchanges the two wire values.
 
-Take q1 as $[\sqrt3/2,1/2]^T$ and q0 as $[1/\sqrt2,1/\sqrt2]^T$. Multiply each entry of the first vector by each entry of the second, preserving the order 00, 01, 10, 11:
+The same gate can create entanglement for one input and leave another input separable. A CX applied to 01 produces 11, a single basis state. A CX applied to a suitable superposition can correlate branches. The gate has entangling capability; entanglement is a property of the input and output state together.
 
-$
-[\sqrt3/(2\sqrt2),\sqrt3/(2\sqrt2),1/(2\sqrt2),1/(2\sqrt2)]^T.
-$
+## Prerequisite recap
 
-The probabilities are $[3/8,3/8,1/8,1/8]$. For outcome 10, q1 contributes its one amplitude and q0 contributes its zero amplitude. Their product squared is $1/8$. Check that all four probabilities sum to one.
+You can calculate tensor products and read a two-qubit statevector. You know that QuantLearn displays basis strings as $|q_1q_0\rangle$, that q0 is the top wire and least significant bit, and that the rightmost printed bit is q0.
 
-A useful circuit-reading routine is to write the starting state, apply one gate, then update the state before moving right. Starting at 01, CX(q0,q1) gives 11; applying the same CX again gives 01. For a superposition, apply this basis-state rule to every term and keep its coefficient. Do not measure the control mentally or choose one branch unless the circuit actually includes measurement.
+## Notation and vocabulary
 
-## Reading the gates
+Write $\mathrm{CX}(q_0,q_1)$ to mean q0 is control and q1 is target. Under the declared basis order,
 
-A control dot connected to a plus target means controlled X, also called CX or CNOT. CX(q0, q1) flips q1 when q0 is 1. Its action on our ordered basis is 00→00, 01→11, 10→10, 11→01.
+$$
+00\to00,\quad 01\to11,\quad 10\to10,\quad 11\to01.
+$$
 
-CZ changes the phase of 11 by -1. SWAP exchanges the states of two wires. SWAP can be decomposed into three CX operations with alternating directions.
+CZ leaves every basis state unchanged except $|11\rangle$, which receives a factor of $-1$. SWAP maps 01 to 10 and 10 to 01. Gate count counts logical operations. Circuit depth counts sequential layers after a scheduling rule is stated. Connectivity describes which physical qubits can interact directly.
 
-![A two-qubit circuit prepares 01 and then uses a controlled X to obtain 11.](/learn/visuals/multi-qubit.svg)
+## Visual explanation before equations
 
-A CX does not always create entanglement. On input 01 it simply produces 11. The input state matters, as the next chapter demonstrates.
+The truth-table view makes control and target explicit. It also shows that CZ changes phase rather than flipping a bit.
 
-## Circuit time and resources
+![Truth-table view of CX, CZ and SWAP under the QuantLearn q0 convention.](/learn/visuals/controlled-gates.svg)
 
-Read a diagram left to right. A measurement box outputs a classical value; a classical control later in a circuit is different from a coherent quantum control.
+Resource metrics are different measurements of a circuit. Two H gates can be parallel, while a CX uses both wires and must occur later.
 
-Gate count is the number of operations. Circuit depth counts sequential layers under stated scheduling assumptions. H on q0 and H on q1 can share a layer because they act on different qubits. A subsequent CX uses both and requires another layer. Hardware connectivity and compilation can add SWAPs and increase depth.
+![Gate count and circuit depth comparison for parallel and sequential operations.](/learn/visuals/circuit-resources.svg)
 
-## Framework ordering
+The asymmetric circuit is the important test case. A symmetric Bell distribution can look correct even if q0 and q1 are reversed.
 
-Qiskit displays the highest-numbered bit on the left of a bitstring. Cirq can use an explicit qubit_order. QuantLearn will request [q1, q0] for a two-qubit Cirq statevector and measure in the same order. Comparing only Bell states can hide an ordering bug because both 00 and 11 are unchanged by reversal; the asymmetric 01 example exposes it.
+![An asymmetric two-qubit circuit exposing top-wire and rightmost-bit conventions.](/learn/visuals/bit-order.svg)
 
-## Summary
+The debugging visual compares the conventions that an adapter must normalize.
 
-Label basis order on every statevector and histogram. Distinguish quantum wires from classical results. Track phase and correlations alongside individual wire values.
+![A bit-order debugging matrix comparing QuantLearn, Qiskit, Cirq and PennyLane conventions.](/learn/visuals/bit-order-debug.svg)
+
+## Worked example: CX on all basis inputs
+
+Apply $\mathrm{CX}(q_0,q_1)$ to each basis state.
+
+1. 00 has q0=0, so the target q1 is unchanged: 00.
+2. 01 has q0=1, so q1 flips from 0 to 1: 11.
+3. 10 has q0=0, so q1 remains 1: 10.
+4. 11 has q0=1, so q1 flips from 1 to 0: 01.
+
+The mapping is reversible because applying the same CX again returns every input. Notice that the order of the printed string is q1q0. If you interpret 01 as q0=0,q1=1, you have silently changed the convention.
+
+## Second example: gate count, depth and routing
+
+Consider H(q0), H(q1), then CX(q0,q1). The logical gate count is three. The two H operations act on disjoint qubits, so they can occupy one layer. CX uses both qubits and occupies a second layer. The minimum logical depth is therefore two.
+
+If hardware cannot directly connect q0 and q1, a compiler may insert SWAP operations to move states next to one another. The logical algorithm still has three gates, but the physical circuit has more gates and greater depth. Gate count and depth should always be reported with the layer and connectivity assumptions that produced them.
+
+## Why CX does not always entangle
+
+Starting from 01, CX produces 11. The output is $|1\rangle\otimes|1\rangle$, which is a product state. Starting from $|+\rangle\otimes|0\rangle$, CX produces
+
+$$
+\frac{|00\rangle+|11\rangle}{\sqrt2},
+$$
+
+which cannot be factored into independent single-qubit states. The operation is the same; the input is different. Therefore “a CX creates entanglement” is too broad. The precise statement is that CX can entangle some product superpositions.
+
+## Classical control and quantum control
+
+A control dot in a circuit is a coherent quantum condition. A classical bit produced by measurement is different. After measurement, a classical controller can decide whether to apply X or Z, but the device is no longer keeping both classical outcomes as coherent branches. This distinction will matter when you read teleportation and algorithmic oracles.
+
+## Framework ordering and the adapter boundary
+
+Qiskit commonly writes statevector entries in $|q_1q_0\rangle$ order, with q0 as the least significant bit. Cirq lets the caller set `qubit_order`; QuantLearn requests an explicit order so output arrays line up. PennyLane uses integer wire labels, which still need an adapter when a visual places q0 at the top.
+
+Do not solve a display mismatch by changing the physics. Normalize the convention at the boundary: label wires, reorder arrays once, and test with an asymmetric state such as 01. Symmetric states such as 00 and 11 cannot reveal a reversal.
+
+The circuit shown on a page is the logical circuit: it describes the operation the learner intends. A hardware compiler may insert SWAPs, decompose a gate into native pulses, or schedule independent gates in parallel. Those implementation details change physical gate count and depth, but they should preserve the logical statevector after the chosen ordering adapter. When comparing two results, say whether you are comparing logical depth, compiled depth, or execution time. Otherwise a learner may mistake an optimization detail for a change in quantum meaning.
+
+## Interactive prediction
+
+Choose CX or CZ and an input bitstring. Predict the output before selecting a different input. The local activity keeps the control semantics and q0 convention visible without changing a Lab circuit.
+
+```interactive
+{"widget":"controlled-gate","preset":"cx-order"}
+```
+
+## Common mistakes
+
+- Flipping the control instead of the target in CX.
+- Treating CZ as a bit flip instead of a phase change on 11.
+- Assuming every two-qubit gate creates entanglement.
+- Reporting circuit depth without saying which gates can run in parallel.
+- Comparing simulator arrays without fixing wire order first.
+- Testing only symmetric states and missing a q0/q1 reversal.
+- Treating a classical measurement result as a coherent quantum control.
+
+## Summary and glossary
+
+Controlled gates apply an operation conditionally according to control and target semantics. CX can entangle superpositions but not every basis input. Gate count, depth and hardware routing describe different circuit costs. A stable q0 convention and asymmetric test state are the simplest defenses against bit-order bugs.
+
+**Control:** wire that selects a conditional operation. **Target:** wire receiving the operation. **Depth:** number of sequential layers. **Connectivity:** which hardware qubits can interact directly. **Bit-order adapter:** the boundary code that maps one framework's wire order to the platform convention.
+
+## Transfer problem
+
+Use the declared convention to predict $\mathrm{CX}(q_0,q_1)$ on 01 and 10, then reverse the display order and see which labels change. As a debugging prompt, write “q0 control, q1 target, display q1q0” above your calculation. If the Lab reports 10 where you expected 01, inspect the adapter and measurement order before changing the gates.
+
+## Assessment
+
+Run the controlled-gate activity on all four inputs, then calculate the two-layer depth example by hand. The ten-question assessment should check semantics, resource accounting and convention debugging rather than only ask for truth-table memorization.
+
+## Lab connection
+
+The matching challenge is [Which qubit is which?](/lab?challenge=bit-order). Build the asymmetric circuit, apply X to q0, and verify that the result is 01 under QuantLearn's convention. After the quiz, the Lab handoff repeats the debugging prompt and links back to this lesson section so you can compare the visual and simulator output.
 
 ## Chapter quiz
 
-Answer all 10 questions in order: 3 easy checks, 4 medium applications and 3 harder reasoning questions. Use the worked examples if you get stuck. After submitting, read the explanations and revisit the relevant section before retrying.
+Answer every question in order. This ten-question assessment covers CX, CZ, SWAP, entanglement conditions, gate count, circuit depth, connectivity and framework bit ordering. Review the explanations before retrying the bit-order challenge.
 
 ## Sources
 
-- [Quantum information: multiple systems](https://quantum.cloud.ibm.com/learning/en/courses/basics-of-quantum-information/multiple-systems/quantum-information). IBM Quantum Learning / John Watrous.
+- [Quantum circuits](https://quantum.cloud.ibm.com/learning/en/courses/basics-of-quantum-information/quantum-circuits). IBM Quantum Learning / John Watrous.
 - [Bit-ordering in the Qiskit SDK](https://quantum.cloud.ibm.com/docs/en/guides/bit-ordering). IBM Quantum Documentation.
 - [Circuits](https://quantumai.google/cirq/build/circuits). Google Quantum AI.
