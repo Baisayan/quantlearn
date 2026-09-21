@@ -3,9 +3,10 @@
 import Link from "next/link";
 import { ArrowRight, CircleUserRound, LoaderCircle, LogOut } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
-import { useState } from "react";
+import { Suspense, useState } from "react";
 
 import { Button } from "@/components/ui/button";
+import { AppSidebar } from "@/components/navigation/app-sidebar";
 import { createClient } from "@/lib/supabase/client";
 
 import "./globals.css";
@@ -13,11 +14,6 @@ import "./globals.css";
 type RootLayoutProps = Readonly<{
   children: React.ReactNode;
 }>;
-
-const appLinks = [
-  { href: "/learn", label: "Learn" },
-  { href: "/lab", label: "Lab" },
-];
 
 function SiteHeader() {
   const pathname = usePathname() ?? "/";
@@ -86,29 +82,6 @@ function SiteHeader() {
 
         {isApplicationRoute ? (
           <>
-            <nav
-              className="order-3 flex basis-full items-center justify-center gap-1 sm:gap-2 lg:order-none lg:ml-auto lg:basis-auto"
-              aria-label="Application navigation"
-            >
-              {appLinks.map(({ href, label }) => {
-                const active = pathname === href || pathname.startsWith(`${href}/`);
-
-                return (
-                  <Button
-                    key={href}
-                    asChild
-                    size="sm"
-                    variant={active ? "default" : "ghost"}
-                    className="rounded-md px-4"
-                  >
-                    <Link href={href} aria-current={active ? "page" : undefined}>
-                      {label}
-                    </Link>
-                  </Button>
-                );
-              })}
-            </nav>
-
             <div className="ml-auto flex items-center gap-1 sm:gap-2">
               {isProgress ? (
                 <Button
@@ -149,6 +122,11 @@ function SiteHeader() {
 export default function RootLayout({ children }: RootLayoutProps) {
   const pathname = usePathname() ?? "/";
   const isHome = pathname === "/";
+  const isWorkspaceRoute =
+    pathname === "/learn" ||
+    pathname.startsWith("/learn/") ||
+    pathname === "/lab" ||
+    pathname.startsWith("/lab/");
   const contentTop = isHome ? "pt-16" : "pt-20 md:pt-16";
   const shellBackground = "bg-background";
 
@@ -165,7 +143,20 @@ export default function RootLayout({ children }: RootLayoutProps) {
         <div className={`relative isolate min-h-svh text-foreground ${shellBackground}`}>
           <SiteHeader />
           <div className={`relative z-10 flex min-h-svh flex-col ${contentTop}`}>
-            {children}
+            {isWorkspaceRoute ? (
+              <div className="flex min-w-0 flex-1 flex-col lg:flex-row">
+                <Suspense
+                  fallback={
+                    <aside className="hidden border-r border-border/70 bg-card/70 lg:block lg:w-72" />
+                  }
+                >
+                  <AppSidebar />
+                </Suspense>
+                <div className="min-w-0 flex-1">{children}</div>
+              </div>
+            ) : (
+              children
+            )}
           </div>
         </div>
       </body>

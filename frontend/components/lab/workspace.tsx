@@ -19,8 +19,13 @@ const CodeMirror = dynamic(() => import("@uiw/react-codemirror"), {
 const selectClass =
   "h-10 max-w-full rounded-md border border-border/80 bg-card px-3 text-sm outline-none transition-[border-color,box-shadow] duration-300 focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/50";
 
-export function LabWorkspace() {
-  const [challengeId, setChallengeId] = useState("bell");
+export function LabWorkspace({ initialChallengeId }: { initialChallengeId?: string }) {
+  const startingChallenge = challenges.some(
+    (challengeItem) => challengeItem.id === initialChallengeId,
+  )
+    ? initialChallengeId!
+    : "bell";
+  const challengeId = startingChallenge;
   const [editorKey, setEditorKey] = useState(0);
   const challenge = challenges.find((c) => c.id === challengeId);
   const [circuit, setCircuit] = useState<Circuit>({
@@ -45,11 +50,9 @@ export function LabWorkspace() {
     setAssessment(undefined);
     setError("");
   }
-  function reset(id = challengeId) {
-    setEditorKey(key => key + 1);
-    const next = challenges.find((c) => c.id === id);
-    setChallengeId(id);
-    update({ qubits: next?.qubits || 2, operations: [] });
+  function reset() {
+    setEditorKey((key) => key + 1);
+    update({ qubits: challenge?.qubits || 2, operations: [] });
     setTab("circuit");
   }
   async function run(action: "simulate" | "grade", compare = false) {
@@ -94,7 +97,7 @@ export function LabWorkspace() {
     }
   }
   return (
-    <main className="lab-shell mx-auto w-full max-w-7xl space-y-8 px-5 py-8 sm:px-8 lg:px-10">
+    <main className="lab-shell w-full space-y-8 px-5 py-8 sm:px-8 lg:px-10 xl:px-12">
       <div>
         <p className="font-mono text-xs font-semibold uppercase tracking-widest text-primary">
           Quantum playground
@@ -125,22 +128,6 @@ export function LabWorkspace() {
         className="space-y-6 disabled:opacity-80"
       >
         <div className="flex flex-wrap items-end gap-4">
-          <div className="flex min-w-0 flex-col gap-2">
-            <Label htmlFor="challenge">Experiment</Label>
-            <select
-              id="challenge"
-              className={selectClass}
-              value={challengeId}
-              onChange={(e) => reset(e.target.value)}
-            >
-              <option value="free">Free experiment</option>
-              {challenges.map((c) => (
-                <option key={c.id} value={c.id}>
-                  {c.title}
-                </option>
-              ))}
-            </select>
-          </div>
           <div className="flex flex-col gap-2">
             <Label htmlFor="engine">Simulator</Label>
             <select

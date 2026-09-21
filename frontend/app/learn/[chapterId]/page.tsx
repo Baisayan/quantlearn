@@ -27,7 +27,7 @@ export default async function ChapterPage({
     .replace(/## Learning objectives\r?\n[\s\S]*?(?=\r?\n## )/, "")
     .replace(/## Chapter quiz\r?\n[\s\S]*?(?=\r?\n## |$)/, "");
   return (
-    <main className="mx-auto w-full max-w-5xl min-w-0 space-y-8 px-5 py-8 sm:px-8 sm:py-10 lg:px-10">
+    <main className="w-full min-w-0 space-y-8 px-5 py-8 sm:px-8 sm:py-10 lg:px-10 xl:px-12">
       <nav
         aria-label="Breadcrumb"
         className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground"

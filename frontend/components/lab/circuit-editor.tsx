@@ -176,7 +176,7 @@ export function CircuitEditor({
   }
   return (
     <div className="space-y-4">
-      <DndContext sensors={sensors} onDragEnd={dropped} onDragStart={event => setDragLabel(String(event.active.data.current?.gate || event.active.id).toUpperCase())} onDragCancel={() => setDragLabel(null)}>
+      <DndContext id="quantlearn-circuit-editor" sensors={sensors} onDragEnd={dropped} onDragStart={event => setDragLabel(String(event.active.data.current?.gate || event.active.id).toUpperCase())} onDragCancel={() => setDragLabel(null)}>
         <DragOverlay>
           {dragLabel && (
             <div className="rounded-xl border border-primary bg-card px-4 py-2 text-sm font-medium text-primary shadow-lg">

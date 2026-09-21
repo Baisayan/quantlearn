@@ -18,7 +18,7 @@ export default async function ProgressPage() {
   );
   const next = course.chapters.find((chapter) => !completed.has(chapter.id));
   return (
-    <main className="mx-auto w-full max-w-7xl space-y-10 px-5 py-8 sm:px-8 sm:py-10 lg:px-10">
+    <main className="w-full space-y-10 px-5 py-8 sm:px-8 sm:py-10 lg:px-10 xl:px-12">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div className="space-y-3">
           <p className={`${eyebrow} text-primary`}>Your progress</p>

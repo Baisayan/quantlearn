@@ -14,7 +14,7 @@ export default async function LearnPage() {
   const started = new Set(lessons.map((lesson) => lesson.chapter_id));
   const next = course.chapters.find((chapter) => !completed.has(chapter.id));
   return (
-    <main className="mx-auto w-full max-w-7xl space-y-10 px-5 py-8 sm:px-8 sm:py-10 lg:px-10">
+    <main className="w-full space-y-10 px-5 py-8 sm:px-8 sm:py-10 lg:px-10 xl:px-12">
       <section className="space-y-5">
         <p className={`${eyebrow} text-primary`}>Your learning path</p>
         <div className="flex flex-col justify-between gap-6 sm:flex-row sm:items-end">
