@@ -180,6 +180,16 @@
     "reuse": "Reference only; no third-party prose, diagrams or photographs are reproduced."
   },
   {
+    "id": "pennylane-gradients",
+    "title": "Gradients",
+    "publisher": "PennyLane Documentation",
+    "url": "https://docs.pennylane.ai/en/stable/introduction/interfaces.html",
+    "published": null,
+    "accessed": "2026-09-21",
+    "supports": "Differentiable quantum functions, parameterized operations and gradient interfaces.",
+    "reuse": "Reference only; no third-party prose, diagrams or photographs are reproduced."
+  },
+  {
     "id": "cirq-gates",
     "title": "Gates and operations",
     "publisher": "Google Quantum AI",

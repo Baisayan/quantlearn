@@ -1,122 +1,142 @@
-# The same circuit in Qiskit Aer, Cirq and PennyLane
+# Cross-framework comparison and capstone
+
+The final chapter turns three framework lessons into one debugging method. Qiskit Aer, Cirq and PennyLane can represent the same ideal circuit, but they expose wires, state arrays, measurements, seeds and return values differently. A fair comparison first normalizes the logical experiment, then compares exact probabilities, then compares statevectors up to global phase, and only then compares finite samples.
 
 ## Learning objectives
 
-Read three framework examples, align bit ordering and choose between exact-state inspection and sampled results.
+By the end of this lesson you should be able to:
 
-## Shared experiment
+- implement the same Bell and asymmetric circuits in Aer, Cirq and PennyLane;
+- normalize wire order and compare exact probabilities;
+- explain why equivalent statevectors can differ by global phase;
+- explain why identical seeds do not promise identical samples; and
+- choose a framework and result type for a stated debugging task.
 
-The read-only examples below prepare a Bell pair and sample 1024 measurements. Exact probabilities are 1/2 for 00 and 11. Counts vary; using the same seed in different libraries does not require identical samples.
+## Why this concept matters
 
-### Qiskit Aer
+Cross-framework work is common in quantum computing. A research group may design a circuit in one API, validate it in another simulator, and submit it through a third provider. If the comparison is casual, a bit-order convention can look like a physics disagreement. If the comparison is staged, each mismatch becomes diagnosable.
 
-```python
-from qiskit import QuantumCircuit, transpile
-from qiskit_aer import AerSimulator
+The capstone is therefore not a popularity contest. Qiskit is useful for circuit and transpilation workflows, Cirq makes qubits and moments explicit, and PennyLane makes measurement returns and differentiable parameters convenient. The right choice depends on the question, while the mathematical experiment should remain invariant.
 
-circuit = QuantumCircuit(2, 2)
-circuit.h(0)
-circuit.cx(0, 1)
-circuit.measure([0, 1], [0, 1])
-simulator = AerSimulator(seed_simulator=42)
-compiled = transpile(circuit, simulator)
-counts = simulator.run(compiled, shots=1024).result().get_counts()
-print(counts)  # Keys are c1c0, matching q1q0 here.
+## Plain-language intuition
+
+Imagine three teams following the same recipe but writing their notes in different coordinate systems. Before comparing the final answer, verify that they used the same ingredients, order, units, measurement basis and number of trials. A statevector is like a coordinate list, so the same physical state can be stored at different indices or multiplied by a common phase. A count table is like a poll, so even identical sampling instructions can produce different random responses.
+
+## Prerequisite recap
+
+You should know the Qiskit, Cirq and PennyLane vocabulary from the previous three chapters. You should also know Bell-state preparation, asymmetric bit-order tests, exact probabilities, finite counts, global phase and simulator seeds.
+
+## Notation and vocabulary
+
+The shared Bell circuit is H on q0 followed by CX from q0 to q1. In QuantLearn's convention, display basis strings as `q1q0`, so the ideal statevector is `[1/sqrt(2),0,0,1/sqrt(2)]` and counts are `00` or `11`.
+
+The asymmetric test is X on q0 with q1 idle. In `q1q0` order the statevector is `[0,1,0,0]` and the display outcome is `01`. Use this test to expose order mismatches. A statevector comparison should allow a global phase: vectors `v` and `e^{iφ}v` have identical physical predictions.
+
+**Exact probability comparison** checks squared magnitudes after order normalization. **Statevector comparison** checks complex amplitudes after order normalization and global-phase alignment. **Sample comparison** checks statistical consistency, not exact count identity. **Reproducibility metadata** includes fixture, framework, version, device, order, shots, seed and measurement return.
+
+## Visual explanation before equations
+
+First choose the result type that answers your question.
+
+![Sampled measurements, exact states and mixed representations answer different framework questions.](/learn/visuals/framework-flow.svg)
+
+Then normalize labels and tensor order.
+
+![A framework comparison maps wire order, statevector basis and count-string order into one convention.](/learn/visuals/framework-order.svg)
+
+The comparison matrix makes the staging explicit.
+
+![Framework comparison stages normalize logical gates, basis order, probabilities and observable conventions.](/learn/visuals/framework-matrix.svg)
+
+Seeds and shots are metadata, not proof that independent samplers share one random sequence.
+
+![Reproducibility metadata records circuit, engine, shots, seed and basis order for a fair comparison.](/learn/visuals/framework-repro.svg)
+
+Finally choose the framework by the task rather than by a universal winner.
+
+![Framework choice connects Qiskit Aer, Cirq and PennyLane to different workflow questions.](/learn/visuals/framework-choice.svg)
+
+## Worked example 1: compare the Bell probabilities
+
+In Aer, build a two-qubit circuit, transpile it, and run measurements. In Cirq, create q0 and q1, place H and CNOT in a circuit, and call `run` with repetitions. In PennyLane, create `default.qubit` with finite shots and return `qml.counts()`.
+
+The logical operations are the same. After normalizing count keys to `q1q0`, each engine should approach `P(00)=1/2` and `P(11)=1/2`, while `P(01)=P(10)=0` in the ideal model. With 1,024 shots, each engine can return different nearby counts. The correct comparison is support, frequencies within sampling variation, and declared metadata.
+
+The first calculation is the exact probability vector `[0.5,0,0,0.5]`. The second is a sampled estimate such as `00:506, 11:518`, which sums to 1,024 and estimates frequencies near one half. Do not call the second vector an exact state.
+
+## Worked example 2: align an asymmetric state
+
+Apply X only to q0. Under QuantLearn order `q1q0`, the state is `[0,1,0,0]`. If a framework returns `[0,0,1,0]`, first ask whether it uses `q0q1` storage order. Reversing the adapter's basis labels can reconcile the arrays. Adding a SWAP gate would change the circuit and is not a valid fix for a display mismatch.
+
+Next compare states up to global phase. If one engine returns `[-1/sqrt(2),0,0,-1/sqrt(2)]` for a Bell state, the common factor `-1` does not change any probability or expectation. Align the phase using one nonzero reference amplitude before judging the remaining entries.
+
+## Interactive prediction
+
+Select a framework view, switch the Bell experiment between exact probabilities and sampled counts, and toggle the asymmetric order. Predict whether the logical circuit, the state array, or only the random sample changes.
+
+```interactive
+{"widget":"framework-comparison","preset":"bell-and-order-debug"}
 ```
 
-### Cirq
+Inline check: identical seeds can produce different count maps across libraries because their random-number generators and sampling implementations can differ. Agreement of ideal probabilities is the stronger cross-framework invariant.
 
-```python
-import cirq
+## Choosing a framework
 
-q0, q1 = cirq.LineQubit.range(2)
-circuit = cirq.Circuit(
-    cirq.H(q0),
-    cirq.CNOT(q0, q1),
-    cirq.measure(q1, q0, key="bits"),
-)
-simulator = cirq.Simulator(seed=42)
-result = simulator.run(circuit, repetitions=1024)
-counts = {
-    format(value, "02b"): count
-    for value, count in result.histogram(key="bits").items()
-}
-print(counts)  # Measurement order explicitly makes these q1q0.
-```
+Use Qiskit Aer when the task emphasizes `QuantumCircuit`, transpilation, backend methods and detailed result objects. Use Cirq when explicit qubit objects, moments, circuit timelines and simulator methods are central. Use PennyLane when quantum functions, measurement returns and differentiable parameters are central. Use all three when the goal is validation or adapter testing.
 
-### PennyLane
+The choice does not remove the need for a convention. A Qiskit count key, a Cirq integer histogram and a PennyLane count dictionary still need a common bitstring interpretation. A QNode expectation and an Aer counts-derived expectation need the same observable and shot assumptions before they can be compared.
 
-```python
-import pennylane as qml
+## Debugging sequence
 
-sample_device = qml.device("default.qubit", wires=2, shots=1024)
+1. Compare source operations and wire mapping.
+2. Run an asymmetric basis-state fixture.
+3. Declare the tensor and count-key order.
+4. Compare exact probabilities before finite samples.
+5. Align statevectors up to global phase.
+6. Compare expectations using the same observable and basis.
+7. Only then investigate seeds, statistical variation or noise.
 
-@qml.qnode(sample_device)
-def circuit():
-    qml.Hadamard(wires=0)
-    qml.CNOT(wires=[0, 1])
-    return qml.counts(all_outcomes=True)
+This sequence prevents a common failure mode: changing gates until two display panels look alike, even though the logical experiments have diverged.
 
-counts = circuit()
-print(counts)  # Keys are computational-basis strings such as 00 and 11.
-```
+## Common mistakes
 
-PennyLane uses integer wire labels and binds a quantum function to a device with a QNode. The
-`qml.counts` measurement samples computational-basis outcomes. For an exact state inspection,
-use an unmeasured QNode that returns `qml.state()` instead. QuantLearn uses `default.qubit`,
-PennyLane's built-in ideal simulator, for this demo.
+- Comparing raw arrays before normalizing basis order.
+- Treating a global phase difference as a physical disagreement.
+- Expecting the same seed to synchronize three libraries.
+- Comparing count integers instead of probabilities and confidence from the same shot budget.
+- Forgetting idle wires in Cirq or classical-register order in Qiskit.
+- Calling `default.qubit` hardware or assuming every device supports every measurement.
+- Choosing a framework before writing down the result type required by the task.
 
-These snippets use local simulators, not cloud credentials or QPU jobs. They are reference examples for the corresponding Lab engine integrations.
+## Summary and glossary
 
-## Read the code one operation at a time
+Equivalent frameworks should agree on logical operations and ideal probabilities. Statevectors should be compared after basis-order normalization and global-phase alignment. Samples should be compared statistically, with shots and seeds recorded but not overinterpreted. Qiskit Aer emphasizes circuit and transpilation workflows, Cirq emphasizes explicit qubits and moments, and PennyLane emphasizes QNodes, measurement returns and gradients.
 
-In Qiskit, QuantumCircuit(2,2) allocates two quantum bits and two classical storage bits. The measure call copies the outcomes of q0 and q1 into their respective classical bits. Transpilation translates a circuit into operations compatible with the chosen target; it is not an extra measurement. The result's count values must add to 1024.
+Glossary: **adapter** maps one framework's representation to another; **basis order** assigns array indices to bitstrings; **global phase** is a common unit-magnitude factor with no measurement effect; **exact probability** is a simulator calculation; **sample** is a finite measurement record; **reproducibility metadata** records the setup needed to repeat a comparison.
 
-In Cirq, LineQubit names the qubits, Circuit collects operations, and the measurement key names the output record. Repetitions has the same role as shots in the Aer example. Histogram keys are integers here; formatting each as a two-bit binary string retains a leading zero when necessary. Measuring q1 before q0 in the argument list sets result ordering. It does not insert a SWAP gate.
+## Assessment
 
-In PennyLane, `wires=[0, 1]` makes the control and target order explicit for a two-wire operation. A QNode can return a state, probabilities, counts or expectation values, depending on its measurement. QuantLearn keeps the displayed basis convention consistent across all three adapters, so a PennyLane result is normalized before it reaches the Lab panels.
+Answer the chapter quiz after working both the Bell and asymmetric examples. The questions check framework roles, state and count normalization, global phase, seeds, result types and debugging order.
 
-Compare results in stages: first circuit operations and qubit labels, then exact probabilities, then sampled frequencies. If probabilities differ, inspect ordering and angles before blaming sampling. If exact states differ only by a common unit-magnitude factor, their physical predictions still agree.
+## Transfer problem
 
-## Inspect state before measurement
+You receive three outputs: Aer counts `{'00': 510, '11': 514}`, Cirq counts `{1: 512, 2: 512}`, and PennyLane probabilities `[0.5,0,0,0.5]`. Decide which can be compared directly, what mapping is missing for the Cirq integers, and what claim is justified about the experiment.
 
-For Aer, prepare a separate unmeasured circuit and call save_statevector() before execution with AerSimulator(method="statevector"). Retrieve the saved state from the result. For Cirq, simulate an unmeasured circuit with qubit_order=[q1,q0] and inspect final_state_vector. In PennyLane, return `qml.state()` from an unmeasured QNode. A measurement can collapse or sample the state, so the snapshot location matters.
+## Lab connection
 
-## Catch an ordering mismatch
+Use the Bell-pair challenge as the capstone. Run the fixture through the available Lab engines, inspect each result panel, and document the normalized order and shot count. Debugging prompt: when two results disagree, reproduce the asymmetric X(q0) fixture before changing the Bell circuit.
 
-Bell probabilities look identical after reversing bits. Instead prepare X(q0) with q1 untouched. The expected QuantLearn statevector is [0,1,0,0], and the outcome is 01. Cirq with the order [q0,q1] would instead place the nonzero amplitude at index 2.
-
-![Explicit mapping between wire order, Qiskit output and the chosen Cirq order.](/learn/visuals/framework-order.svg)
-
-In Cirq, include both qubits in qubit_order even when one is idle. In Qiskit, the allocated two-qubit register retains that idle qubit. In PennyLane, include every wire in the device even when a wire has no operation.
-
-## Choose the result you need
-
-![A comparison of sampled measurements, exact pure states and mixed-state representations.](/learn/visuals/framework-flow.svg)
-
-To investigate finite measurement counts, use a sampled run with a stated shot count. In Cirq this is simulator.run(circuit, repetitions=N); in PennyLane, configure shots and return `qml.counts()`. To investigate amplitudes and phase, simulate an unmeasured circuit and inspect its state. To model a noisy ensemble, choose a density-matrix representation rather than interpreting one random trajectory as the whole ensemble.
-
-The Learn examples are fixed reference experiments. The Lab will let you run related circuits and compare Aer, Cirq and PennyLane. An exact state is useful for understanding the calculation, but a real quantum device does not return its full unknown statevector as one measurement result. Matching engines means matching ideal probabilities and state up to numerical tolerance, not identical finite-shot samples.
-
-## What you should be able to do next
-
-You should now be able to predict a small circuit, read its diagram and explain the main differences between exact states and measured counts. Practice in Lab will be needed to demonstrate that you can build and debug an unfamiliar circuit.
-
-This course is an introduction, not expert certification. Further study should include deeper linear algebra, mixed-state methods, Fourier transforms and phase estimation, error correction, and larger algorithm implementations. High quiz scores are useful feedback, but they cannot replace independent derivations and practical work.
-
-## Summary
-
-Equivalent circuits should agree on ideal probabilities up to numerical tolerance and statevectors up to global phase. Normalize order before comparison and select the result type that answers your question. PennyLane is a direct third adapter for this normalized ideal-circuit contract, not a second execution path in the browser.
+Try this in Lab: [open the Bell-pair challenge](/lab?challenge=bell).
 
 ## Chapter quiz
 
-Answer all 10 questions in order: 3 easy checks, 4 medium applications and 3 harder reasoning questions. Use the worked examples if you get stuck. After submitting, read the explanations and revisit the relevant section before retrying.
+Answer every question and read the feedback. The count follows the capstone comparison and debugging content in this module.
 
 ## Sources
 
-- [Simulators](https://qiskit.github.io/qiskit-aer/tutorials/1_aersimulator.html). Qiskit Aer Documentation.
-- [Simulation](https://quantumai.google/cirq/simulate/simulation). Google Quantum AI.
-- [Circuits](https://docs.pennylane.ai/en/stable/introduction/circuits.html). PennyLane Documentation.
-- [Measurements](https://docs.pennylane.ai/en/stable/introduction/measurements.html). PennyLane Documentation.
-- [Bit-ordering in the Qiskit SDK](https://quantum.cloud.ibm.com/docs/en/guides/bit-ordering). IBM Quantum Documentation.
-- [Circuits](https://quantumai.google/cirq/build/circuits). Google Quantum AI.
+- Qiskit Aer, [Simulators](https://qiskit.github.io/qiskit-aer/tutorials/1_aersimulator.html).
+- Google Quantum AI, [Simulation](https://quantumai.google/cirq/simulate/simulation).
+- Google Quantum AI, [Circuits](https://quantumai.google/cirq/build/circuits).
+- PennyLane, [Circuits](https://docs.pennylane.ai/en/stable/introduction/circuits.html).
+- PennyLane, [Measurements](https://docs.pennylane.ai/en/stable/introduction/measurements.html).
+- IBM Quantum, [Bit ordering in the Qiskit SDK](https://quantum.cloud.ibm.com/docs/en/guides/bit-ordering).

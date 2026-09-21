@@ -355,7 +355,7 @@ function DensityMatrixExplorer() {
       : "No local statevector; reduced state ρlocal = I/2"
     : system === "joint"
       ? "ρΦ+ = 1/2 [[1,0,0,1],[0,0,0,0],[0,0,0,0],[1,0,0,1]]"
-      : "Trother(ρΦ+) = I/2 = [[1/2,0],[0,1/2]]";
+      : "Tr_other(ρΦ+) = I/2 = [[1/2,0],[0,1/2]]";
   return (
     <Frame eyebrow="Change the representation" title="A local state can hide a joint state">
       <div className="grid gap-4 sm:grid-cols-2">
@@ -454,6 +454,171 @@ function NoCloningExplorer() {
   );
 }
 
+function OracleExplorer() {
+  const [oracle, setOracle] = useState("xor");
+  const [helper, setHelper] = useState("minus");
+  const inputs = ["00", "01", "10", "11"];
+  const value = (input: string) => oracle === "zero" ? 0 : oracle === "one" ? 1 : Number(input[0]) ^ Number(input[1]);
+  return (
+    <Frame eyebrow="Predict, then reveal" title="Turn a truth table into phase signs">
+      <div className="grid gap-3 sm:grid-cols-2">
+        <label className="space-y-1 text-sm"><span className="block">Oracle</span><select value={oracle} onChange={(event) => setOracle(event.target.value)} className="w-full rounded-lg border border-border/70 bg-background px-3 py-2"><option value="zero">constant zero</option><option value="one">constant one</option><option value="xor">XOR</option></select></label>
+        <div className="space-y-1 text-sm"><span className="block">Helper state</span><div className="flex flex-wrap gap-2"><Choice selected={helper === "zero"} onClick={() => setHelper("zero")}>|0⟩</Choice><Choice selected={helper === "one"} onClick={() => setHelper("one")}>|1⟩</Choice><Choice selected={helper === "minus"} onClick={() => setHelper("minus")}>|−⟩</Choice></div></div>
+      </div>
+      <div className="grid grid-cols-4 gap-2 font-mono text-xs">{inputs.map((input) => { const f = value(input); const phase = helper === "minus" ? (f ? "−" : "+") : `y → y⊕${f}`; return <div key={input} className="rounded-lg border border-border/70 p-3 text-center"><p>|{input}⟩</p><p className="mt-2 text-primary">f={f}</p><p className="mt-2 font-semibold">{phase}</p></div>; })}</div>
+      <p className="rounded-lg bg-secondary/70 p-4 text-sm leading-relaxed">With `|−⟩`, the helper stays in the same named state and the input branches receive the signs {inputs.map((input) => value(input) ? "−" : "+").join(", ")}. With `|0⟩` or `|1⟩`, the same oracle is visible as a helper-bit flip.</p>
+    </Frame>
+  );
+}
+
+function DeutschJozsaExplorer() {
+  const [oracle, setOracle] = useState("xor");
+  const inputs = ["00", "01", "10", "11"];
+  const value = (input: string) => oracle === "zero" ? 0 : oracle === "one" ? 1 : Number(input[0]) ^ Number(input[1]);
+  const signs = inputs.map((input) => value(input) ? "−" : "+");
+  const allZero = oracle === "zero" || oracle === "one";
+  return (
+    <Frame eyebrow="Run the promise problem" title="Does the function look constant or balanced?">
+      <div className="flex flex-wrap gap-2"><Choice selected={oracle === "zero"} onClick={() => setOracle("zero")}>constant 0</Choice><Choice selected={oracle === "one"} onClick={() => setOracle("one")}>constant 1</Choice><Choice selected={oracle === "xor"} onClick={() => setOracle("xor")}>balanced XOR</Choice></div>
+      <div className="grid grid-cols-4 gap-2 font-mono text-xs">{inputs.map((input, index) => <div key={input} className="rounded-lg border border-border/70 p-3 text-center"><p>{input}</p><p className="mt-2 text-primary">f={value(input)}</p><p className="mt-2 text-lg">{signs[index]}</p></div>)}</div>
+      <div className="grid gap-3 sm:grid-cols-2"><p className="rounded-lg bg-secondary/70 p-4 text-sm">Signs: <span className="font-mono">{signs.join(" ")}</span></p><p className="rounded-lg border border-primary/20 bg-primary/5 p-4 text-sm">P(00) after final H: <span className="font-mono font-semibold">{allZero ? "1.000" : "0.000"}</span></p></div>
+      <p className="text-sm leading-relaxed text-muted-foreground">For this XOR instance the nonzero output is 11. The promise only guarantees that a balanced oracle excludes 00; it does not guarantee one particular nonzero string.</p>
+    </Frame>
+  );
+}
+
+function GroverExplorer() {
+  const [marked, setMarked] = useState("11");
+  const [iteration, setIteration] = useState(0);
+  const candidates = ["00", "01", "10", "11"];
+  const amplitudes = iteration === 0 ? candidates.map(() => 0.5) : iteration === 1 ? candidates.map((candidate) => candidate === marked ? 1 : 0) : candidates.map(() => -0.5);
+  const success = iteration === 1 ? 1 : 0.25;
+  return (
+    <Frame eyebrow="Amplify a marked state" title="Predict the next Grover iteration">
+      <div className="grid gap-3 sm:grid-cols-2"><label className="space-y-1 text-sm"><span className="block">Marked state</span><select value={marked} onChange={(event) => setMarked(event.target.value)} className="w-full rounded-lg border border-border/70 bg-background px-3 py-2">{candidates.map((candidate) => <option key={candidate}>{candidate}</option>)}</select></label><div className="space-y-1 text-sm"><span className="block">Iterations</span><div className="flex gap-2">{[0, 1, 2].map((value) => <Choice key={value} selected={iteration === value} onClick={() => setIteration(value)}>{value}</Choice>)}</div></div></div>
+      <div className="grid grid-cols-4 gap-2">{candidates.map((candidate, index) => <div key={candidate} className="space-y-2 text-center"><div className="flex h-24 items-end justify-center rounded-lg bg-secondary/70 p-2"><div className={`w-8 rounded-t-md transition-[height,background-color] duration-300 ${candidate === marked ? "bg-primary" : "bg-muted-foreground/40"}`} style={{ height: `${Math.max(8, Math.abs(amplitudes[index]) * 100)}%` }} /></div><p className="font-mono text-xs">{candidate}</p><p className="font-mono text-xs">{amplitudes[index].toFixed(2)}</p></div>)}</div>
+      <p className="rounded-lg bg-secondary/70 p-4 text-sm">Marked-state success: <span className="font-mono font-semibold">{success.toFixed(3)}</span>. For four candidates and one marked item, one iteration is the peak and two iterations overshoot.</p>
+    </Frame>
+  );
+}
+
+function ObservableExplorer() {
+  const [observable, setObservable] = useState("Z");
+  const [positive, setPositive] = useState(70);
+  const shots = 100;
+  const expectation = (positive - (shots - positive)) / shots;
+  return (
+    <Frame eyebrow="Counts to an objective" title="Estimate an observable from shots">
+      <div className="grid gap-3 sm:grid-cols-2"><div className="space-y-2"><p className="text-sm">Observable</p><div className="flex gap-2"><Choice selected={observable === "Z"} onClick={() => setObservable("Z")}>Z</Choice><Choice selected={observable === "X"} onClick={() => setObservable("X")}>X</Choice><Choice selected={observable === "Y"} onClick={() => setObservable("Y")}>Y</Choice></div></div><label className="space-y-2 text-sm"><span className="flex justify-between"><span>Positive outcomes</span><span className="font-mono text-xs">{positive}/{shots}</span></span><input type="range" min="0" max={shots} value={positive} onChange={(event) => setPositive(Number(event.target.value))} className="w-full accent-primary" /></label></div>
+      <div className="grid gap-3 sm:grid-cols-2"><p className="rounded-lg bg-secondary/70 p-4 font-mono text-sm">negative: {shots - positive}</p><p className="rounded-lg border border-primary/20 bg-primary/5 p-4 font-mono text-sm">⟨{observable}⟩ = {expectation.toFixed(2)}</p></div>
+      <p className="text-sm leading-relaxed text-muted-foreground">Z uses the direct detector. X uses H before Z, and Y uses S† then H. The signed estimate is positive minus negative divided by shots.</p>
+    </Frame>
+  );
+}
+
+function QaoaExplorer() {
+  const [gamma, setGamma] = useState(90);
+  const [beta, setBeta] = useState(22.5);
+  const expected = 0.5 + 0.5 * Math.sin((4 * beta * Math.PI) / 180) * Math.sin((gamma * Math.PI) / 180);
+  return (
+    <Frame eyebrow="Tune the hybrid circuit" title="One-edge MaxCut parameter landscape">
+      <div className="grid gap-4 sm:grid-cols-2"><label className="space-y-2 text-sm"><span className="flex justify-between"><span>γ</span><span className="font-mono text-xs">{gamma}°</span></span><input type="range" min="0" max="180" value={gamma} onChange={(event) => setGamma(Number(event.target.value))} className="w-full accent-primary" /></label><label className="space-y-2 text-sm"><span className="flex justify-between"><span>β</span><span className="font-mono text-xs">{beta.toFixed(1)}°</span></span><input type="range" min="0" max="45" step="0.5" value={beta} onChange={(event) => setBeta(Number(event.target.value))} className="w-full accent-primary" /></label></div>
+      <div className="grid gap-3 sm:grid-cols-2"><p className="rounded-lg bg-secondary/70 p-4 text-sm">Cost term: <span className="font-mono">(I − Z₀Z₁)/2</span></p><p className="rounded-lg border border-primary/20 bg-primary/5 p-4 text-sm">Expected cut: <span className="font-mono font-semibold">{expected.toFixed(3)}</span></p></div>
+      <p className="text-sm leading-relaxed text-muted-foreground">At γ=90° and β=22.5°, the ideal expected score is 1.000. The classical optimizer would use sampled scores like this to choose its next angles.</p>
+    </Frame>
+  );
+}
+
+function VqeExplorer() {
+  const [theta, setTheta] = useState(0);
+  const [step, setStep] = useState(0);
+  const trace = [0, 90, 206.565];
+  const shownTheta = step ? trace[step] : theta;
+  const radians = (shownTheta * Math.PI) / 180;
+  const energy = Math.cos(radians) + 0.5 * Math.sin(radians);
+  return (
+    <Frame eyebrow="Search an energy curve" title="VQE estimates Z + 0.5X">
+      <label className="block space-y-2 text-sm"><span className="flex justify-between"><span>Ansatz angle θ</span><span className="font-mono text-xs">{shownTheta.toFixed(1)}°</span></span><input type="range" min="0" max="360" value={shownTheta} onChange={(event) => { setStep(0); setTheta(Number(event.target.value)); }} className="w-full accent-primary" /></label>
+      <div className="flex flex-wrap gap-2"><Button type="button" size="sm" variant="outline" onClick={() => setStep((value) => value === 2 ? 0 : value + 1)}>Replay optimizer step</Button><span className="rounded-lg bg-secondary/70 px-3 py-2 font-mono text-xs">step {step}/2</span></div>
+      <div className="grid gap-3 sm:grid-cols-3"><p className="rounded-lg border border-border/70 p-3 font-mono text-xs">⟨Z⟩ {Math.cos(radians).toFixed(3)}</p><p className="rounded-lg border border-border/70 p-3 font-mono text-xs">⟨X⟩ {Math.sin(radians).toFixed(3)}</p><p className="rounded-lg border border-primary/20 bg-primary/5 p-3 font-mono text-xs">E(θ) {energy.toFixed(3)}</p></div>
+      <p className="text-sm leading-relaxed text-muted-foreground">The exact minimum for this toy Hamiltonian is −√1.25 ≈ −1.118 near 206.6°. Separate Z and X shot batches would estimate the two terms in a real run.</p>
+    </Frame>
+  );
+}
+
+function SimulationExplorer() {
+  const [view, setView] = useState("state");
+  const [sampled, setSampled] = useState(false);
+  const [noise, setNoise] = useState(0);
+  const exact = noise === 0 ? "P(00)=0.500, P(11)=0.500" : `P(00)=${(0.5 * (1 - noise / 100)).toFixed(3)}, P(11)=${(0.5 * (1 + noise / 100)).toFixed(3)}`;
+  const content: Record<string, string> = { state: "[1/√2, 0, 0, 1/√2]", histogram: sampled ? "32 shots: 00=17, 11=15" : exact, density: noise ? "ρ: coherence reduced by the channel" : "ρΦ+ with off-diagonal coherence", bloch: "local Bloch vectors: center for each Bell qubit" };
+  return (
+    <Frame eyebrow="Compare result types" title="One circuit, several simulation views">
+      <div className="flex flex-wrap gap-2">{[["state", "Statevector"], ["histogram", "Histogram"], ["density", "Density matrix"], ["bloch", "Bloch view"]].map(([id, label]) => <Choice key={id} selected={view === id} onClick={() => setView(id)}>{label}</Choice>)}</div>
+      <div className="grid gap-3 sm:grid-cols-2"><Choice selected={!sampled} onClick={() => setSampled(false)}>Exact model</Choice><Choice selected={sampled} onClick={() => setSampled(true)}>Sample 32 shots</Choice></div>
+      <label className="block space-y-2 text-sm"><span className="flex justify-between"><span>Noise channel</span><span className="font-mono text-xs">{noise}%</span></span><input type="range" min="0" max="100" value={noise} onChange={(event) => setNoise(Number(event.target.value))} className="w-full accent-primary" /></label>
+      <p className="rounded-lg bg-secondary/70 p-4 font-mono text-sm">{content[view]}</p>
+      <p className="text-sm leading-relaxed text-muted-foreground">Exact and sampled outputs answer different questions. A seed can repeat sampling within one setup, but it does not make a simulator state a hardware measurement.</p>
+    </Frame>
+  );
+}
+
+function QiskitCodeExplorer() {
+  const [line, setLine] = useState(0);
+  const lines = [["QuantumCircuit(2, 2)", "Allocate quantum and classical registers."], ["h(0); cx(0, 1)", "Prepare the Bell state."], ["measure([0,1], [0,1])", "Write outcomes into classical bits."], ["transpile(circuit, simulator)", "Adapt the circuit to the target."], ["run(..., shots=1024)", "Repeat the measured experiment."], ["get_counts()", "Read the frequency map."]];
+  return (
+    <Frame eyebrow="Read the pipeline" title="Click a Qiskit line to inspect its effect">
+      <div className="grid gap-2">{lines.map(([code], index) => <button key={code} type="button" onClick={() => setLine(index)} className={`rounded-lg border p-3 text-left transition-[border-color,background-color] duration-300 ${line === index ? "border-primary bg-secondary" : "border-border/70"}`}><span className="font-mono text-xs">{index + 1}. {code}</span></button>)}</div>
+      <p className="rounded-lg bg-secondary/70 p-4 text-sm leading-relaxed">{lines[line][1]}</p>
+      <div className="grid gap-3 sm:grid-cols-2"><p className="rounded-lg border border-border/70 p-3 font-mono text-xs">counts: 00, 11</p><p className="rounded-lg border border-primary/20 bg-primary/5 p-3 font-mono text-xs">state: exact snapshot when saved before measurement</p></div>
+    </Frame>
+  );
+}
+
+function CirqExplorer() {
+  const [moment, setMoment] = useState(0);
+  const [order, setOrder] = useState("q1q0");
+  const steps = [["q0, q1", "Create named qubit objects."], ["H(q0)", "q0 becomes |+⟩."], ["CNOT(q0,q1)", "The pair becomes entangled."], ["measure(q1,q0)", "The keyed result follows the requested order."]];
+  const asymmetric = order === "q1q0" ? "state index 1 → 01" : "state index 2 → 10";
+  return (
+    <Frame eyebrow="Step through moments" title="Cirq run versus simulate">
+      <div className="flex flex-wrap gap-2">{steps.map(([label], index) => <Choice key={label} selected={moment === index} onClick={() => setMoment(index)}>{index + 1}. {label}</Choice>)}</div>
+      <p className="rounded-lg bg-secondary/70 p-4 text-sm leading-relaxed">{steps[moment][1]}</p>
+      <div className="grid gap-3 sm:grid-cols-2"><Choice selected={order === "q1q0"} onClick={() => setOrder("q1q0")}>qubit_order=[q1,q0]</Choice><Choice selected={order === "q0q1"} onClick={() => setOrder("q0q1")}>qubit_order=[q0,q1]</Choice></div>
+      <div className="grid gap-3 sm:grid-cols-2"><p className="rounded-lg border border-border/70 p-3 font-mono text-xs">run(1024): 00 / 11 counts</p><p className="rounded-lg border border-primary/20 bg-primary/5 p-3 font-mono text-xs">simulate: {asymmetric}</p></div>
+    </Frame>
+  );
+}
+
+function PennyLaneExplorer() {
+  const [theta, setTheta] = useState(90);
+  const [measurement, setMeasurement] = useState("probs");
+  const p1 = Math.sin((theta * Math.PI) / 360) ** 2;
+  const result: Record<string, string> = { state: `[${Math.cos((theta * Math.PI) / 360).toFixed(3)}, ${Math.sin((theta * Math.PI) / 360).toFixed(3)}]`, probs: `[${(1 - p1).toFixed(3)}, ${p1.toFixed(3)}]`, counts: `256 shots: 0≈${Math.round((1 - p1) * 256)}, 1≈${Math.round(p1 * 256)}`, expval: `⟨Z⟩ = ${(1 - 2 * p1).toFixed(3)}` };
+  return (
+    <Frame eyebrow="Choose a QNode return" title="RY(theta) through PennyLane measurements">
+      <label className="block space-y-2 text-sm"><span className="flex justify-between"><span>theta</span><span className="font-mono text-xs">{theta}°</span></span><input type="range" min="0" max="360" value={theta} onChange={(event) => setTheta(Number(event.target.value))} className="w-full accent-primary" /></label>
+      <div className="flex flex-wrap gap-2">{[["state", "qml.state()"], ["probs", "qml.probs()"], ["counts", "qml.counts()"], ["expval", "qml.expval(Z)"],].map(([id, label]) => <Choice key={id} selected={measurement === id} onClick={() => setMeasurement(id)}>{label}</Choice>)}</div>
+      <p className="rounded-lg bg-secondary/70 p-4 font-mono text-sm">{result[measurement]}</p>
+      <p className="text-sm leading-relaxed text-muted-foreground">default.qubit is a local ideal simulator. Counts add finite-shot variation; state and probability returns show the exact model.</p>
+    </Frame>
+  );
+}
+
+function FrameworkComparison() {
+  const [mode, setMode] = useState("bell");
+  const [framework, setFramework] = useState("all");
+  const output = mode === "bell" ? "Exact probabilities: 00=0.5, 11=0.5" : framework === "cirq" ? "q0q1 order: asymmetric state appears at index 2" : "q1q0 order: X(q0) appears as 01 at index 1";
+  return (
+    <Frame eyebrow="Capstone debugging" title="Normalize before comparing frameworks">
+      <div className="flex flex-wrap gap-2"><Choice selected={mode === "bell"} onClick={() => setMode("bell")}>Bell comparison</Choice><Choice selected={mode === "order"} onClick={() => setMode("order")}>Order bug</Choice></div>
+      <div className="flex flex-wrap gap-2">{[["all", "All frameworks"], ["qiskit", "Aer"], ["cirq", "Cirq"], ["pennylane", "PennyLane"]].map(([id, label]) => <Choice key={id} selected={framework === id} onClick={() => setFramework(id)}>{label}</Choice>)}</div>
+      <div className="grid gap-3 sm:grid-cols-3"><p className="rounded-lg border border-border/70 p-3 text-sm">Logical gates<br /><span className="font-mono text-xs">H(q0); CX(q0,q1)</span></p><p className="rounded-lg border border-border/70 p-3 text-sm">Order<br /><span className="font-mono text-xs">q1q0</span></p><p className="rounded-lg border border-primary/20 bg-primary/5 p-3 text-sm">Result<br /><span className="font-mono text-xs">{framework}: {output}</span></p></div>
+      <p className="text-sm leading-relaxed text-muted-foreground">Compare exact probabilities first, then align statevectors up to global phase, then compare finite samples statistically. Identical seeds do not guarantee identical counts across libraries.</p>
+    </Frame>
+  );
+}
+
 export function LessonInteractive({ spec }: { spec: LessonInteractiveSpec }) {
   switch (spec.widget) {
     case "information-basics":
@@ -484,6 +649,28 @@ export function LessonInteractive({ spec }: { spec: LessonInteractiveSpec }) {
       return <TeleportationTracer />;
     case "no-cloning-explorer":
       return <NoCloningExplorer />;
+    case "oracle-explorer":
+      return <OracleExplorer />;
+    case "deutsch-jozsa-explorer":
+      return <DeutschJozsaExplorer />;
+    case "grover-explorer":
+      return <GroverExplorer />;
+    case "observable-explorer":
+      return <ObservableExplorer />;
+    case "qaoa-explorer":
+      return <QaoaExplorer />;
+    case "vqe-explorer":
+      return <VqeExplorer />;
+    case "simulation-explorer":
+      return <SimulationExplorer />;
+    case "qiskit-code-explorer":
+      return <QiskitCodeExplorer />;
+    case "cirq-explorer":
+      return <CirqExplorer />;
+    case "pennylane-explorer":
+      return <PennyLaneExplorer />;
+    case "framework-comparison":
+      return <FrameworkComparison />;
     default:
       return null;
   }

@@ -438,27 +438,59 @@
       "quiz": "quizzes/no-cloning-and-no-signalling.json"
     },
     {
-      "id": "deutsch-jozsa",
-      "summary": "Use phase kickback to distinguish constant and balanced functions.",
+      "id": "oracles-and-phase-kickback",
+      "summary": "Turn Boolean query rules into reversible circuits and make a helper qubit carry a phase.",
       "difficulty": "Intermediate",
-      "title": "Deutsch-Jozsa and phase kickback",
+      "title": "Oracles and phase kickback",
       "module": "algorithms",
       "order": 15,
       "prerequisites": [
         "no-cloning-and-no-signalling"
       ],
       "objectives": [
-        "State the constant-or-balanced promise.",
-        "Trace a two-input XOR oracle.",
-        "Interpret query complexity without overstating practical advantage."
+        "Explain a reversible Boolean oracle as a query interface.",
+        "Use the |−⟩ helper state to derive phase kickback.",
+        "Distinguish an oracle query from the gates that implement it."
       ],
       "sourceIds": [
         "ibm-dj",
-        "ibm-circuits"
+        "ibm-circuits",
+        "cirq-gates"
+      ],
+      "visualIds": [
+        "oracle-model",
+        "oracle-truth-table",
+        "oracle-helper"
+      ],
+      "lesson": "lessons/oracles-and-phase-kickback.md",
+      "quiz": "quizzes/oracles-and-phase-kickback.json"
+    },
+    {
+      "id": "deutsch-jozsa",
+      "summary": "Use phase kickback and interference to distinguish promised constant and balanced functions.",
+      "difficulty": "Intermediate",
+      "title": "Deutsch-Jozsa",
+      "module": "algorithms",
+      "order": 16,
+      "prerequisites": [
+        "oracles-and-phase-kickback"
+      ],
+      "objectives": [
+        "State the constant-or-balanced promise and its limits.",
+        "Trace constant, balanced XOR and three-input truth-table examples.",
+        "Compare query complexity with the cost of constructing an oracle."
+      ],
+      "sourceIds": [
+        "ibm-dj",
+        "ibm-circuits",
+        "cirq-gates"
       ],
       "visualIds": [
         "dj-circuit",
-        "dj-results"
+        "dj-results",
+        "dj-truth-table",
+        "dj-cancellation",
+        "dj-query-cost"
       ],
       "lesson": "lessons/deutsch-jozsa.md",
       "quiz": "quizzes/deutsch-jozsa.json"
@@ -469,7 +501,7 @@
       "difficulty": "Intermediate",
       "title": "Grover search and amplitude amplification",
       "module": "algorithms",
-      "order": 16,
+      "order": 17,
       "prerequisites": [
         "deutsch-jozsa"
       ],
@@ -484,20 +516,52 @@
       ],
       "visualIds": [
         "grover-circuit",
-        "grover-amplitudes"
+        "grover-amplitudes",
+        "grover-geometry",
+        "grover-success",
+        "grover-overshoot"
       ],
       "lesson": "lessons/grover.md",
       "quiz": "quizzes/grover.json"
     },
     {
+      "id": "observables-and-expectations",
+      "summary": "Turn measurement counts into expectation values and small cost estimates.",
+      "difficulty": "Intermediate",
+      "title": "Observables, expectations and cost functions",
+      "module": "algorithms",
+      "order": 18,
+      "prerequisites": [
+        "grover"
+      ],
+      "objectives": [
+        "Relate Pauli observables and eigenvalues to measurement bases.",
+        "Estimate expectations from exact probabilities and finite counts.",
+        "Combine measured terms into a cost or energy while tracking shot noise."
+      ],
+      "sourceIds": [
+        "ibm-single",
+        "ibm-qaoa",
+        "cirq-observables"
+      ],
+      "visualIds": [
+        "observable-bases",
+        "counts-expectation",
+        "cost-terms",
+        "shot-noise-expectation"
+      ],
+      "lesson": "lessons/observables-and-expectations.md",
+      "quiz": "quizzes/observables-and-expectations.json"
+    },
+    {
       "id": "qaoa",
-      "summary": "Encode a small max-cut problem and trace a cost and mixer layer.",
+      "summary": "Encode a small MaxCut problem and trace a cost and mixer layer.",
       "difficulty": "Advanced",
       "title": "QAOA and combinatorial optimization",
       "module": "algorithms",
-      "order": 17,
+      "order": 19,
       "prerequisites": [
-        "grover"
+        "observables-and-expectations"
       ],
       "objectives": [
         "Encode a one-edge max-cut objective.",
@@ -511,7 +575,10 @@
       ],
       "visualIds": [
         "qaoa-circuit",
-        "qaoa-cost"
+        "qaoa-cost",
+        "qaoa-graph",
+        "qaoa-landscape",
+        "qaoa-loop"
       ],
       "lesson": "lessons/qaoa.md",
       "quiz": "quizzes/qaoa.json"
@@ -522,7 +589,7 @@
       "difficulty": "Advanced",
       "title": "VQE and energy estimation",
       "module": "algorithms",
-      "order": 18,
+      "order": 20,
       "prerequisites": [
         "qaoa"
       ],
@@ -538,25 +605,28 @@
       ],
       "visualIds": [
         "vqe-measurements",
-        "vqe-energy"
+        "vqe-energy",
+        "vqe-model",
+        "vqe-terms",
+        "vqe-optimizer"
       ],
       "lesson": "lessons/vqe.md",
       "quiz": "quizzes/vqe.json"
     },
     {
       "id": "simulation-and-noise",
-      "summary": "Compare representations, sampling uncertainty and physical noise.",
+      "summary": "Choose a simulation representation and separate exact state, finite shots and noise.",
       "difficulty": "Intermediate",
-      "title": "Simulation, noise and result displays",
+      "title": "Simulation foundations",
       "module": "execution",
-      "order": 19,
+      "order": 21,
       "prerequisites": [
         "vqe"
       ],
       "objectives": [
-        "Compare statevector, density matrix and sampling.",
-        "Distinguish noise from shot uncertainty.",
-        "Read Bloch, statevector, histogram and circuit panels."
+        "Compare statevector, density-matrix and sampling representations.",
+        "Distinguish shot noise from device noise and explain dense scaling.",
+        "Read circuit, statevector, histogram and Bloch panels without confusing simulation with measurement."
       ],
       "sourceIds": [
         "aer-sim",
@@ -564,6 +634,9 @@
         "ibm-visualization"
       ],
       "visualIds": [
+        "simulation-views",
+        "simulation-sampling",
+        "simulation-scaling",
         "noise-comparison",
         "result-panels"
       ],
@@ -571,19 +644,108 @@
       "quiz": "quizzes/simulation-and-noise.json"
     },
     {
-      "id": "aer-and-cirq",
-      "summary": "Read equivalent Python circuits and align their output conventions.",
+      "id": "qiskit-aer",
+      "summary": "Build, transpile and inspect a Qiskit Aer circuit from counts to saved state.",
       "difficulty": "Intermediate",
-      "title": "The same circuit in Qiskit Aer, Cirq and PennyLane",
+      "title": "Qiskit Aer",
       "module": "execution",
-      "order": 20,
+      "order": 22,
       "prerequisites": [
         "simulation-and-noise"
       ],
       "objectives": [
-        "Read all three Python APIs.",
-        "Normalize basis ordering.",
-        "Choose between sampled results and exact-state inspection."
+        "Build a QuantumCircuit with quantum and classical registers.",
+        "Trace transpilation, shots, counts and statevector or density-matrix snapshots.",
+        "Debug Qiskit measurement and bit-ordering mistakes."
+      ],
+      "sourceIds": [
+        "aer-sim",
+        "ibm-circuits",
+        "ibm-bit-order",
+        "ibm-visualization"
+      ],
+      "visualIds": [
+        "qiskit-pipeline",
+        "qiskit-registers",
+        "qiskit-ordering",
+        "qiskit-state-snapshot"
+      ],
+      "lesson": "lessons/qiskit-aer.md",
+      "quiz": "quizzes/qiskit-aer.json"
+    },
+    {
+      "id": "cirq",
+      "summary": "Construct Cirq circuits from qubits and moments, then compare run and simulate.",
+      "difficulty": "Intermediate",
+      "title": "Cirq",
+      "module": "execution",
+      "order": 23,
+      "prerequisites": [
+        "qiskit-aer"
+      ],
+      "objectives": [
+        "Use qubit objects, operations, moments, measurement keys and circuits.",
+        "Distinguish Simulator.run from Simulator.simulate.",
+        "Make qubit order explicit and debug reversed results."
+      ],
+      "sourceIds": [
+        "cirq-sim",
+        "cirq-circuits",
+        "cirq-gates",
+        "ibm-bit-order"
+      ],
+      "visualIds": [
+        "cirq-timeline",
+        "cirq-run-simulate",
+        "cirq-ordering",
+        "cirq-bell"
+      ],
+      "lesson": "lessons/cirq.md",
+      "quiz": "quizzes/cirq.json"
+    },
+    {
+      "id": "pennylane",
+      "summary": "Use devices, QNodes and measurement returns to explore differentiable quantum programs.",
+      "difficulty": "Intermediate",
+      "title": "PennyLane",
+      "module": "execution",
+      "order": 24,
+      "prerequisites": [
+        "cirq"
+      ],
+      "objectives": [
+        "Connect devices, wires, quantum functions and QNodes.",
+        "Choose state, probability, count and expectation measurements.",
+        "Explain finite shots, default.qubit and basic parameter gradients."
+      ],
+      "sourceIds": [
+        "pennylane-circuits",
+        "pennylane-measurements",
+        "pennylane-gradients"
+      ],
+      "visualIds": [
+        "pennylane-device",
+        "pennylane-qnode",
+        "pennylane-measurements",
+        "pennylane-gradients"
+      ],
+      "lesson": "lessons/pennylane.md",
+      "quiz": "quizzes/pennylane.json"
+    },
+    {
+      "id": "aer-and-cirq",
+      "summary": "Normalize one circuit across Aer, Cirq and PennyLane and debug a framework mismatch.",
+      "difficulty": "Intermediate",
+      "title": "Cross-framework comparison and capstone",
+      "module": "execution",
+      "order": 25,
+      "prerequisites": [
+        "pennylane"
+      ],
+      "objectives": [
+        "Compare one circuit's exact probabilities and sampled outputs across three frameworks.",
+        "Normalize basis order and compare statevectors up to global phase.",
+        "Choose a framework and result type for a stated debugging task."
       ],
       "sourceIds": [
         "aer-sim",
@@ -595,7 +757,10 @@
       ],
       "visualIds": [
         "framework-flow",
-        "framework-order"
+        "framework-order",
+        "framework-matrix",
+        "framework-repro",
+        "framework-choice"
       ],
       "lesson": "lessons/aer-and-cirq.md",
       "quiz": "quizzes/aer-and-cirq.json"

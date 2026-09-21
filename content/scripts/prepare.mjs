@@ -20,7 +20,7 @@ unique(catalog.modules.map((m) => m.id), "module IDs");
 assert.ok(catalog.modules.every((m) => m.description), "Missing module description");
 unique(circuits.map((c) => c.id), "circuit IDs");
 assert.deepEqual(catalog.engines, ["aer", "cirq", "pennylane"]);
-assert.equal(catalog.chapters.length, 20);
+assert.equal(catalog.chapters.length, 25);
 assert.ok(catalog.chapterQuiz.minQuestions > 0);
 assert.ok(catalog.chapterQuiz.maxQuestions >= catalog.chapterQuiz.minQuestions);
 assert.deepEqual(catalog.chapterQuiz.difficultyOrder, ["easy", "medium", "hard"]);
@@ -39,6 +39,17 @@ const allowedInteractiveWidgets = new Set([
   "bell-explorer",
   "teleportation-tracer",
   "no-cloning-explorer",
+  "oracle-explorer",
+  "deutsch-jozsa-explorer",
+  "grover-explorer",
+  "observable-explorer",
+  "qaoa-explorer",
+  "vqe-explorer",
+  "simulation-explorer",
+  "qiskit-code-explorer",
+  "cirq-explorer",
+  "pennylane-explorer",
+  "framework-comparison",
 ]);
 for (const source of sources) {
   assert.ok(source.title && source.publisher && source.supports && source.reuse);
