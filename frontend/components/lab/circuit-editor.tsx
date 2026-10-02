@@ -264,10 +264,146 @@ function Cell({
       variant="ghost"
       onClick={onClick}
       className={cellClass}
+      title={
+        here
+          ? `${here.gate.toUpperCase()} gate on q${row} (drag back to palette to remove, or drag to reorder)`
+          : `q${row}, step ${column + 1} (empty)`
+      }
       aria-label={`q${row}, step ${column + 1}${here ? `, ${here.gate.toUpperCase()}` : ", empty"}`}
     >
       {label}
     </Button>
+  );
+}
+
+function GatePaletteDroppable({
+  gate,
+  setGate,
+  setPending,
+  setMessage,
+  angle,
+  setAngle,
+  isDraggingCircuitGate,
+}: {
+  gate: Gate;
+  setGate: (g: Gate) => void;
+  setPending: (p: { gate: Gate; row: number; column: number } | null) => void;
+  setMessage: (m: string) => void;
+  angle: string;
+  setAngle: (a: string) => void;
+  isDraggingCircuitGate: boolean;
+}) {
+  const { setNodeRef, isOver } = useDroppable({
+    id: "palette-return",
+    data: { isPalette: true },
+  });
+
+  return (
+    <div
+      ref={setNodeRef}
+      className={`space-y-3 rounded-xl border p-3.5 backdrop-blur-sm shadow-sm transition-all duration-200 ${
+        isOver
+          ? "border-2 border-dashed border-rose-500/80 bg-rose-500/10 ring-4 ring-rose-500/20 dark:bg-rose-950/30"
+          : isDraggingCircuitGate
+          ? "border-2 border-dashed border-amber-500/60 bg-amber-500/5 shadow-md shadow-amber-500/5"
+          : "border-border/80 bg-card/60"
+      }`}
+    >
+      <div className="flex items-center justify-between border-b border-border/50 pb-2">
+        {isOver ? (
+          <div className="flex items-center gap-2 text-xs font-semibold text-rose-600 dark:text-rose-400 animate-pulse">
+            <span className="text-base leading-none">↩</span>
+            <span>Drop here to remove gate from circuit and return to palette</span>
+          </div>
+        ) : isDraggingCircuitGate ? (
+          <div className="flex items-center gap-2 text-xs font-medium text-amber-600 dark:text-amber-400">
+            <span className="text-base leading-none">↩</span>
+            <span>Drop gate here to put back into palette</span>
+          </div>
+        ) : (
+          <>
+            <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+              Quantum Gate Palette (IBM Composer Standard)
+            </span>
+            <span className="text-[11px] text-muted-foreground/80">
+              Drag to wire or click to place • Drag placed gate back here to remove
+            </span>
+          </>
+        )}
+      </div>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+        {(Object.keys(CATEGORY_GATES) as GateCategory[]).map((catKey) => {
+          const cat = CATEGORY_STYLES[catKey];
+          const catGates = CATEGORY_GATES[catKey];
+          return (
+            <div
+              key={catKey}
+              className={`rounded-lg border ${cat.border} bg-background/50 p-2.5 flex flex-col justify-between`}
+            >
+              <div className="mb-2 flex items-center justify-between">
+                <span className="text-xs font-semibold text-foreground/90">
+                  {cat.title}
+                </span>
+                <span className="text-[10px] text-muted-foreground font-mono">
+                  {catGates.length} {catGates.length === 1 ? "gate" : "gates"}
+                </span>
+              </div>
+              <div className="flex flex-wrap gap-1.5">
+                {catGates.map((g) => (
+                  <GateButton
+                    key={g}
+                    gate={g}
+                    selected={gate === g}
+                    onClick={() => {
+                      setGate(g);
+                      setPending(null);
+                      setMessage("");
+                    }}
+                  />
+                ))}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Active Gate Inspection & Parameter Controls */}
+      <div className="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-border/60 bg-muted/20 p-2.5 text-xs">
+        <div className="flex items-center gap-2.5 flex-wrap">
+          <span className="font-semibold text-foreground">
+            Selected: <span className="font-mono text-primary font-bold">{gate.toUpperCase()}</span> ({GATE_INFO[gate]?.name})
+          </span>
+          <span className="text-muted-foreground hidden md:inline">•</span>
+          <span className="text-muted-foreground hidden md:inline">
+            {GATE_INFO[gate]?.description}
+          </span>
+          <span className="font-mono text-[11px] bg-background/80 px-2 py-0.5 rounded border border-border/60 text-muted-foreground">
+            U = {GATE_INFO[gate]?.matrix}
+          </span>
+        </div>
+
+        {(isRotation(gate) || gate === "rzz") && (
+          <div className="flex items-center gap-2">
+            <span className="text-muted-foreground font-medium">θ presets:</span>
+            <div className="flex gap-1">
+              {ANGLE_PRESETS.map((p) => (
+                <Button
+                  key={p.label}
+                  type="button"
+                  size="sm"
+                  variant={angle === p.value ? "default" : "outline"}
+                  className="h-6 px-2 text-xs font-mono"
+                  onClick={() => setAngle(p.value)}
+                >
+                  {p.label}
+                </Button>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
   );
 }
 
@@ -287,6 +423,7 @@ export function CircuitEditor({
   } | null>(null);
   const [message, setMessage] = useState("");
   const [dragLabel, setDragLabel] = useState<string | null>(null);
+  const [isDraggingCircuitGate, setIsDraggingCircuitGate] = useState(false);
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
     useSensor(KeyboardSensor),
@@ -343,15 +480,41 @@ export function CircuitEditor({
   }
   function dropped(event: DragEndEvent) {
     setDragLabel(null);
+    setIsDraggingCircuitGate(false);
+
+    const activeId = String(event.active.id);
+    const isFromCircuit = activeId.startsWith("operation:");
+
+    // Return / undrag gate back to palette
+    if (
+      isFromCircuit &&
+      (event.over?.id === "palette-return" || event.over?.data.current?.isPalette)
+    ) {
+      const from = event.active.data.current!.column as number;
+      const gateName = String(event.active.data.current?.gate || "").toUpperCase();
+      const operations = [...circuit.operations];
+      operations.splice(from, 1);
+      onChange({ ...circuit, operations });
+      setPending(null);
+      setMessage(`Removed ${gateName || "gate"} and returned to palette.`);
+      return;
+    }
+
     if (event.over?.data.current) {
       const { row, column } = event.over.data.current;
-      if (String(event.active.id).startsWith("operation:")) {
+      if (isFromCircuit) {
         const from = event.active.data.current!.column as number;
         const operations = [...circuit.operations];
         const [operation] = operations.splice(from, 1);
-        operations.splice(Math.min(column, operations.length), 0, operation);
+        const updatedOp = !isPair(operation.gate)
+          ? { ...operation, targets: [row] }
+          : operation;
+        operations.splice(Math.min(column, operations.length), 0, updatedOp);
         onChange({ ...circuit, operations });
         setPending(null);
+        setMessage(
+          `Moved ${operation.gate.toUpperCase()} gate to step ${Math.min(column, operations.length) + 1}.`,
+        );
         return;
       }
       place(event.active.id as Gate, row, column);
@@ -359,97 +522,50 @@ export function CircuitEditor({
   }
   return (
     <div className="space-y-4">
-      <DndContext id="quantlearn-circuit-editor" sensors={sensors} onDragEnd={dropped} onDragStart={event => setDragLabel(String(event.active.data.current?.gate || event.active.id).toUpperCase())} onDragCancel={() => setDragLabel(null)}>
+      <DndContext
+        id="quantlearn-circuit-editor"
+        sensors={sensors}
+        onDragEnd={dropped}
+        onDragStart={(event) => {
+          const isFromCircuit = String(event.active.id).startsWith("operation:");
+          setIsDraggingCircuitGate(isFromCircuit);
+          setDragLabel(
+            String(event.active.data.current?.gate || event.active.id).toUpperCase(),
+          );
+        }}
+        onDragCancel={() => {
+          setDragLabel(null);
+          setIsDraggingCircuitGate(false);
+        }}
+      >
         <DragOverlay>
           {dragLabel && (
-            <div className="rounded-xl border border-primary bg-card px-4 py-2 text-sm font-medium text-primary shadow-lg">
-              {dragLabel}
+            <div
+              className={`flex items-center gap-2 rounded-xl border px-4 py-2 text-sm font-medium shadow-xl backdrop-blur-md ${
+                isDraggingCircuitGate
+                  ? "border-amber-500/80 bg-card text-foreground ring-2 ring-amber-500/20"
+                  : "border-primary bg-card text-primary"
+              }`}
+            >
+              <span className="font-mono font-bold">{dragLabel}</span>
+              {isDraggingCircuitGate && (
+                <span className="text-[11px] font-normal text-muted-foreground">
+                  • drop on palette to return
+                </span>
+              )}
             </div>
           )}
         </DragOverlay>
-        {/* IBM Quantum Composer-style Categorized Gate Palette */}
-        <div className="space-y-3 rounded-xl border border-border/80 bg-card/60 p-3.5 backdrop-blur-sm shadow-sm">
-          <div className="flex items-center justify-between border-b border-border/50 pb-2">
-            <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-              Quantum Gate Palette (IBM Composer Standard)
-            </span>
-            <span className="text-[11px] text-muted-foreground/80">
-              Drag to wire or click to place
-            </span>
-          </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-            {(Object.keys(CATEGORY_GATES) as GateCategory[]).map((catKey) => {
-              const cat = CATEGORY_STYLES[catKey];
-              const catGates = CATEGORY_GATES[catKey];
-              return (
-                <div
-                  key={catKey}
-                  className={`rounded-lg border ${cat.border} bg-background/50 p-2.5 flex flex-col justify-between`}
-                >
-                  <div className="mb-2 flex items-center justify-between">
-                    <span className="text-xs font-semibold text-foreground/90">
-                      {cat.title}
-                    </span>
-                    <span className="text-[10px] text-muted-foreground font-mono">
-                      {catGates.length} {catGates.length === 1 ? "gate" : "gates"}
-                    </span>
-                  </div>
-                  <div className="flex flex-wrap gap-1.5">
-                    {catGates.map((g) => (
-                      <GateButton
-                        key={g}
-                        gate={g}
-                        selected={gate === g}
-                        onClick={() => {
-                          setGate(g);
-                          setPending(null);
-                          setMessage("");
-                        }}
-                      />
-                    ))}
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-
-          {/* Active Gate Inspection & Parameter Controls */}
-          <div className="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-border/60 bg-muted/20 p-2.5 text-xs">
-            <div className="flex items-center gap-2.5 flex-wrap">
-              <span className="font-semibold text-foreground">
-                Selected: <span className="font-mono text-primary font-bold">{gate.toUpperCase()}</span> ({GATE_INFO[gate]?.name})
-              </span>
-              <span className="text-muted-foreground hidden md:inline">•</span>
-              <span className="text-muted-foreground hidden md:inline">
-                {GATE_INFO[gate]?.description}
-              </span>
-              <span className="font-mono text-[11px] bg-background/80 px-2 py-0.5 rounded border border-border/60 text-muted-foreground">
-                U = {GATE_INFO[gate]?.matrix}
-              </span>
-            </div>
-
-            {(isRotation(gate) || gate === "rzz") && (
-              <div className="flex items-center gap-2">
-                <span className="text-muted-foreground font-medium">θ presets:</span>
-                <div className="flex gap-1">
-                  {ANGLE_PRESETS.map((p) => (
-                    <Button
-                      key={p.label}
-                      type="button"
-                      size="sm"
-                      variant={angle === p.value ? "default" : "outline"}
-                      className="h-6 px-2 text-xs font-mono"
-                      onClick={() => setAngle(p.value)}
-                    >
-                      {p.label}
-                    </Button>
-                  ))}
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
+        <GatePaletteDroppable
+          gate={gate}
+          setGate={setGate}
+          setPending={setPending}
+          setMessage={setMessage}
+          angle={angle}
+          setAngle={setAngle}
+          isDraggingCircuitGate={isDraggingCircuitGate}
+        />
 
         <div className="flex flex-wrap items-end gap-3">
           <div className="space-y-1">
@@ -486,8 +602,8 @@ export function CircuitEditor({
         </div>
         <p className="text-sm text-muted-foreground">
           Drag a gate onto a wire, or select a gate and click a cell. Two-qubit
-          gates need a second wire. Each column is one operation; placing on an
-          occupied column replaces it. Drag an existing gate to change its order.
+          gates need a second wire. Each column is one operation. Drag an existing
+          gate to change its order, or drag it back up to the palette to return it.
         </p>
         <p className="text-sm text-primary" role="status">
           {message}

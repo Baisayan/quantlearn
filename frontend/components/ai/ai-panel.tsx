@@ -2,6 +2,7 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import Markdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 import remarkMath from "remark-math";
 import rehypeKatex from "rehype-katex";
 import "katex/dist/katex.min.css";
@@ -95,6 +96,37 @@ const thinkingSteps = [
   "Formulating explanation…",
   "Synthesizing Dirac notation & gates…",
 ];
+
+function normalizeMarkdownMath(text: string): string {
+  if (!text) return "";
+  let out = text;
+
+  // 1. Convert LaTeX display math \[ ... \] to $$ ... $$ and inline \( ... \) to $ ... $
+  out = out.replace(/\\\[([\s\S]*?)\\\]/g, (_, math) => `\n$$\n${math.trim()}\n$$\n`);
+  out = out.replace(/\\\(([\s\S]*?)\\\)/g, (_, math) => `$${math.trim()}$`);
+
+  // 2. Fix broken closing tags where backslash was dropped in JSON serialization (e.g. "end{pmatrix}" -> "\end{pmatrix}")
+  out = out.replace(/(?<!\\)end\{(pmatrix|bmatrix|vmatrix|matrix|align|aligned|array)\}/g, "\\end{$1}");
+
+  // 3. Fix matrix environments not wrapped in math mode ($ or $$)
+  const envRegex = /(\\begin\{(?:pmatrix|bmatrix|vmatrix|matrix|aligned|array)\}[\s\S]*?\\end\{(?:pmatrix|bmatrix|vmatrix|matrix|aligned|array)\})/g;
+  out = out.replace(envRegex, (match, _, offset, str) => {
+    const before = str.slice(0, offset);
+    const after = str.slice(offset + match.length);
+    const hasOpeningDollar = /\$\s*$/.test(before);
+    const hasClosingDollar = /^\s*\$/.test(after);
+    if (hasOpeningDollar && hasClosingDollar) {
+      return match;
+    }
+    return `\n$$\n${match.trim()}\n$$\n`;
+  });
+
+  // 4. Ensure lists have clean separation from preceding paragraphs for proper markdown rendering
+  out = out.replace(/([^\n])\n([0-9]+\.\s)/g, "$1\n\n$2");
+  out = out.replace(/([^\n])\n([*-]\s)/g, "$1\n\n$2");
+
+  return out;
+}
 
 export function AIPanel({
   context,
@@ -367,13 +399,91 @@ export function AIPanel({
                   <QuantumAIIcon className="size-4" />
                 </div>
                 <div className="min-w-0 flex-1 space-y-2.5 rounded-2xl rounded-tl-xs border border-border/70 bg-card/80 backdrop-blur-sm p-4 shadow-xs">
-                  <div className="min-w-0 space-y-3 break-words text-sm leading-relaxed text-foreground [&_.katex-display]:overflow-x-auto [&_pre]:overflow-x-auto [&_ol]:list-decimal [&_ol]:pl-5 [&_ul]:list-disc [&_ul]:pl-5">
+                  <div className="min-w-0 space-y-3 break-words text-sm leading-relaxed text-foreground [&_.katex-display]:my-3.5 [&_.katex-display]:overflow-x-auto [&_.katex-display]:py-3 [&_.katex-display]:px-4 [&_.katex-display]:rounded-xl [&_.katex-display]:bg-muted/40 [&_.katex-display]:border [&_.katex-display]:border-border/60 [&_.katex-display]:shadow-xs [&_.katex]:text-[1.05em] [&_.katex-error]:rounded-md [&_.katex-error]:bg-destructive/10 [&_.katex-error]:border [&_.katex-error]:border-destructive/30 [&_.katex-error]:px-1.5 [&_.katex-error]:py-0.5 [&_.katex-error]:font-mono [&_.katex-error]:text-xs [&_.katex-error]:text-rose-400 [&_pre]:overflow-x-auto">
                     <Markdown
                       skipHtml
-                      remarkPlugins={[remarkMath]}
-                      rehypePlugins={[[rehypeKatex, { trust: false }]]}
+                      remarkPlugins={[remarkGfm, remarkMath]}
+                      rehypePlugins={[
+                        [
+                          rehypeKatex,
+                          { trust: false, strict: false, throwOnError: false },
+                        ],
+                      ]}
                       disallowedElements={["img"]}
                       components={{
+                        p: ({ children }) => (
+                          <p className="text-[13.5px] leading-relaxed text-foreground/95 mb-3 last:mb-0">
+                            {children}
+                          </p>
+                        ),
+                        ol: ({ children }) => (
+                          <ol className="my-3 space-y-2.5 pl-5 list-decimal marker:text-primary/70 marker:font-mono marker:text-xs">
+                            {children}
+                          </ol>
+                        ),
+                        ul: ({ children }) => (
+                          <ul className="my-3 space-y-2 pl-5 list-disc marker:text-primary/60">
+                            {children}
+                          </ul>
+                        ),
+                        li: ({ children }) => (
+                          <li className="text-[13.5px] leading-relaxed pl-1 text-foreground/90">
+                            {children}
+                          </li>
+                        ),
+                        h1: ({ children }) => (
+                          <h1 className="text-base font-bold text-foreground mt-4 mb-2 tracking-tight">
+                            {children}
+                          </h1>
+                        ),
+                        h2: ({ children }) => (
+                          <h2 className="text-sm font-bold text-foreground mt-3.5 mb-2 tracking-tight">
+                            {children}
+                          </h2>
+                        ),
+                        h3: ({ children }) => (
+                          <h3 className="text-sm font-semibold text-primary mt-3 mb-1.5 tracking-tight flex items-center gap-1.5">
+                            {children}
+                          </h3>
+                        ),
+                        strong: ({ children }) => (
+                          <strong className="font-semibold text-foreground">
+                            {children}
+                          </strong>
+                        ),
+                        code: ({ children, className }) => {
+                          const isInline = !className;
+                          if (isInline) {
+                            return (
+                              <code className="rounded-md bg-muted/80 px-1.5 py-0.5 font-mono text-[12px] font-medium text-primary border border-border/60">
+                                {children}
+                              </code>
+                            );
+                          }
+                          return <code className={className}>{children}</code>;
+                        },
+                        blockquote: ({ children }) => (
+                          <blockquote className="border-l-2 border-primary/50 bg-primary/5 pl-3.5 py-1.5 my-2.5 rounded-r-lg text-xs italic text-muted-foreground">
+                            {children}
+                          </blockquote>
+                        ),
+                        table: ({ children }) => (
+                          <div className="my-3 overflow-x-auto rounded-lg border border-border/70">
+                            <table className="w-full border-collapse text-xs">
+                              {children}
+                            </table>
+                          </div>
+                        ),
+                        th: ({ children }) => (
+                          <th className="border-b border-border/70 bg-muted/40 px-3 py-1.5 text-left font-semibold text-foreground">
+                            {children}
+                          </th>
+                        ),
+                        td: ({ children }) => (
+                          <td className="border-b border-border/40 px-3 py-1.5 text-muted-foreground">
+                            {children}
+                          </td>
+                        ),
                         a: ({ href, children }) =>
                           href?.startsWith("/") ? (
                             <Link
@@ -435,7 +545,7 @@ export function AIPanel({
                         },
                       }}
                     >
-                      {message.text}
+                      {normalizeMarkdownMath(message.text)}
                     </Markdown>
                   </div>
 
