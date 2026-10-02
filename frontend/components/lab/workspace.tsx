@@ -100,16 +100,16 @@ const ALGORITHM_PRESETS: {
 ];
 
 export function LabWorkspace({ initialChallengeId }: { initialChallengeId?: string }) {
-  const startingChallenge = challenges.some(
-    (challengeItem) => challengeItem.id === initialChallengeId,
-  )
-    ? initialChallengeId!
-    : "bell";
-  const challengeId = startingChallenge;
+  const initialChallenge = initialChallengeId
+    ? challenges.find((challengeItem) => challengeItem.id === initialChallengeId) ?? null
+    : null;
+  const [challengeId, setChallengeId] = useState<string | null>(
+    initialChallenge?.id ?? null,
+  );
   const [editorKey, setEditorKey] = useState(0);
-  const challenge = challenges.find((c) => c.id === challengeId);
+  const challenge = challengeId ? challenges.find((c) => c.id === challengeId) : null;
   const [circuit, setCircuit] = useState<Circuit>({
-    qubits: 2,
+    qubits: challenge?.qubits || 2,
     operations: [],
   });
   const [engine, setEngine] = useState<Engine>("aer");
@@ -136,12 +136,14 @@ export function LabWorkspace({ initialChallengeId }: { initialChallengeId?: stri
   function reset() {
     setEditorKey((key) => key + 1);
     setActivePreset(null);
-    update({ qubits: challenge?.qubits || 2, operations: [] });
+    update({ qubits: challenge?.qubits || circuit.qubits || 2, operations: [] });
     setTab("circuit");
   }
   function loadPreset(preset: (typeof ALGORITHM_PRESETS)[0]) {
     setEditorKey((key) => key + 1);
     setActivePreset(preset.id);
+    const matchingChallenge = challenges.find((c) => c.id === preset.id);
+    setChallengeId(matchingChallenge ? matchingChallenge.id : null);
     update(preset.circuit, true);
     setTab("circuit");
   }
@@ -209,10 +211,10 @@ export function LabWorkspace({ initialChallengeId }: { initialChallengeId?: stri
         </div>
         <div className="flex items-center gap-2">
           <AIPanel
-            key={challengeId}
+            key={challengeId || "sandbox"}
             context={{
               surface: "lab",
-              challengeId,
+              challengeId: challengeId || "free",
               engine,
               circuit,
               code,
@@ -279,13 +281,14 @@ export function LabWorkspace({ initialChallengeId }: { initialChallengeId?: stri
             <Label htmlFor="engine">Simulator</Label>
             <select
               id="engine"
-              disabled={codeDirty}
+              disabled={Boolean(busy)}
               className={selectClass}
               value={engine}
               onChange={(e) => {
                 const next = e.target.value as Engine;
                 setEngine(next);
                 setCode(toCode(circuit, next));
+                setCodeDirty(false);
                 setTab("circuit");
                 setResults([]);
                 setAssessment(undefined);
@@ -335,6 +338,11 @@ export function LabWorkspace({ initialChallengeId }: { initialChallengeId?: stri
           <Button
             variant="outline"
             disabled={tab === "code"}
+            title={
+              tab === "code"
+                ? "Switch to Circuit builder tab to compare across simulators."
+                : "Simulate simultaneously across Qiskit Aer, Cirq and PennyLane"
+            }
             onClick={() => run("simulate", true)}
           >
             Compare engines
@@ -343,19 +351,31 @@ export function LabWorkspace({ initialChallengeId }: { initialChallengeId?: stri
         <div className="grid items-start gap-5 lg:grid-cols-[1fr_3fr]">
           <Card className="rounded-2xl border-border/80">
             <CardContent className="space-y-4 p-5">
-              <p className="text-xs font-medium text-primary">
-                {challenge?.difficulty || "Open exploration"}
-              </p>
+              <div className="flex items-center justify-between gap-2">
+                <p className="text-xs font-semibold uppercase tracking-wider text-primary">
+                  {challenge?.difficulty || "Custom Sandbox"}
+                </p>
+                {challenge && (
+                  <button
+                    type="button"
+                    onClick={() => setChallengeId(null)}
+                    className="text-[11px] font-medium text-muted-foreground hover:text-primary transition-colors underline underline-offset-2"
+                    title="Switch to unconstrained sandbox"
+                  >
+                    Switch to Sandbox
+                  </button>
+                )}
+              </div>
               <h2 className="text-lg font-semibold">
-                {challenge?.title || "Your experiment"}
+                {challenge?.title || "Quantum Circuit Playground"}
               </h2>
               <p className="text-sm leading-relaxed text-muted-foreground">
                 {challenge?.objective ||
-                  "Build any supported circuit and compare exact states with sampled measurements."}
+                  "Build any supported quantum circuit with up to 5 qubits. Inspect exact statevectors, Bloch spheres, and probabilities across multiple simulator engines."}
               </p>
-              {challenge && (
+              {challenge ? (
                 <>
-                  <p className="text-xs text-muted-foreground">
+                  <p className="text-xs text-muted-foreground font-mono">
                     {challenge.qubits} qubits · at most {challenge.maxGates}{" "}
                     gates
                   </p>
@@ -373,9 +393,18 @@ export function LabWorkspace({ initialChallengeId }: { initialChallengeId?: stri
                     </p>
                   </details>
                 </>
+              ) : (
+                <div className="rounded-xl border border-border/70 bg-muted/30 p-3 text-xs text-muted-foreground space-y-1.5">
+                  <p className="font-semibold text-foreground">💡 Sandbox Tips:</p>
+                  <ul className="list-disc pl-4 space-y-1">
+                    <li>Use the <strong>Qubits</strong> selector above to change wires (1–5).</li>
+                    <li>Click any <strong>Quick Preset</strong> to load classic quantum algorithms.</li>
+                    <li>Simulate device noise or compare <strong>Qiskit Aer</strong>, <strong>Cirq</strong>, and <strong>PennyLane</strong>.</li>
+                  </ul>
+                </div>
               )}
               <p className="text-xs leading-relaxed text-muted-foreground">
-                All wires start at zero. Measurements are added at the end.
+                All wires start at |0⟩. Measurements are added at the end.
                 Angles use radians; q0 is the rightmost bit in results.
               </p>
             </CardContent>
@@ -386,14 +415,17 @@ export function LabWorkspace({ initialChallengeId }: { initialChallengeId?: stri
                 value={tab}
                 onValueChange={(value) => {
                   if (value === "circuit" && tab === "code") {
-                    setCode(toCode(circuit, engine));
+                    if (codeDirty) {
+                      setCode(toCode(circuit, engine));
+                      setCodeDirty(false);
+                    }
                   }
                   setTab(value);
                 }}
               >
                 <div className="flex flex-wrap items-center justify-between gap-3">
                   <TabsList>
-                    <TabsTrigger value="circuit" disabled={codeDirty}>
+                    <TabsTrigger value="circuit">
                       Circuit builder
                     </TabsTrigger>
                     <TabsTrigger value="code">Python code</TabsTrigger>
@@ -402,30 +434,59 @@ export function LabWorkspace({ initialChallengeId }: { initialChallengeId?: stri
                     <Label htmlFor="qubits">Qubits</Label>
                     <select
                       id="qubits"
-                      disabled={Boolean(challenge) || codeDirty}
+                      disabled={Boolean(busy)}
                       className={selectClass}
                       value={circuit.qubits}
-                      onChange={(e) =>
+                      onChange={(e) => {
+                        const nextQubits = Number(e.target.value);
+                        if (challenge && nextQubits !== challenge.qubits) {
+                          setChallengeId(null);
+                        }
                         update({
-                          qubits: Number(e.target.value),
+                          qubits: nextQubits,
                           operations: [],
-                        })
+                        });
+                      }}
+                      title={
+                        challenge
+                          ? `Currently in "${challenge.title}" (${challenge.qubits}Q). Changing qubits switches to Sandbox.`
+                          : "Select circuit qubits (1 to 5)"
                       }
                     >
                       {[1, 2, 3, 4, 5].map((n) => (
-                        <option key={n}>{n}</option>
+                        <option key={n} value={n}>{n}</option>
                       ))}
                     </select>
                   </div>
                 </div>
                 <TabsContent value="circuit">
                   <CircuitEditor
-                    key={`${challengeId}:${circuit.qubits}:${editorKey}`}
+                    key={`${challengeId || "sandbox"}:${circuit.qubits}:${editorKey}`}
                     circuit={circuit}
                     onChange={update}
                   />
                 </TabsContent>
                 <TabsContent value="code" className="space-y-3">
+                  {codeDirty && (
+                    <div className="flex flex-wrap items-center justify-between gap-2 rounded-xl border border-amber-500/30 bg-amber-500/10 p-2.5 text-xs text-amber-700 dark:text-amber-300">
+                      <div className="flex items-center gap-1.5 font-medium">
+                        <span className="size-2 rounded-full bg-amber-500 animate-pulse" />
+                        <span>Modified Python code — Visual builder will sync when you run or revert.</span>
+                      </div>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        className="h-7 text-xs border-amber-500/40 bg-background hover:bg-amber-500/20"
+                        onClick={() => {
+                          setCode(toCode(circuit, engine));
+                          setCodeDirty(false);
+                        }}
+                      >
+                        Revert to Circuit
+                      </Button>
+                    </div>
+                  )}
                   <p className="text-sm text-muted-foreground">
                     Editable Python circuit subset. Use the imports and
                     initialization below, then gate calls with numeric angles or
@@ -488,7 +549,7 @@ export function LabWorkspace({ initialChallengeId }: { initialChallengeId?: stri
         {assessment && (
           <SubmissionHud
             assessment={assessment}
-            challenge={challenge}
+            challenge={challenge ?? undefined}
             circuit={circuit}
             engine={engine}
           />
@@ -519,30 +580,6 @@ export function LabWorkspace({ initialChallengeId }: { initialChallengeId?: stri
             and diagram.
           </div>
         )}
-      </div>
-
-      {/* Floating AI Tutor Launcher */}
-      <div className="fixed bottom-6 right-6 z-40 shadow-2xl transition-transform duration-300 hover:scale-105">
-        <AIPanel
-          key={`floating-${challengeId}`}
-          context={{
-            surface: "lab",
-            challengeId,
-            engine,
-            circuit,
-            code,
-            codeDirty,
-            error,
-            results,
-          }}
-          onApplyCode={(newCode: string) => {
-            setCode(newCode);
-            setTab("code");
-            setCodeDirty(true);
-            setResults([]);
-          }}
-          label="✨ AI Assistant"
-        />
       </div>
     </main>
   );

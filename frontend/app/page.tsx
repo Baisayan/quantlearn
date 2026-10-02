@@ -5,9 +5,12 @@ import {
   ChartNoAxesCombined,
   CheckCircle2,
   ChevronRight,
+  Cpu,
+  EyeOff,
   FlaskConical,
-  Infinity,
+  Hourglass,
   Sparkles,
+  Terminal,
   Trophy,
 } from "lucide-react";
 
@@ -18,42 +21,45 @@ import { QuantumSymbol } from "@/components/brand/logo";
 const eyebrow = "font-mono text-xs font-semibold uppercase leading-tight tracking-widest";
 
 const problemPoints = [
-  "Abstract concepts are difficult to picture.",
-  "Theory-heavy resources can make progress feel slow.",
-  "There is too little hands-on practice while learning.",
-  "Access to real quantum hardware is limited.",
-];
-
-const features = [
   {
-    title: "Guided learning paths",
-    description:
-      "Move from qubits and gates to algorithms through structured, visual lessons.",
-    icon: BookOpen,
-    iconClass: "bg-primary-soft text-primary",
+    num: "01",
+    tag: "Visual Gap",
+    title: "Abstract concepts are difficult to picture.",
+    description: "Bloch spheres, phase angles, and complex statevectors remain purely theoretical equations on static blackboard chalk.",
+    icon: EyeOff,
+    accent: "text-rose-500 bg-rose-500/10 border-rose-500/25",
+    badge: "text-rose-600 dark:text-rose-400 bg-rose-500/15 border-rose-500/30",
   },
   {
-    title: "Build real circuits",
-    description:
-      "Drag gates into a circuit or write Python, then run the experiment in your browser.",
-    icon: Infinity,
-    iconClass: "bg-secondary text-teal",
+    num: "02",
+    tag: "Cognitive Bottleneck",
+    title: "Theory-heavy resources make progress feel slow.",
+    description: "Dense 400-page academic textbooks drown beginners in matrix arithmetic before ever constructing a functional algorithm.",
+    icon: Hourglass,
+    accent: "text-amber-500 bg-amber-500/10 border-amber-500/25",
+    badge: "text-amber-600 dark:text-amber-400 bg-amber-500/15 border-amber-500/30",
   },
   {
-    title: "See the quantum state",
-    description:
-      "Read histograms, statevectors, Bloch views, and circuit output together.",
-    icon: ChartNoAxesCombined,
-    iconClass: "bg-accent text-accent-foreground",
+    num: "03",
+    tag: "Passive Learning",
+    title: "Too little hands-on practice while learning.",
+    description: "Reading theorems without assembling and running live simulator circuits leaves critical conceptual blind spots.",
+    icon: Terminal,
+    accent: "text-cyan-500 bg-cyan-500/10 border-cyan-500/25",
+    badge: "text-cyan-600 dark:text-cyan-400 bg-cyan-500/15 border-cyan-500/30",
   },
   {
-    title: "Learn with an AI tutor",
-    description:
-      "Ask for explanations, hints, debugging help, and a study plan when you need it.",
-    icon: Sparkles,
-    iconClass: "bg-violet-soft text-violet",
+    num: "04",
+    tag: "Access Barrier",
+    title: "Access to real quantum hardware is limited.",
+    description: "Multi-hour cloud queues, noisy physical QPUs, and complex local Python environment setups stall curiosity.",
+    icon: Cpu,
+    accent: "text-emerald-500 bg-emerald-500/10 border-emerald-500/25",
+    badge: "text-emerald-600 dark:text-emerald-400 bg-emerald-500/15 border-emerald-500/30",
   },
 ] as const;
+
+
 
 const heroSignals = [
   { title: "Interactive", subtitle: "lessons", icon: BookOpen },
@@ -350,7 +356,7 @@ export default function Home() {
 
       {/* Learning Pipeline: How QuantLearn Works */}
       <section
-        id="learning-pipeline"
+        id="features"
         className="scroll-mt-24 border-b border-border/70 bg-gradient-to-b from-background via-surface-alt/40 to-background py-14 sm:py-18 lg:py-20"
         aria-labelledby="pipeline-heading"
       >
@@ -439,72 +445,133 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="problem" className="scroll-mt-24 bg-surface-alt py-14 sm:py-16 lg:py-20" aria-labelledby="problem-heading">
-        <div className="mx-auto grid w-full max-w-7xl gap-8 px-5 sm:px-8 lg:grid-cols-5 lg:gap-12 lg:px-10">
-          <div className="lg:col-span-2">
-            <p className={`${eyebrow} text-teal`}>The problem</p>
-            <h2 id="problem-heading" className="mt-4 max-w-md text-3xl font-semibold leading-tight tracking-tight sm:text-4xl">
-              Quantum learning is hard for predictable reasons.
-            </h2>
-            <p className="mt-5 max-w-md leading-7 text-muted-foreground">
-              The subject is powerful, but most learners need a bridge between
-              the notation on the page and the behavior of a real circuit.
+      <section id="problem" className="scroll-mt-24 border-b border-border/70 bg-surface-alt/40 py-16 sm:py-20 lg:py-24" aria-labelledby="problem-heading">
+        <div className="mx-auto grid w-full max-w-7xl gap-10 px-5 sm:px-8 lg:grid-cols-5 lg:gap-14 lg:px-10">
+          <div className="lg:col-span-2 space-y-4">
+            <p className={`${eyebrow} text-teal flex items-center gap-1.5`}>
+              <span className="size-2 rounded-full bg-teal" aria-hidden="true" />
+              The Problem
             </p>
-          </div>
+            <h2 id="problem-heading" className="text-3xl font-bold leading-tight tracking-tight sm:text-4xl text-foreground">
+              <span className="bg-gradient-to-r from-primary via-violet-500 to-cyan-500 bg-clip-text text-transparent">
+                Quantum learning
+              </span>{" "}
+              is hard for predictable reasons.
+            </h2>
+            <p className="text-base leading-relaxed text-muted-foreground">
+              The subject is powerful, but most learners need an intuitive visual bridge between mathematical notation on the page and the actual physical behavior of quantum circuits.
+            </p>
 
-          <div className="grid gap-3 sm:grid-cols-2 lg:col-span-3">
-            {problemPoints.map((point, index) => (
-              <Card key={point} interactive className="rounded-2xl border-border/80">
-                <CardContent className="p-4">
-                  <span className="font-mono text-xs font-medium text-primary/70">0{index + 1}</span>
-                  <p className="mt-4 text-base font-medium leading-6 text-foreground">{point}</p>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-
-          <div className="rounded-3xl border border-primary/15 bg-primary-soft p-5 sm:p-6 lg:col-span-5 lg:flex lg:items-center lg:justify-between lg:gap-12">
-            <div className="max-w-xl">
-              <p className={`${eyebrow} text-primary`}>The QuantLearn approach</p>
-              <h3 className="mt-3 text-2xl font-semibold tracking-tight sm:text-3xl">Turn invisible ideas into something you can work with.</h3>
+            <div className="pt-2 hidden lg:block">
+              <Button asChild variant="outline" size="sm" className="rounded-xl gap-2 text-xs border-primary/30 text-primary hover:bg-primary/10">
+                <Link href="/learn">
+                  Explore Guided Curriculum
+                  <ArrowRight className="size-3.5" />
+                </Link>
+              </Button>
             </div>
-            <p className="mt-5 max-w-xl leading-7 text-muted-foreground lg:mt-0">
-              Learn the idea, build a small circuit, run it across simulators,
-              and read the result with help available at the exact moment you
-              get stuck.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      <section id="features" className="scroll-mt-24 bg-background py-14 sm:py-16 lg:py-20" aria-labelledby="features-heading">
-        <div className="mx-auto w-full max-w-7xl px-5 sm:px-8 lg:px-10">
-          <div className="max-w-2xl">
-            <p className={`${eyebrow} text-primary`}>One connected workspace</p>
-            <h2 id="features-heading" className="mt-4 text-3xl font-semibold leading-tight tracking-tight sm:text-4xl">
-              Everything you need to go from curious to capable.
-            </h2>
-            <p className="mt-5 leading-7 text-muted-foreground">
-              QuantLearn brings the curriculum, circuit playground, simulations,
-              and feedback loop into one focused place.
-            </p>
           </div>
 
-          <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {features.map(({ title, description, icon: Icon, iconClass }) => (
-              <Card key={title} interactive className="h-full rounded-2xl border-border/80">
-                <CardContent className="flex h-full flex-col p-5">
-                  <div className={`inline-flex size-11 items-center justify-center rounded-xl border border-border/70 ${iconClass}`}>
-                    <Icon className="size-5" strokeWidth={1.8} aria-hidden="true" />
+          <div className="grid gap-4 sm:grid-cols-2 lg:col-span-3">
+            {problemPoints.map((item) => {
+              const Icon = item.icon;
+              return (
+                <Card
+                  key={item.num}
+                  interactive
+                  className="group relative flex flex-col justify-between rounded-2xl border-border/80 bg-card/80 p-5 shadow-xs transition-all duration-300 hover:-translate-y-1 hover:border-primary/40 hover:shadow-md"
+                >
+                  <CardContent className="p-0 space-y-3">
+                    <div className="flex items-center justify-between">
+                      <span className={`inline-flex items-center rounded-md border px-2 py-0.5 font-mono text-[10px] font-bold ${item.badge}`}>
+                        {item.num} · {item.tag}
+                      </span>
+                      <div className={`flex size-9 items-center justify-center rounded-xl border ${item.accent} transition-transform duration-300 group-hover:scale-110 shadow-xs`}>
+                        <Icon className="size-4" strokeWidth={2} />
+                      </div>
+                    </div>
+
+                    <h3 className="text-base font-bold tracking-tight text-foreground group-hover:text-primary transition-colors">
+                      {item.title}
+                    </h3>
+                    <p className="text-xs leading-relaxed text-muted-foreground">
+                      {item.description}
+                    </p>
+                  </CardContent>
+                </Card>
+              );
+            })}
+          </div>
+
+          {/* Redesigned The QuantLearn Approach Hero Banner */}
+          <div className="rounded-3xl border border-primary/30 bg-gradient-to-br from-primary/10 via-card to-card p-6 sm:p-8 lg:col-span-5 shadow-xl shadow-primary/5">
+            <div className="grid gap-6 lg:grid-cols-12 lg:items-center">
+              <div className="lg:col-span-7 space-y-3.5">
+                <div className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/15 px-3 py-1 text-xs font-semibold text-primary">
+                  <Sparkles className="size-3.5" />
+                  The QuantLearn Solution
+                </div>
+                <h3 className="text-2xl font-bold tracking-tight sm:text-3xl text-foreground leading-snug">
+                  <span className="bg-gradient-to-r from-primary via-violet-500 to-cyan-500 bg-clip-text text-transparent">
+                    Turn invisible ideas
+                  </span>{" "}
+                  into something you can work with.
+                </h3>
+                <p className="text-sm leading-relaxed text-muted-foreground max-w-xl">
+                  Learn the idea visually with interactive Bloch spheres, build and test circuits instantly across industrial engines (Qiskit Aer, Cirq, PennyLane), and get 24/7 Socratic AI diagnostics whenever you get stuck.
+                </p>
+                <div className="pt-1 flex flex-wrap gap-2.5">
+                  <Button asChild size="sm" className="rounded-xl gap-2 text-xs font-semibold shadow-md">
+                    <Link href="/learn">
+                      Get Started Free
+                      <ArrowRight className="size-3.5" />
+                    </Link>
+                  </Button>
+                  <Button asChild size="sm" variant="outline" className="rounded-xl gap-2 text-xs font-semibold border-border/80">
+                    <Link href="/lab">
+                      <FlaskConical className="size-3.5 text-primary" />
+                      Open Simulator Lab
+                    </Link>
+                  </Button>
+                </div>
+              </div>
+
+              <div className="lg:col-span-5 grid gap-3">
+                <div className="flex items-center gap-3.5 rounded-2xl border border-border/70 bg-card/90 p-3.5 shadow-xs transition-colors hover:border-cyan-500/40">
+                  <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-cyan-500/15 text-cyan-600 dark:text-cyan-400 border border-cyan-500/30">
+                    <BookOpen className="size-5" />
                   </div>
-                  <h3 className="mt-4 text-lg font-semibold leading-6 tracking-tight">{title}</h3>
-                  <p className="mt-3 text-sm leading-6 text-muted-foreground">{description}</p>
-                </CardContent>
-              </Card>
-            ))}
+                  <div>
+                    <p className="text-xs font-bold text-foreground">Live Bloch & Math Visuals</p>
+                    <p className="text-[11px] text-muted-foreground">Interactive intuition for all 25 chapters</p>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-3.5 rounded-2xl border border-border/70 bg-card/90 p-3.5 shadow-xs transition-colors hover:border-emerald-500/40">
+                  <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30">
+                    <FlaskConical className="size-5" />
+                  </div>
+                  <div>
+                    <p className="text-xs font-bold text-foreground">Multi-Engine Quantum Lab</p>
+                    <p className="text-[11px] text-muted-foreground">Qiskit, Cirq & PennyLane with 0 setup</p>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-3.5 rounded-2xl border border-border/70 bg-card/90 p-3.5 shadow-xs transition-colors hover:border-primary/40">
+                  <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-primary/15 text-primary border border-primary/30">
+                    <Sparkles className="size-5" />
+                  </div>
+                  <div>
+                    <p className="text-xs font-bold text-foreground">Socratic AI Mentorship</p>
+                    <p className="text-[11px] text-muted-foreground">Instant concept diagnostics on quizzes and circuits</p>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
+
 
       <section className="border-t border-border/70 bg-surface-alt px-5 py-14 sm:px-8 sm:py-16 lg:px-10 lg:py-20" aria-labelledby="cta-heading">
         <div className="mx-auto max-w-5xl rounded-3xl border border-primary/15 bg-gradient-to-br from-primary-soft via-background to-secondary px-6 py-9 text-center shadow-xl sm:px-10 sm:py-12">

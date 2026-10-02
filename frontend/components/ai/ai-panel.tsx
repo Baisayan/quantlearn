@@ -1,10 +1,23 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
+import Link from "next/link";
 import Markdown from "react-markdown";
 import remarkMath from "remark-math";
 import rehypeKatex from "rehype-katex";
 import "katex/dist/katex.min.css";
-import { Sparkles } from "lucide-react";
+import {
+  RotateCcw,
+  Copy,
+  Check,
+  BookOpen,
+  Sparkles,
+  SendHorizontal,
+  Atom,
+  FlaskConical,
+  Binary,
+  Compass,
+} from "lucide-react";
+import { QuantumAIIcon } from "./quantum-ai-icon";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import {
@@ -25,30 +38,74 @@ import {
 const prompts = {
   learn: [
     "Explain this concept simply",
-    "Walk through a formula",
-    "Explain the chapter's figures",
-    "Give me a practice question",
+    "Walk through the formula",
+    "Explain the chapter figures",
+    "Give me a practice quiz question",
     "Which Lab challenge should I try?",
   ],
   lab: [
     "Explain my circuit",
-    "Explain these results",
+    "Explain these measurement results",
     "Help me understand this error",
     "Give me a next-gate hint",
-    "Compare my engine results",
+    "Compare statevector vs shots",
   ],
-  progress: ["Create my study plan"],
+  progress: [
+    "Create my study plan",
+    "How do streaks work?",
+    "What should I study next?",
+  ],
+  general: [
+    "How should I study on QuantLearn?",
+    "Where do I start as a beginner?",
+    "How does the Quantum Lab work?",
+    "How do I earn Quantum XP?",
+  ],
 };
+
+const capabilityCards = [
+  {
+    icon: Atom,
+    title: "Deconstruct Concepts",
+    desc: "Superposition, entanglement & Bloch sphere",
+    prompt: "Explain quantum superposition and statevectors simply with an intuition guide",
+  },
+  {
+    icon: FlaskConical,
+    title: "Circuit Lab Copilot",
+    desc: "Bell states, gate depth & measurement stats",
+    prompt: "How do I construct a Bell State circuit in the Quantum Lab?",
+  },
+  {
+    icon: Binary,
+    title: "Formulas & Dirac Math",
+    desc: "Unitary matrices, bra-ket & eigenvalues",
+    prompt: "Walk me through the mathematical matrix of a Hadamard gate and how it transforms |0>",
+  },
+  {
+    icon: Compass,
+    title: "Curriculum Roadmap",
+    desc: "Modules, streaks, challenges & earning XP",
+    prompt: "Where should I start as a beginner on QuantLearn to master quantum computing?",
+  },
+];
+
+const thinkingSteps = [
+  "Analyzing quantum principles…",
+  "Formulating explanation…",
+  "Synthesizing Dirac notation & gates…",
+];
 
 export function AIPanel({
   context,
-  label = "Ask Tutor",
-  title = "QuantLearn Tutor",
+  label = "Ask AI Copilot",
+  title = "QuantLearn AI Copilot",
   onApplyCode,
   initialQuestion,
   triggerVariant = "outline",
   triggerSize = "default",
   triggerClassName,
+  customTrigger,
 }: {
   context: AIContext;
   label?: string;
@@ -58,6 +115,7 @@ export function AIPanel({
   triggerVariant?: "default" | "outline" | "secondary" | "ghost" | "link";
   triggerSize?: "default" | "sm" | "lg" | "icon";
   triggerClassName?: string;
+  customTrigger?: React.ReactNode;
 }) {
   const [open, setOpen] = useState(false);
   const [input, setInput] = useState("");
@@ -65,13 +123,28 @@ export function AIPanel({
     [],
   );
   const [pending, setPending] = useState(false);
+  const [thinkingStepIndex, setThinkingStepIndex] = useState(0);
   const [error, setError] = useState("");
   const [selection, setSelection] = useState("");
   const [lastQuestion, setLastQuestion] = useState("");
+  const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
   const controller = useRef<AbortController | null>(null);
   const end = useRef<HTMLDivElement>(null);
   const plan = context.surface === "progress";
+
   useEffect(() => () => controller.current?.abort(), []);
+
+  useEffect(() => {
+    if (!pending) {
+      setThinkingStepIndex(0);
+      return;
+    }
+    const interval = setInterval(() => {
+      setThinkingStepIndex((prev) => (prev + 1) % thinkingSteps.length);
+    }, 2200);
+    return () => clearInterval(interval);
+  }, [pending]);
+
   useEffect(() => {
     if (context.surface !== "learn") return;
     function captureSelection() {
@@ -87,6 +160,7 @@ export function AIPanel({
     return () =>
       document.removeEventListener("selectionchange", captureSelection);
   }, [context.surface]);
+
   useEffect(() => {
     if (open) end.current?.scrollIntoView({ block: "nearest" });
   }, [messages, pending, open]);
@@ -115,11 +189,9 @@ export function AIPanel({
               ? { ...context, selectedText: selection }
               : context,
           message: question,
-          history: plan
-            ? []
-            : messages
-                .slice(-6)
-                .map(({ role, text }) => ({ role, text: text.slice(0, 6000) })),
+          history: messages
+            .slice(-6)
+            .map(({ role, text }) => ({ role, text: text.slice(0, 6000) })),
         }),
       });
       const data = await response.json();
@@ -127,7 +199,7 @@ export function AIPanel({
         throw new Error(data.error || "The tutor could not respond.");
       const reply = parseReply(data);
       setMessages((current) => [
-        ...(plan ? [] : current.slice(-10)),
+        ...current.slice(-10),
         { role: "user", text: question },
         { role: "assistant", text: reply.answer, reply },
       ]);
@@ -144,7 +216,15 @@ export function AIPanel({
       setPending(false);
     }
   }
+
+  function handleCopy(text: string, index: number) {
+    void navigator.clipboard.writeText(text);
+    setCopiedIndex(index);
+    setTimeout(() => setCopiedIndex(null), 2000);
+  }
+
   const last = messages.at(-1)?.reply;
+
   return (
     <Sheet
       open={open}
@@ -154,132 +234,298 @@ export function AIPanel({
       }}
     >
       <SheetTrigger asChild>
-        <Button
-          variant={triggerVariant}
-          size={triggerSize}
-          className={
-            triggerClassName ||
-            "rounded-md border-violet/30 bg-card text-violet-foreground hover:bg-violet-soft hover:text-violet-foreground"
-          }
-        >
-          <Sparkles className="size-4 shrink-0" aria-hidden="true" />
-          <span>{label}</span>
-        </Button>
+        {customTrigger ? (
+          customTrigger
+        ) : (
+          <Button
+            variant={triggerVariant}
+            size={triggerSize}
+            className={
+              triggerClassName ||
+              "rounded-md border-border/80 bg-card text-foreground hover:bg-muted"
+            }
+          >
+            <QuantumAIIcon className="size-4 shrink-0" aria-hidden="true" />
+            <span>{label}</span>
+          </Button>
+        )}
       </SheetTrigger>
-      <SheetContent className="flex w-full flex-col bg-card p-0 sm:max-w-lg">
-        <SheetHeader className="border-b border-border/70 bg-violet-soft/60 pr-12">
-          <SheetTitle>{title}</SheetTitle>
-          <SheetDescription>
-            {plan
-              ? "Recommendations from your saved Learn and Lab results."
-              : context.surface === "lab"
-                ? "Help with your current circuit, code and results."
-                : `Learning with you: ${context.chapterId.replaceAll("-", " ")}.`}
-          </SheetDescription>
+
+      <SheetContent className="flex w-full flex-col bg-card p-0 sm:max-w-lg shadow-2xl border-l border-border/80">
+        {/* Sleek High-Tech Header with Live Telemetry */}
+        <SheetHeader className="border-b border-border/80 bg-card/70 backdrop-blur-xl px-5 py-3.5">
+          <div className="flex items-center justify-between gap-3 pr-6">
+            <div className="flex items-center gap-3 min-w-0">
+              <div className="relative flex size-9 shrink-0 items-center justify-center rounded-xl bg-gradient-to-tr from-primary/20 via-cyan-500/15 to-primary/10 border border-primary/25 shadow-xs">
+                <QuantumAIIcon className="size-5.5" />
+                <span className="absolute -bottom-0.5 -right-0.5 size-2.5 rounded-full bg-emerald-500 ring-2 ring-card animate-pulse" />
+              </div>
+              <div className="min-w-0">
+                <div className="flex items-center gap-2">
+                  <SheetTitle className="text-sm font-semibold tracking-tight text-foreground truncate">
+                    {title}
+                  </SheetTitle>
+                  <span className="hidden sm:inline-flex items-center gap-1 rounded-full border border-primary/30 bg-primary/10 px-2 py-0.5 font-mono text-[9px] font-semibold uppercase tracking-wider text-primary">
+                    <span className="size-1 rounded-full bg-primary animate-ping" />
+                    Gemini Flash
+                  </span>
+                </div>
+                <SheetDescription className="text-xs text-muted-foreground truncate">
+                  {plan
+                    ? "Adaptive study plan from your Learn & Lab telemetry"
+                    : context.surface === "lab"
+                      ? "Assisting with circuits, gates and code"
+                      : context.surface === "learn"
+                        ? `Learning with you: ${context.chapterId.replaceAll("-", " ")}`
+                        : "24/7 Quantum physics mentor and guide"}
+                </SheetDescription>
+              </div>
+            </div>
+
+            {messages.length > 0 && (
+              <button
+                type="button"
+                onClick={() => {
+                  setMessages([]);
+                  setError("");
+                }}
+                title="Clear conversation"
+                className="inline-flex size-8 shrink-0 items-center justify-center rounded-lg border border-border/70 text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
+              >
+                <RotateCcw className="size-3.5" />
+                <span className="sr-only">Clear chat</span>
+              </button>
+            )}
+          </div>
         </SheetHeader>
+
+        {/* Message Stream */}
         <div
-          className="min-h-0 flex-1 space-y-5 overflow-y-auto p-5"
+          className="min-h-0 flex-1 space-y-4 overflow-y-auto p-5"
           role="log"
           aria-label={plan ? "Study plan" : "Tutor conversation"}
         >
+          {/* Welcome Screen with Linear/Raycast Style Capability Cards */}
           {!messages.length && (
-            <p className="text-sm leading-relaxed text-muted-foreground">
-              {plan
-                ? "Get three next steps, a chapter to revisit and a Lab challenge to practise."
-                : "Ask a question or choose a starting point. AI can make mistakes; use the lesson and simulator to check its suggestions."}
-            </p>
-          )}
-          {messages
-            .filter((m) => !plan || m.role === "assistant")
-            .map((message, index) => (
-              <div
-                key={index}
-                className={
-                  message.role === "user"
-                    ? "rounded-xl bg-secondary/60 p-4 text-sm"
-                    : "space-y-3 text-sm leading-7"
-                }
-              >
-                {!plan && (
-                  <p className="mb-2 text-xs font-medium text-muted-foreground">
-                    {message.role === "user" ? "You" : "Tutor"}
-                  </p>
-                )}
-                <div className="min-w-0 space-y-3 break-words [&_.katex-display]:overflow-x-auto [&_pre]:overflow-x-auto [&_pre]:rounded-lg [&_pre]:bg-secondary/50 [&_pre]:p-3 [&_ol]:list-decimal [&_ol]:pl-5 [&_ul]:list-disc [&_ul]:pl-5">
-                  <Markdown
-                    skipHtml
-                    remarkPlugins={[remarkMath]}
-                    rehypePlugins={[[rehypeKatex, { trust: false }]]}
-                    disallowedElements={["img"]}
-                    components={{
-                      a: ({ href, children }) =>
-                        /^\/learn(?:\/[a-z0-9-]+)?(?:#[a-z0-9-]+)?$/.test(
-                          href ?? "",
-                        ) || href === "/lab" ? (
-                          <a href={href} className="text-primary underline">
-                            {children}
-                          </a>
-                        ) : (
-                          <span>{children}</span>
-                        ),
-                      pre: ({ children }) => {
-                        let rawText = "";
-                        if (children && typeof children === "object" && "props" in (children as unknown as Record<string, unknown>)) {
-                          const inner = (children as unknown as { props?: { children?: unknown } }).props?.children;
-                          if (typeof inner === "string") rawText = inner;
-                        }
-                        const isCircuitCode = rawText.includes("QuantumCircuit") || rawText.includes("cirq.") || rawText.includes("qml.");
-                        return (
-                          <div className="relative group my-2">
-                            <pre className="overflow-x-auto rounded-lg bg-secondary/50 p-3 text-xs font-mono">{children}</pre>
-                            {onApplyCode && isCircuitCode && (
-                              <button
-                                type="button"
-                                onClick={() => {
-                                  onApplyCode(rawText.trim());
-                                  setOpen(false);
-                                }}
-                                className="mt-1.5 inline-flex items-center gap-1.5 rounded-md bg-primary px-2.5 py-1 text-xs font-medium text-primary-foreground shadow-sm hover:bg-primary/90 transition-colors"
-                              >
-                                ⚡ Apply to Lab Editor
-                              </button>
-                            )}
-                          </div>
-                        );
-                      },
-                    }}
-                  >
-                    {message.text}
-                  </Markdown>
-                </div>
-                {!!message.reply?.citations.length && (
-                  <div className="flex flex-wrap gap-2">
-                    {message.reply.citations
-                      .filter((c) => /^[a-z0-9-]+\.md$/.test(c))
-                      .map((c) => (
-                        <a
-                          key={c}
-                          href={`/learn/${c.replace(/\.md$/, "")}`}
-                          className="text-xs text-primary underline"
-                        >
-                          {c.replace(/\.md$/, "").replaceAll("-", " ")}
-                        </a>
-                      ))}
-                  </div>
-                )}
+            <div className="my-auto flex flex-col items-center justify-center text-center px-2 py-6 space-y-5">
+              <div className="relative flex size-14 items-center justify-center rounded-2xl bg-gradient-to-tr from-primary/20 via-cyan-500/15 to-primary/10 border border-primary/30 shadow-[0_0_30px_rgba(59,130,246,0.2)]">
+                <QuantumAIIcon className="size-8" />
               </div>
-            ))}
-          {pending && (
-            <p role="status" className="text-sm text-violet">
-              Thinking through your question…
-            </p>
+              <div className="space-y-1.5 max-w-sm">
+                <h4 className="text-base font-semibold tracking-tight text-foreground">
+                  What would you like to explore?
+                </h4>
+                <p className="text-xs leading-relaxed text-muted-foreground">
+                  Your interactive quantum copilot. Deconstruct Dirac notation, simulate circuits, or master core fundamentals.
+                </p>
+              </div>
+
+              {/* 4 Interactive Starter Capability Cards */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 w-full pt-1 text-left">
+                {capabilityCards.map((card) => {
+                  const Icon = card.icon;
+                  return (
+                    <button
+                      key={card.title}
+                      type="button"
+                      disabled={pending}
+                      onClick={() => void ask(card.prompt)}
+                      className="group flex flex-col justify-between rounded-xl border border-border/70 bg-card/60 p-3.5 shadow-xs transition-all duration-200 hover:-translate-y-0.5 hover:border-primary/50 hover:bg-muted/50 hover:shadow-md text-left disabled:opacity-50"
+                    >
+                      <div className="flex items-center gap-2 mb-1.5">
+                        <span className="flex size-6 items-center justify-center rounded-lg bg-primary/10 text-primary transition-colors group-hover:bg-primary group-hover:text-white">
+                          <Icon className="size-3.5" />
+                        </span>
+                        <span className="text-xs font-semibold text-foreground tracking-tight group-hover:text-primary transition-colors">
+                          {card.title}
+                        </span>
+                      </div>
+                      <p className="text-[11px] leading-snug text-muted-foreground line-clamp-2">
+                        {card.desc}
+                      </p>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
           )}
+
+          {messages.map((message, index) =>
+            message.role === "user" ? (
+              /* User Bubble */
+              <div key={index} className="flex justify-end">
+                <div className="max-w-[85%] rounded-2xl rounded-tr-xs bg-primary px-4 py-2.5 text-sm text-primary-foreground shadow-xs">
+                  <p className="whitespace-pre-wrap break-words leading-relaxed">
+                    {message.text}
+                  </p>
+                </div>
+              </div>
+            ) : (
+              /* Tutor Card with Quantum AI Emblem */
+              <div key={index} className="flex items-start gap-3">
+                <div className="flex size-7 shrink-0 items-center justify-center rounded-full bg-gradient-to-tr from-primary/20 via-cyan-500/15 to-primary/10 border border-primary/25 mt-0.5 shadow-xs">
+                  <QuantumAIIcon className="size-4" />
+                </div>
+                <div className="min-w-0 flex-1 space-y-2.5 rounded-2xl rounded-tl-xs border border-border/70 bg-card/80 backdrop-blur-sm p-4 shadow-xs">
+                  <div className="min-w-0 space-y-3 break-words text-sm leading-relaxed text-foreground [&_.katex-display]:overflow-x-auto [&_pre]:overflow-x-auto [&_ol]:list-decimal [&_ol]:pl-5 [&_ul]:list-disc [&_ul]:pl-5">
+                    <Markdown
+                      skipHtml
+                      remarkPlugins={[remarkMath]}
+                      rehypePlugins={[[rehypeKatex, { trust: false }]]}
+                      disallowedElements={["img"]}
+                      components={{
+                        a: ({ href, children }) =>
+                          href?.startsWith("/") ? (
+                            <Link
+                              href={href}
+                              onClick={() => setOpen(false)}
+                              className="inline-flex items-center gap-1 rounded bg-primary/10 px-1.5 py-0.5 font-medium text-primary hover:bg-primary/20 hover:underline transition-colors"
+                            >
+                              <span>{children}</span>
+                              <span className="text-[10px] opacity-70">↗</span>
+                            </Link>
+                          ) : (
+                            <a
+                              href={href}
+                              target="_blank"
+                              rel="noreferrer"
+                              className="text-primary underline font-medium"
+                            >
+                              {children}
+                            </a>
+                          ),
+                        pre: ({ children }) => {
+                          let rawText = "";
+                          if (
+                            children &&
+                            typeof children === "object" &&
+                            "props" in
+                              (children as unknown as Record<string, unknown>)
+                          ) {
+                            const inner = (
+                              children as unknown as {
+                                props?: { children?: unknown };
+                              }
+                            ).props?.children;
+                            if (typeof inner === "string") rawText = inner;
+                          }
+                          const isCircuitCode =
+                            rawText.includes("QuantumCircuit") ||
+                            rawText.includes("cirq.") ||
+                            rawText.includes("qml.");
+                          return (
+                            <div className="relative group my-2">
+                              <pre className="overflow-x-auto rounded-lg border border-border/70 bg-muted/60 p-3 text-xs font-mono">
+                                {children}
+                              </pre>
+                              {onApplyCode && isCircuitCode && (
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    onApplyCode(rawText.trim());
+                                    setOpen(false);
+                                  }}
+                                  className="mt-1.5 inline-flex items-center gap-1.5 rounded-md bg-primary px-2.5 py-1 text-xs font-medium text-primary-foreground shadow-sm hover:bg-primary/90 transition-colors"
+                                >
+                                  ⚡ Apply to Lab Editor
+                                </button>
+                              )}
+                            </div>
+                          );
+                        },
+                      }}
+                    >
+                      {message.text}
+                    </Markdown>
+                  </div>
+
+                  {/* Citations & Topic Chips */}
+                  {!!message.reply?.citations.length && (
+                    <div className="flex flex-wrap items-center gap-1.5 pt-2 border-t border-border/50">
+                      <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mr-1">
+                        Topics:
+                      </span>
+                      {message.reply.citations
+                        .filter((c) => /^[a-z0-9-]+\.md$/.test(c))
+                        .map((c) => (
+                          <a
+                            key={c}
+                            href={`/learn/${c.replace(/\.md$/, "")}`}
+                            className="inline-flex items-center gap-1 rounded-full border border-border/80 bg-muted/50 px-2 py-0.5 text-[11px] font-medium text-primary hover:border-primary/40 hover:bg-primary/5 transition-colors"
+                          >
+                            <BookOpen className="size-3" />
+                            {c.replace(/\.md$/, "").replaceAll("-", " ")}
+                          </a>
+                        ))}
+                    </div>
+                  )}
+
+                  {/* Message Action Footer */}
+                  <div className="flex items-center justify-end gap-2 pt-1 border-t border-border/40">
+                    <button
+                      type="button"
+                      onClick={() => handleCopy(message.text, index)}
+                      className="inline-flex items-center gap-1 rounded px-2 py-1 text-[11px] font-medium text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
+                      title="Copy response"
+                    >
+                      {copiedIndex === index ? (
+                        <>
+                          <Check className="size-3 text-emerald-500" />
+                          <span className="text-emerald-500 font-semibold">
+                            Copied
+                          </span>
+                        </>
+                      ) : (
+                        <>
+                          <Copy className="size-3" />
+                          <span>Copy</span>
+                        </>
+                      )}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ),
+          )}
+
+          {/* Animated Gemini + ChatGPT Style Thinking Indicator */}
+          {pending && (
+            <div
+              className="flex items-start gap-3"
+              role="status"
+              aria-label="Tutor is thinking"
+            >
+              <div className="relative flex size-7 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary border border-primary/20 mt-0.5 shadow-xs ring-4 ring-primary/15 animate-pulse">
+                <QuantumAIIcon className="size-4" />
+              </div>
+              <div className="min-w-0 flex-1 space-y-3 rounded-2xl rounded-tl-xs border border-border/70 bg-card p-4 shadow-xs">
+                <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-1.5 py-0.5">
+                    <span className="size-2 rounded-full bg-primary chatgpt-dot-1" />
+                    <span className="size-2 rounded-full bg-primary chatgpt-dot-2" />
+                    <span className="size-2 rounded-full bg-primary chatgpt-dot-3" />
+                  </div>
+                  <span className="text-xs font-semibold text-primary tracking-tight transition-opacity duration-300">
+                    {thinkingSteps[thinkingStepIndex]}
+                  </span>
+                </div>
+
+                {/* Gemini Shimmer Skeleton Wave */}
+                <div className="space-y-2 pt-0.5">
+                  <div className="h-2.5 w-5/6 rounded-full gemini-shimmer" />
+                  <div className="h-2.5 w-full rounded-full gemini-shimmer" />
+                  <div className="h-2.5 w-3/5 rounded-full gemini-shimmer" />
+                </div>
+              </div>
+            </div>
+          )}
+
           {error && (
             <div
               role="alert"
-              className="space-y-2 rounded-lg border border-border/70 p-3 text-sm"
+              className="space-y-2 rounded-xl border border-destructive/30 bg-destructive/5 p-3.5 text-sm"
             >
-              <p>{error}</p>
+              <p className="text-xs text-destructive">{error}</p>
               <Button
                 size="sm"
                 variant="outline"
@@ -292,78 +538,91 @@ export function AIPanel({
           )}
           <div ref={end} />
         </div>
-        <div className="space-y-3 border-t p-5">
+
+        {/* Input & Action Area */}
+        <div className="space-y-2.5 border-t border-border/80 bg-card p-4">
           {selection && context.surface === "learn" && (
-            <div className="rounded-md border border-violet/20 bg-violet-soft/60 p-3 text-xs">
-              <p className="line-clamp-3">Selected text: {selection}</p>
-              <Button
-                size="sm"
-                variant="ghost"
+            <div className="flex items-center justify-between rounded-lg border border-border/80 bg-muted/40 px-3 py-2 text-xs">
+              <p className="line-clamp-1 text-muted-foreground">
+                <span className="font-semibold text-foreground">Selected:</span>{" "}
+                {selection}
+              </p>
+              <button
+                type="button"
                 onClick={() => setSelection("")}
+                className="shrink-0 text-[11px] font-medium text-primary hover:underline ml-2"
               >
-                Remove selection
-              </Button>
+                Clear
+              </button>
             </div>
           )}
-          <div className="flex flex-wrap gap-2">
+
+          {/* Suggested Prompts - Horizontal Scrollable Rail */}
+          <div className="flex items-center gap-1.5 overflow-x-auto pb-1 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
             {(plan
               ? [
                   messages.length
                     ? "Refresh my study plan"
                     : "Create my study plan",
+                  "What should I study next?",
+                  "How do streaks work?",
                 ]
               : last?.suggestedPrompts.length
                 ? last.suggestedPrompts
                 : prompts[context.surface]
             ).map((p) => (
-              <Button
+              <button
                 key={p}
-                size="sm"
-                variant="outline"
-                className="h-auto whitespace-normal border-violet/20 text-violet-foreground hover:bg-violet-soft hover:text-violet-foreground"
+                type="button"
                 disabled={pending}
                 onClick={() => ask(p)}
+                className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-border/80 bg-card px-3 py-1.5 text-xs font-medium text-foreground shadow-xs transition-colors hover:border-primary/40 hover:bg-muted/70 active:scale-95 disabled:opacity-50"
               >
-                {p}
-              </Button>
+                <Sparkles className="size-3 text-primary/70" />
+                <span>{p}</span>
+              </button>
             ))}
           </div>
-          {!plan && (
-            <form
-              className="space-y-2"
-              onSubmit={(e) => {
-                e.preventDefault();
-                void ask(input);
-              }}
-            >
-              <Textarea
+
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              if (!pending && input.trim()) void ask(input);
+            }}
+          >
+            {/* Unified Seamless Omnibar */}
+            <div className="relative rounded-2xl border border-border/80 bg-background/90 dark:bg-muted/30 p-3 shadow-xs transition-all focus-within:border-primary/60 focus-within:ring-2 focus-within:ring-primary/10">
+              <textarea
                 aria-label="Question for the tutor"
-                placeholder="What would you like to understand?"
+                placeholder="Ask a question or explore a concept (e.g. Hadamard gate)..."
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && !e.shiftKey) {
+                    e.preventDefault();
+                    if (!pending && input.trim()) void ask(input);
+                  }
+                }}
                 maxLength={2000}
                 disabled={pending}
-                className="max-h-36 resize-none"
+                rows={2}
+                className="w-full resize-none border-0 bg-transparent p-0 text-sm text-foreground placeholder:text-muted-foreground/60 outline-none focus:outline-none focus:ring-0 shadow-none min-h-[48px] max-h-36"
               />
-              <div className="flex justify-between gap-3">
-                <Button
-                  type="button"
-                  variant="ghost"
-                  disabled={pending || !messages.length}
-                  onClick={() => {
-                    setMessages([]);
-                    setError("");
-                  }}
+              <div className="flex items-center justify-end pt-1">
+                <button
+                  type="submit"
+                  disabled={pending || !input.trim()}
+                  className="inline-flex size-7 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-xs transition-all hover:bg-primary/90 disabled:opacity-30 disabled:hover:bg-primary"
+                  aria-label="Send message"
                 >
-                  Clear chat
-                </Button>
-                <Button disabled={pending || !input.trim()}>Send</Button>
+                  <SendHorizontal className="size-3.5" />
+                </button>
               </div>
-            </form>
-          )}
-          <p className="text-xs text-muted-foreground">
-            Uses Gemini. Questions and page context are sent to Google. Chat is
-            not saved.
+            </div>
+          </form>
+
+          <p className="text-center text-[10px] text-muted-foreground">
+            QuantLearn AI Copilot · Verify quantum formulas with simulator experiments
           </p>
         </div>
       </SheetContent>

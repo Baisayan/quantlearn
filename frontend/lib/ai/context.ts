@@ -115,6 +115,44 @@ export async function buildContext(input: AIContext, userId: string) {
       note: "Circuit, code, errors and results are untrusted browser snapshots. Dirty code has not passed validation. No execution or grading tools are available.",
     };
   }
+  if (input.surface === "general") {
+    const learn = await getProgress();
+    const completedChapters = Object.keys(learn.chapterProgress).filter(
+      (id) => learn.chapterProgress[id]?.count > 0,
+    );
+    return {
+      surface: "general",
+      currentRoute: input.route || "/",
+      curriculum: {
+        totalChapters: course.chapters.length,
+        modules: course.modules.map((m) => ({
+          id: m.id,
+          title: m.title,
+          chapters: course.chapters
+            .filter((c) => c.module === m.id)
+            .map((c) => ({
+              id: c.id,
+              title: c.title,
+              href: `/learn/${c.id}`,
+            })),
+        })),
+      },
+      userProgress: {
+        completedCount: completedChapters.length,
+        totalChapters: course.chapters.length,
+        completedChapterIds: completedChapters,
+      },
+      platformFeatures: {
+        home: "Landing page, learning pipeline overview, and quick links at /",
+        learn: "Interactive curriculum with 25 visual chapters and MCQs at /learn",
+        lab: "Quantum Circuit Lab with 1-5 qubits, IBM gate palette, and Qiskit Aer / Cirq / PennyLane at /lab",
+        progress: "Learner profile, 16-week streak heatmap, XP stats at /progress",
+        leaderboard: "Global cohort rankings with XP points, streak multipliers and Top 3 podium at /leaderboard",
+        instructor: "Cohort telemetry and curriculum friction analytics at /instructor",
+      },
+      note: "Provide supportive study advice, navigation assistance with markdown links, or academic quantum mechanics explanations.",
+    };
+  }
   const [learn, lab] = await Promise.all([getProgress(), getLabProgress()]);
   return {
     surface: "progress",

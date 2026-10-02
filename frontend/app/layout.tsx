@@ -9,6 +9,8 @@ import { Button } from "@/components/ui/button";
 import { AppSidebar } from "@/components/navigation/app-sidebar";
 import { createClient } from "@/lib/supabase/client";
 import { BrandLogo } from "@/components/brand/logo";
+import { GlobalAITutor } from "@/components/ai/global-ai-tutor";
+import { ThemeToggle } from "@/components/ui/theme-toggle";
 
 import "./globals.css";
 
@@ -81,17 +83,21 @@ function SiteHeader() {
                 <span className="hidden sm:inline">Profile</span>
               </Link>
             </Button>
+            <ThemeToggle />
           </div>
         ) : null}
 
         {isLogin ? (
-          <Button
-            asChild
-            variant="outline"
-            className="rounded-md border-primary/30 bg-card text-primary shadow-sm hover:bg-primary-soft hover:text-primary"
-          >
-            <Link href="/">Home</Link>
-          </Button>
+          <div className="flex items-center gap-2">
+            <Button
+              asChild
+              variant="outline"
+              className="rounded-md border-primary/30 bg-card text-primary shadow-sm hover:bg-primary-soft hover:text-primary"
+            >
+              <Link href="/">Home</Link>
+            </Button>
+            <ThemeToggle />
+          </div>
         ) : null}
 
         {isApplicationRoute ? (
@@ -145,6 +151,7 @@ function SiteHeader() {
                   </Link>
                 </Button>
               )}
+              <ThemeToggle />
               {signOutError ? (
                 <span className="text-sm text-primary" role="alert">
                   {signOutError}
@@ -170,12 +177,27 @@ export default function RootLayout({ children }: RootLayoutProps) {
   const shellBackground = "bg-background";
 
   return (
-    <html lang="en">
+    <html lang="en" className="dark" suppressHydrationWarning>
       <head>
         <title>QuantLearn</title>
         <meta
           name="description"
           content="Learn quantum computing through guided lessons, interactive circuits and AI explanations."
+        />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              try {
+                const stored = localStorage.getItem('quantlearn-theme');
+                const isDark = stored ? stored === 'dark' : true;
+                if (isDark) {
+                  document.documentElement.classList.add('dark');
+                } else {
+                  document.documentElement.classList.remove('dark');
+                }
+              } catch (e) {}
+            `,
+          }}
         />
       </head>
       <body>
@@ -197,6 +219,9 @@ export default function RootLayout({ children }: RootLayoutProps) {
               children
             )}
           </div>
+          <Suspense fallback={null}>
+            <GlobalAITutor />
+          </Suspense>
         </div>
       </body>
     </html>

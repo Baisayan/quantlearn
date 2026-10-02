@@ -1,6 +1,8 @@
 @import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Manrope:wght@400;500;600;700;800&family=Sora:wght@600;700;800&display=swap&subset=latin");
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 :root {
   --background: #f4f7fb;
   --foreground: #152235;
@@ -34,6 +36,37 @@
   --font-quant-mono: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
   --radius: 1rem;
 }
+
+.dark {
+  --background: #0b1120;
+  --foreground: #f1f5f9;
+  --card: #0f172a;
+  --card-foreground: #f1f5f9;
+  --primary: #3b82f6;
+  --primary-foreground: #ffffff;
+  --primary-soft: rgba(59, 130, 246, 0.15);
+  --secondary: #132738;
+  --secondary-foreground: #38bdf8;
+  --muted: #1e293b;
+  --muted-foreground: #94a3b8;
+  --accent: #2e2612;
+  --accent-foreground: #fde047;
+  --border: rgba(255, 255, 255, 0.12);
+  --input: rgba(255, 255, 255, 0.18);
+  --ring: #3b82f6;
+  --destructive: #f43f5e;
+  --destructive-foreground: #ffffff;
+  --success: #10b981;
+  --success-foreground: #ffffff;
+  --teal: #14b8a6;
+  --amber: #f59e0b;
+  --violet: #8b5cf6;
+  --violet-soft: rgba(139, 92, 246, 0.15);
+  --violet-foreground: #c4b5fd;
+  --grid-line: rgba(59, 130, 246, 0.08);
+  --surface-alt: #1e293b;
+}
+
 
 @theme inline {
   --color-background: var(--background);
@@ -109,12 +142,55 @@
   background-size: 3rem 3rem;
 }
 
+/* Gemini + ChatGPT AI Thinking Animations */
+@keyframes gemini-shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+@keyframes chatgpt-wave {
+  0%, 100% {
+    transform: translateY(0) scale(0.75);
+    opacity: 0.35;
+  }
+  50% {
+    transform: translateY(-5px) scale(1.25);
+    opacity: 1;
+    filter: drop-shadow(0 0 5px rgba(35, 87, 217, 0.6));
+  }
+}
+
+.gemini-shimmer {
+  background: linear-gradient(
+    90deg,
+    rgba(35, 87, 217, 0.06) 0%,
+    rgba(35, 87, 217, 0.25) 50%,
+    rgba(35, 87, 217, 0.06) 100%
+  );
+  background-size: 200% 100%;
+  animation: gemini-shimmer 1.8s infinite linear;
+}
+
+.chatgpt-dot-1 {
+  animation: chatgpt-wave 1.4s infinite ease-in-out;
+}
+.chatgpt-dot-2 {
+  animation: chatgpt-wave 1.4s infinite ease-in-out 0.2s;
+}
+.chatgpt-dot-3 {
+  animation: chatgpt-wave 1.4s infinite ease-in-out 0.4s;
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
   }
 
-  *,
+  *:not(.gemini-shimmer):not(.chatgpt-dot-1):not(.chatgpt-dot-2):not(.chatgpt-dot-3),
   *::before,
   *::after {
     animation-duration: 0.01ms !important;
@@ -123,3 +199,4 @@
     scroll-behavior: auto !important;
   }
 }
+

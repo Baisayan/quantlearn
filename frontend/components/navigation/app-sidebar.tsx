@@ -93,7 +93,7 @@ export function AppSidebar() {
       : null;
   const learnOpen = openSection === "learn";
   const labOpen = openSection === "lab";
-  const selectedChallenge = searchParams.get("challenge") ?? "bell";
+  const selectedChallenge = searchParams.get("challenge");
   const totalChapters = learnContent.chapters.length;
   const progressPercent = totalChapters > 0 ? Math.round((completedChapters.length / totalChapters) * 100) : 0;
 
@@ -300,7 +300,25 @@ export function AppSidebar() {
             {/* Lab Experiments List */}
             {labOpen && (
               <div className="relative ml-4 space-y-1 border-l-2 border-cyan-500/25 py-1 pl-2.5">
-                <p className="px-2.5 pb-1 pt-1 font-mono text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+                <Link
+                  href="/lab"
+                  aria-current={pathname === "/lab" && !selectedChallenge ? "page" : undefined}
+                  className={`group flex items-center justify-between rounded-xl px-2.5 py-1.5 text-xs transition-all duration-150 ${
+                    pathname === "/lab" && !selectedChallenge
+                      ? "border border-cyan-500/30 bg-cyan-500/15 font-semibold text-cyan-600 dark:text-cyan-400 shadow-xs ring-1 ring-cyan-500/25"
+                      : "text-muted-foreground hover:bg-muted/60 hover:text-foreground"
+                  }`}
+                >
+                  <span className="flex min-w-0 items-center gap-2">
+                    <FlaskConical className="size-3.5 shrink-0 opacity-70 group-hover:opacity-100" aria-hidden="true" />
+                    <span className="truncate">Custom Sandbox (1–5 Qubits)</span>
+                  </span>
+                  <span className="rounded bg-cyan-500/10 px-1.5 py-0.2 font-mono text-[9px] font-bold text-cyan-500">
+                    Free
+                  </span>
+                </Link>
+
+                <p className="px-2.5 pb-1 pt-1.5 font-mono text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
                   Circuit Benchmarks
                 </p>
                 {challenges.map((challenge) => {

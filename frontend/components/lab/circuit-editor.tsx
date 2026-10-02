@@ -465,16 +465,24 @@ export function CircuitEditor({
               className="w-48 h-8 text-xs font-mono"
             />
           </div>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => {
-              setPending(null);
-              setMessage("");
-            }}
-          >
-            Cancel wire target
-          </Button>
+          {pending && (
+            <div className="flex items-center gap-2 rounded-lg border border-primary/40 bg-primary/10 px-3 py-1 text-xs text-primary">
+              <span>
+                Target wire required for <strong>{pending.gate.toUpperCase()}</strong> (control: q{pending.row})
+              </span>
+              <Button
+                variant="outline"
+                size="sm"
+                className="h-6 px-2 text-[11px] border-primary/40 hover:bg-primary/20"
+                onClick={() => {
+                  setPending(null);
+                  setMessage("");
+                }}
+              >
+                Cancel
+              </Button>
+            </div>
+          )}
         </div>
         <p className="text-sm text-muted-foreground">
           Drag a gate onto a wire, or select a gate and click a cell. Two-qubit

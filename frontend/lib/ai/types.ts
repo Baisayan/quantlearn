@@ -18,7 +18,12 @@ export type AIContext =
       error: string;
       results: Result[];
     }
-  | { surface: "progress" };
+  | { surface: "progress" }
+  | {
+      surface: "general";
+      route?: string;
+      activeChapterTitle?: string;
+    };
 
 export type AIReply = {
   answer: string;
@@ -91,6 +96,12 @@ export function parseRequest(value: unknown): {
       c.results.length > 3
     )
       throw new AIError("Invalid Lab context.");
+  } else if (c.surface === "general") {
+    if (
+      c.route !== undefined &&
+      (typeof c.route !== "string" || !short(c.route, 200))
+    )
+      throw new AIError("Invalid page context.");
   } else if (c.surface !== "progress") throw new AIError("Unknown tutor page.");
   return { context: context as AIContext, message: message.trim(), history };
 }
