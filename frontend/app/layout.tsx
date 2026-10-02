@@ -72,12 +72,13 @@ function SiteHeader() {
             </Button>
             <Button
               asChild
-              size="default"
-              className="h-auto rounded-md px-4 py-2 font-medium shadow-md sm:px-5"
+              variant="outline"
+              size="sm"
+              className="h-9 gap-2 rounded-xl border border-border/80 bg-card px-3 text-xs font-semibold text-foreground transition-all duration-200 hover:border-primary/40 hover:bg-primary/10 shadow-xs"
             >
-              <Link href="/learn">
-                Getting started
-                <ArrowRight className="size-4" />
+              <Link href="/progress" className="inline-flex items-center gap-2" aria-label="Open profile and progress">
+                <CircleUserRound className="size-4 text-primary" aria-hidden="true" />
+                <span className="hidden sm:inline">Profile</span>
               </Link>
             </Button>
           </div>
