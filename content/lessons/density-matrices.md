@@ -1,4 +1,4 @@
-# Density matrices and reduced states
+# Density Matrices and Reduced States
 
 ## Learning objectives
 

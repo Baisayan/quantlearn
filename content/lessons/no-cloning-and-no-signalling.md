@@ -1,4 +1,4 @@
-# No-cloning, no-signalling and limits of entanglement
+# No-Cloning, No-Signalling and Limits of Entanglement
 
 ## Learning objectives
 

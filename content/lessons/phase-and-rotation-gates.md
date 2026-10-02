@@ -1,4 +1,4 @@
-# Phase and rotation gates
+# Phase and Rotation Gates
 
 ## Learning objectives
 

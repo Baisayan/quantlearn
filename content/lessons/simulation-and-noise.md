@@ -1,4 +1,4 @@
-# Simulation foundations
+# Simulation Foundations
 
 Simulation is the bridge between a circuit written on paper and the result panels shown by a quantum platform. It is also a source of easy confusion. An exact statevector is not a hardware measurement, a histogram can be exact or sampled, and a density matrix can describe a noisy ensemble that no single trajectory represents. This chapter gives you a vocabulary for choosing the right view before the framework chapters show the APIs.
 

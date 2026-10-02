@@ -1,4 +1,4 @@
-# Classical and quantum information
+# Classical and Quantum Information
 
 ## Learning objectives
 

@@ -1,4 +1,4 @@
-# Grover search and amplitude amplification
+# Grover Search and Amplitude Amplification
 
 Grover search is the canonical example of amplitude amplification. It does not magically inspect an unsorted database without cost. It starts with a uniform guess, uses an oracle to mark candidate answers by phase, and reflects amplitudes so that marked states become more likely to be measured. The iteration is a rotation, so stopping at the right time matters.
 

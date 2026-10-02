@@ -1,13 +1,14 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowRight, CircleUserRound, LoaderCircle, LogOut } from "lucide-react";
+import { ArrowRight, CircleUserRound, GraduationCap, LoaderCircle, LogOut } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import { Suspense, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { AppSidebar } from "@/components/navigation/app-sidebar";
 import { createClient } from "@/lib/supabase/client";
+import { BrandLogo } from "@/components/brand/logo";
 
 import "./globals.css";
 
@@ -24,7 +25,7 @@ function SiteHeader() {
   const isHome = pathname === "/";
   const isLogin = pathname === "/login";
   const isApplicationRoute = !isHome && !isLogin;
-  const isProgress = pathname === "/progress" || pathname.startsWith("/progress/");
+  const isProgress = pathname === "/progress" || pathname.startsWith("/progress/") || pathname === "/instructor" || pathname === "/leaderboard";
   const headerWidth = isHome ? "max-w-screen-2xl" : "";
 
   async function handleSignOut() {
@@ -49,25 +50,37 @@ function SiteHeader() {
       <div
         className={`mx-auto flex min-h-16 w-full ${headerWidth} flex-wrap items-center justify-between gap-x-4 gap-y-3 px-5 py-3 sm:px-8 lg:px-10`}
       >
-        <Link
-          href="/"
-          className="font-display text-2xl font-semibold tracking-tight focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-4"
-        >
-          <span className="text-foreground">Quant</span>
-          <span className="text-primary">Learn</span>
-        </Link>
+        <BrandLogo href="/" />
 
         {isHome ? (
-          <Button
-            asChild
-            size="default"
-            className="h-auto rounded-md px-4 py-2 font-medium shadow-md sm:px-5"
-          >
-            <Link href="/learn">
-              Getting started
-              <ArrowRight className="size-4" />
-            </Link>
-          </Button>
+          <div className="flex items-center gap-2 sm:gap-3">
+            <Button
+              asChild
+              variant="ghost"
+              size="sm"
+              className="h-9 gap-2 rounded-xl border border-primary/25 bg-primary/10 px-3 text-xs font-semibold text-primary transition-all duration-200 hover:border-primary/40 hover:bg-primary/20"
+            >
+              <Link href="/instructor" className="inline-flex items-center gap-2">
+                <span className="relative flex size-2">
+                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75"></span>
+                  <span className="relative inline-flex size-2 rounded-full bg-emerald-500"></span>
+                </span>
+                <GraduationCap className="size-4 shrink-0 text-primary" aria-hidden="true" />
+                <span className="hidden sm:inline">Instructor Portal</span>
+                <span className="sm:hidden">Instructor</span>
+              </Link>
+            </Button>
+            <Button
+              asChild
+              size="default"
+              className="h-auto rounded-md px-4 py-2 font-medium shadow-md sm:px-5"
+            >
+              <Link href="/learn">
+                Getting started
+                <ArrowRight className="size-4" />
+              </Link>
+            </Button>
+          </div>
         ) : null}
 
         {isLogin ? (
@@ -82,13 +95,33 @@ function SiteHeader() {
 
         {isApplicationRoute ? (
           <>
-            <div className="ml-auto flex items-center gap-1 sm:gap-2">
+            <div className="ml-auto flex items-center gap-2 sm:gap-3">
+              <Button
+                asChild
+                variant="ghost"
+                size="sm"
+                className={`relative h-9 gap-2 rounded-xl px-3 text-xs font-semibold transition-all duration-200 ${
+                  pathname === "/instructor"
+                    ? "border border-primary/50 bg-primary/25 text-primary shadow-xs ring-1 ring-primary/40 font-bold"
+                    : "border border-primary/25 bg-primary/10 text-primary hover:border-primary/40 hover:bg-primary/20"
+                }`}
+              >
+                <Link href="/instructor" className="inline-flex items-center gap-2">
+                  <span className="relative flex size-2">
+                    <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75"></span>
+                    <span className="relative inline-flex size-2 rounded-full bg-emerald-500"></span>
+                  </span>
+                  <GraduationCap className="size-4 shrink-0 text-primary" aria-hidden="true" />
+                  <span className="hidden sm:inline">Instructor Portal</span>
+                  <span className="sm:hidden">Instructor</span>
+                </Link>
+              </Button>
               {isProgress ? (
                 <Button
                   type="button"
                   variant="outline"
                   size="sm"
-                  className="rounded-md"
+                  className="rounded-xl border-border/80 text-xs font-medium hover:border-primary/40"
                   onClick={handleSignOut}
                   disabled={isSigningOut}
                 >
@@ -100,9 +133,14 @@ function SiteHeader() {
                   Sign out
                 </Button>
               ) : (
-                <Button asChild variant="ghost" size="icon" className="rounded-md">
+                <Button
+                  asChild
+                  variant="ghost"
+                  size="icon"
+                  className="size-9 rounded-xl border border-border/80 hover:border-primary/40 hover:bg-primary/10 transition-colors"
+                >
                   <Link href="/progress" aria-label="Open profile and progress">
-                    <CircleUserRound className="size-5" aria-hidden="true" />
+                    <CircleUserRound className="size-5 text-muted-foreground hover:text-primary transition-colors" aria-hidden="true" />
                   </Link>
                 </Button>
               )}

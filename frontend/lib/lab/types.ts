@@ -20,6 +20,7 @@ export type Circuit = { qubits: number; operations: Operation[] };
 export type Result = {
   engine: Engine;
   shots: number;
+  noise?: boolean;
   circuit: Circuit;
   counts: Record<string, number>;
   statevector: {
@@ -29,6 +30,8 @@ export type Result = {
     probability: number;
   }[];
   bloch: { qubit: number; x: number; y: number; z: number }[];
+  correlations?: { qA: number; qB: number; zz: number }[];
+  densityMatrix?: { row: string; col: string; real: number; imag: number }[];
   energy: number | null;
   cutScore: number | null;
   assessment?: {

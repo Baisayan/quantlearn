@@ -1,4 +1,4 @@
-# The quantum circuit model
+# The Quantum Circuit Model
 
 ## Learning objectives
 

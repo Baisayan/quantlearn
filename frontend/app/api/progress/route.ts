@@ -43,3 +43,22 @@ export async function POST(request: Request) {
     { headers: { "Cache-Control": "private, no-store" } },
   );
 }
+
+export async function GET() {
+  const supabase = await createClient();
+  const { data, error } = await supabase.auth.getClaims();
+  if (error || !data?.claims?.sub) {
+    return NextResponse.json({ completedChapters: [] });
+  }
+
+  const { data: attempts } = await supabase
+    .from("quiz_attempts")
+    .select("chapter_id")
+    .eq("user_id", data.claims.sub);
+
+  const completed = Array.from(new Set((attempts ?? []).map((a) => a.chapter_id)));
+  return NextResponse.json(
+    { completedChapters: completed },
+    { headers: { "Cache-Control": "private, no-store" } },
+  );
+}

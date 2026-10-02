@@ -1,4 +1,4 @@
-# Superposition, phase and interference
+# Superposition, Phase and Interference
 
 ## Learning objectives
 

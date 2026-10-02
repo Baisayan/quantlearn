@@ -4,6 +4,7 @@ import Link from "next/link";
 import dynamic from "next/dynamic";
 import { python } from "@codemirror/lang-python";
 import challenges from "@/.generated/lab.json";
+import { Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
@@ -11,6 +12,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Circuit, Engine, Result, toCode } from "@/lib/lab/types";
 import { CircuitEditor } from "./circuit-editor";
 import { Results } from "./results";
+import { SubmissionHud } from "./submission-hud";
 import { AIPanel } from "@/components/ai/ai-panel";
 const CodeMirror = dynamic(() => import("@uiw/react-codemirror"), {
   ssr: false,
@@ -18,6 +20,84 @@ const CodeMirror = dynamic(() => import("@uiw/react-codemirror"), {
 });
 const selectClass =
   "h-10 max-w-full rounded-md border border-border/80 bg-card px-3 text-sm outline-none transition-[border-color,box-shadow] duration-300 focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/50";
+
+const ALGORITHM_PRESETS: {
+  id: string;
+  name: string;
+  badge: string;
+  circuit: Circuit;
+}[] = [
+  {
+    id: "bell",
+    name: "Bell State",
+    badge: "EPR Pair",
+    circuit: {
+      qubits: 2,
+      operations: [
+        { gate: "h", targets: [0] },
+        { gate: "cx", targets: [0, 1] },
+      ],
+    },
+  },
+  {
+    id: "ghz",
+    name: "GHZ State",
+    badge: "3-Qubit",
+    circuit: {
+      qubits: 3,
+      operations: [
+        { gate: "h", targets: [0] },
+        { gate: "cx", targets: [0, 1] },
+        { gate: "cx", targets: [1, 2] },
+      ],
+    },
+  },
+  {
+    id: "superposition-5",
+    name: "5-Qubit Superposition",
+    badge: "5-Qubit",
+    circuit: {
+      qubits: 5,
+      operations: [
+        { gate: "h", targets: [0] },
+        { gate: "h", targets: [1] },
+        { gate: "h", targets: [2] },
+        { gate: "h", targets: [3] },
+        { gate: "h", targets: [4] },
+      ],
+    },
+  },
+  {
+    id: "teleportation",
+    name: "Teleportation",
+    badge: "Protocol",
+    circuit: {
+      qubits: 3,
+      operations: [
+        { gate: "h", targets: [0] },
+        { gate: "h", targets: [1] },
+        { gate: "cx", targets: [1, 2] },
+        { gate: "cx", targets: [0, 1] },
+        { gate: "h", targets: [0] },
+      ],
+    },
+  },
+  {
+    id: "deutsch-jozsa",
+    name: "Deutsch-Jozsa",
+    badge: "Algorithm",
+    circuit: {
+      qubits: 2,
+      operations: [
+        { gate: "x", targets: [1] },
+        { gate: "h", targets: [0] },
+        { gate: "h", targets: [1] },
+        { gate: "cx", targets: [0, 1] },
+        { gate: "h", targets: [0] },
+      ],
+    },
+  },
+];
 
 export function LabWorkspace({ initialChallengeId }: { initialChallengeId?: string }) {
   const startingChallenge = challenges.some(
@@ -41,18 +121,28 @@ export function LabWorkspace({ initialChallengeId }: { initialChallengeId?: stri
   const [results, setResults] = useState<Result[]>([]);
   const [error, setError] = useState("");
   const [busy, setBusy] = useState("");
+  const [noise, setNoise] = useState(false);
   const [assessment, setAssessment] = useState<Result["assessment"]>();
-  function update(next: Circuit) {
+  const [activePreset, setActivePreset] = useState<string | null>(null);
+  function update(next: Circuit, keepPreset = false) {
     setCircuit(next);
     setCode(toCode(next, engine));
     setCodeDirty(false);
     setResults([]);
     setAssessment(undefined);
     setError("");
+    if (!keepPreset) setActivePreset(null);
   }
   function reset() {
     setEditorKey((key) => key + 1);
+    setActivePreset(null);
     update({ qubits: challenge?.qubits || 2, operations: [] });
+    setTab("circuit");
+  }
+  function loadPreset(preset: (typeof ALGORITHM_PRESETS)[0]) {
+    setEditorKey((key) => key + 1);
+    setActivePreset(preset.id);
+    update(preset.circuit, true);
     setTab("circuit");
   }
   async function run(action: "simulate" | "grade", compare = false) {
@@ -67,7 +157,14 @@ export function LabWorkspace({ initialChallengeId }: { initialChallengeId?: stri
         : [engine];
       const responses: Result[] = [];
       for (const selected of engines) {
-        const payload = { engine: selected, ...(tab === "code" ? { code } : { circuit }), shots, seed: 42, ...(action === "grade" ? { challengeId } : {}) };
+        const payload = {
+          engine: selected,
+          ...(tab === "code" ? { code } : { circuit }),
+          shots,
+          seed: 42,
+          noise: selected === "aer" ? noise : false,
+          ...(action === "grade" ? { challengeId } : {}),
+        };
         const fingerprint = JSON.stringify(payload);
         if (action === "grade" && submission.current?.fingerprint !== fingerprint) submission.current = { fingerprint, id: crypto.randomUUID() };
         const response = await fetch(`/api/lab/${action}`, {
@@ -97,32 +194,82 @@ export function LabWorkspace({ initialChallengeId }: { initialChallengeId?: stri
     }
   }
   return (
-    <main className="lab-shell w-full space-y-8 px-5 py-8 sm:px-8 lg:px-10 xl:px-12">
-      <div>
-        <p className="font-mono text-xs font-semibold uppercase tracking-widest text-primary">
-          Quantum playground
-        </p>
-        <h1 className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">
-          Build. Run. Understand.
-        </h1>
-        <p className="mt-3 max-w-2xl text-muted-foreground">
-          Explore up to three qubits with Qiskit Aer, Cirq and PennyLane.
-        </p>
+    <main className="lab-shell w-full space-y-6 px-5 py-8 sm:px-8 lg:px-10 xl:px-12">
+      <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
+        <div>
+          <p className="font-mono text-xs font-semibold uppercase tracking-widest text-primary">
+            Quantum playground
+          </p>
+          <h1 className="mt-1 text-2xl font-semibold tracking-tight sm:text-3xl">
+            Build. Run. Understand.
+          </h1>
+          <p className="mt-1 text-xs sm:text-sm text-muted-foreground">
+            Explore up to 5 qubits with Qiskit Aer, Cirq and PennyLane.
+          </p>
+        </div>
+        <div className="flex items-center gap-2">
+          <AIPanel
+            key={challengeId}
+            context={{
+              surface: "lab",
+              challengeId,
+              engine,
+              circuit,
+              code,
+              codeDirty,
+              error,
+              results,
+            }}
+            onApplyCode={(newCode: string) => {
+              setCode(newCode);
+              setTab("code");
+              setCodeDirty(true);
+              setResults([]);
+            }}
+            label="✨ Ask AI Tutor"
+          />
+        </div>
       </div>
-      <AIPanel
-        key={challengeId}
-        context={{
-          surface: "lab",
-          challengeId,
-          engine,
-          circuit,
-          code,
-          codeDirty,
-          error,
-          results,
-        }}
-        label="Ask about this experiment"
-      />
+
+      {/* Quick Algorithm Presets */}
+      <div className="flex flex-wrap items-center gap-2 rounded-xl border border-border/70 bg-card/60 p-2.5 backdrop-blur-sm">
+        <span className="flex items-center gap-1.5 px-2 font-mono text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+          <Zap className="size-3.5 text-primary" aria-hidden="true" />
+          Quick Presets:
+        </span>
+        <div className="flex flex-wrap items-center gap-1.5">
+          {ALGORITHM_PRESETS.map((preset) => {
+            const isSelected = activePreset === preset.id;
+            return (
+              <button
+                key={preset.id}
+                type="button"
+                onClick={() => loadPreset(preset)}
+                className={`inline-flex items-center gap-1.5 rounded-lg border px-2.5 py-1 text-xs font-medium transition-all duration-200 active:scale-95 ${
+                  isSelected
+                    ? "border-primary bg-primary/15 text-primary font-semibold ring-2 ring-primary/40 shadow-sm"
+                    : "border-border/80 bg-background/80 text-foreground hover:border-primary/60 hover:bg-accent hover:text-primary"
+                }`}
+                aria-pressed={isSelected}
+              >
+                {isSelected && (
+                  <span className="size-1.5 rounded-full bg-primary animate-pulse" />
+                )}
+                <span>{preset.name}</span>
+                <span
+                  className={`rounded px-1 py-0.5 text-[10px] font-semibold transition-colors ${
+                    isSelected
+                      ? "bg-primary text-primary-foreground font-bold"
+                      : "bg-primary/10 text-primary"
+                  }`}
+                >
+                  {preset.badge}
+                </span>
+              </button>
+            );
+          })}
+        </div>
+      </div>
       <fieldset
         disabled={Boolean(busy)}
         className="space-y-6 disabled:opacity-80"
@@ -165,6 +312,20 @@ export function LabWorkspace({ initialChallengeId }: { initialChallengeId?: stri
               ))}
             </select>
           </div>
+          {engine === "aer" && (
+            <label className="flex items-center gap-2 cursor-pointer pb-2 text-sm text-muted-foreground select-none">
+              <input
+                type="checkbox"
+                checked={noise}
+                onChange={(e) => {
+                  setNoise(e.target.checked);
+                  setResults([]);
+                }}
+                className="size-4 rounded border-border accent-primary"
+              />
+              <span>Simulate device noise</span>
+            </label>
+          )}
           <Button onClick={() => run("simulate")}>
             Run circuit
           </Button>
@@ -251,7 +412,7 @@ export function LabWorkspace({ initialChallengeId }: { initialChallengeId?: stri
                         })
                       }
                     >
-                      {[1, 2, 3].map((n) => (
+                      {[1, 2, 3, 4, 5].map((n) => (
                         <option key={n}>{n}</option>
                       ))}
                     </select>
@@ -325,33 +486,12 @@ export function LabWorkspace({ initialChallengeId }: { initialChallengeId?: stri
           </p>
         )}
         {assessment && (
-          <Card
-            className={
-              assessment.passed
-                ? "rounded-2xl border-success/30 bg-success/10"
-                : "rounded-2xl border-accent-foreground/30 bg-accent/60"
-            }
-          >
-            <CardContent className="space-y-2 p-5">
-              <p
-                className={
-                  assessment.passed
-                    ? "font-semibold text-success"
-                    : "font-semibold text-accent-foreground"
-                }
-              >
-                {assessment.passed ? "Completed" : "Keep practising"} ·{" "}
-                {assessment.score}% target match
-              </p>
-              <p className="text-sm">{assessment.feedback}</p>
-              <Link
-                href="/progress"
-                className="text-sm text-primary underline underline-offset-4 transition-colors duration-300 hover:text-primary/80"
-              >
-                View saved progress
-              </Link>
-            </CardContent>
-          </Card>
+          <SubmissionHud
+            assessment={assessment}
+            challenge={challenge}
+            circuit={circuit}
+            engine={engine}
+          />
         )}
       </div>
       {results.length >= 2 && (
@@ -379,6 +519,30 @@ export function LabWorkspace({ initialChallengeId }: { initialChallengeId?: stri
             and diagram.
           </div>
         )}
+      </div>
+
+      {/* Floating AI Tutor Launcher */}
+      <div className="fixed bottom-6 right-6 z-40 shadow-2xl transition-transform duration-300 hover:scale-105">
+        <AIPanel
+          key={`floating-${challengeId}`}
+          context={{
+            surface: "lab",
+            challengeId,
+            engine,
+            circuit,
+            code,
+            codeDirty,
+            error,
+            results,
+          }}
+          onApplyCode={(newCode: string) => {
+            setCode(newCode);
+            setTab("code");
+            setCodeDirty(true);
+            setResults([]);
+          }}
+          label="✨ AI Assistant"
+        />
       </div>
     </main>
   );

@@ -1,4 +1,4 @@
-# Quantum bits and state notation
+# Quantum Bits and State Notation
 
 ## Learning objectives
 

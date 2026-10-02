@@ -108,13 +108,20 @@ export function Results({ result }: { result: Result }) {
   return (
     <Card className="min-w-0 rounded-2xl border-border/80">
       <CardContent className="space-y-4 p-5">
-        <div className="flex flex-wrap justify-between gap-2">
+        <div className="flex flex-wrap items-center justify-between gap-2">
           <h2 className="text-lg font-semibold">
             {engineName} results
           </h2>
-          <span className="text-sm text-muted-foreground">
-            {result.shots} shots · ideal simulation
-          </span>
+          <div className="flex flex-wrap items-center gap-2">
+            {result.noise && (
+              <span className="rounded-full bg-amber/20 px-2.5 py-0.5 font-mono text-xs font-medium text-amber">
+                Physical noise active
+              </span>
+            )}
+            <span className="text-sm text-muted-foreground">
+              {result.shots} shots · {result.noise ? "realistic device noise" : "ideal simulation"}
+            </span>
+          </div>
         </div>
         <p className="text-xs text-muted-foreground">
           Basis order: |
@@ -126,6 +133,9 @@ export function Results({ result }: { result: Result }) {
             <TabsTrigger value="histogram">Histogram</TabsTrigger>
             <TabsTrigger value="state">Statevector</TabsTrigger>
             <TabsTrigger value="bloch">Bloch</TabsTrigger>
+            {n >= 2 && (
+              <TabsTrigger value="correlations">Correlations & Density Matrix</TabsTrigger>
+            )}
             <TabsTrigger value="circuit">Circuit</TabsTrigger>
           </TabsList>
           <TabsContent value="histogram" className="space-y-3">
@@ -196,6 +206,72 @@ export function Results({ result }: { result: Result }) {
               all correlations in the joint state.
             </p>
           </TabsContent>
+          {n >= 2 && (
+            <TabsContent value="correlations" className="space-y-6">
+              <div className="space-y-2">
+                <h3 className="text-sm font-semibold">Pairwise Pauli ZZ Correlations</h3>
+                <p className="text-xs text-muted-foreground">
+                  ⟨Z_A Z_B⟩ measures measurement agreement (+1 = always match, -1 = always opposite, 0 = uncorrelated).
+                </p>
+                <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                  {result.correlations && result.correlations.length > 0 ? (
+                    result.correlations.map((c) => {
+                      const isStrong = Math.abs(c.zz) > 0.8;
+                      return (
+                        <div key={`${c.qA}-${c.qB}`} className="flex items-center justify-between rounded-xl border border-border/80 bg-secondary/30 p-3">
+                          <span className="font-mono text-sm">⟨Z(q{c.qA}) Z(q{c.qB})⟩</span>
+                          <span className={`font-mono text-sm font-bold ${isStrong ? (c.zz > 0 ? "text-success" : "text-violet") : "text-foreground"}`}>
+                            {c.zz >= 0 ? `+${c.zz.toFixed(4)}` : c.zz.toFixed(4)}
+                          </span>
+                        </div>
+                      );
+                    })
+                  ) : (
+                    <p className="text-xs text-muted-foreground">No pairs available.</p>
+                  )}
+                </div>
+              </div>
+
+              {result.densityMatrix && result.densityMatrix.length > 0 && (
+                <div className="space-y-2">
+                  <h3 className="text-sm font-semibold">Joint Density Matrix Re(ρ)</h3>
+                  <p className="text-xs text-muted-foreground">
+                    Off-diagonal elements (coherences) reveal genuine quantum superposition and entanglement.
+                  </p>
+                  <div className="overflow-x-auto rounded-xl border border-border/70 p-2">
+                    <table className="w-full text-center text-xs font-mono">
+                      <tbody>
+                        {Array.from(new Set(result.densityMatrix.map((d) => d.row))).map((r) => (
+                          <tr key={r}>
+                            <td className="p-1 font-semibold text-muted-foreground">|{r}⟩</td>
+                            {result.densityMatrix!.filter((d) => d.row === r).map((d) => {
+                              const absVal = Math.abs(d.real);
+                              return (
+                                <td
+                                  key={d.col}
+                                  className="p-1.5 transition-colors"
+                                  style={{
+                                    backgroundColor: absVal > 0.05
+                                      ? (d.real > 0 ? `rgba(35, 87, 217, ${Math.min(absVal * 0.5, 0.6)})` : `rgba(196, 71, 83, ${Math.min(absVal * 0.5, 0.6)})`)
+                                      : "transparent",
+                                  }}
+                                >
+                                  {d.real.toFixed(3)}
+                                </td>
+                              );
+                            })}
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                  <p className="text-xs text-muted-foreground">
+                    Positive amplitudes are highlighted in blue; negative amplitudes in red. Entangled Bell states show strong off-diagonal corners.
+                  </p>
+                </div>
+              )}
+            </TabsContent>
+          )}
           <TabsContent value="circuit">
             <div className="overflow-x-auto">
               <svg

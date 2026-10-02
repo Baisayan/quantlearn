@@ -1,4 +1,4 @@
-# QAOA and combinatorial optimization
+# QAOA and Combinatorial Optimization
 
 The Quantum Approximate Optimization Algorithm turns a discrete optimization problem into a parameterized circuit. It does not remove the need to define a useful cost function or to search over parameters. Instead, it gives a family of quantum states whose measured bitstrings can be scored by a classical routine. A small MaxCut graph makes every piece visible.
 

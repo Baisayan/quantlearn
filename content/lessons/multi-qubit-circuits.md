@@ -1,4 +1,4 @@
-# Controlled gates, circuit resources and bit ordering
+# Controlled Gates, Circuit Resources and Bit Ordering
 
 ## Learning objectives
 

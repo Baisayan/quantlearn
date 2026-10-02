@@ -1,4 +1,4 @@
-# Observables, expectations and cost functions
+# Observables, Expectations and Cost Functions
 
 Quantum algorithms do not usually hand a classical optimizer a full statevector. They prepare a state, measure selected observables, and turn the resulting counts into numbers. Those numbers become objectives such as a cut score or an energy. This chapter makes that measurement-to-objective pipeline explicit before QAOA and VQE use it.
 

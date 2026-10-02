@@ -1,4 +1,4 @@
-# VQE and energy estimation
+# VQE and Energy Estimation
 
 The Variational Quantum Eigensolver turns energy estimation into a hybrid search. A parameterized circuit prepares candidate states, measurements estimate the Hamiltonian terms, and a classical optimizer changes the parameters. The variational principle supplies a safety rail: for a correctly specified Hamiltonian, the expectation value of any trial state cannot be below the ground-state energy.
 

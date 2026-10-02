@@ -1,4 +1,4 @@
-# Multi-qubit states and tensor products
+# Multi-Qubit States and Tensor Products
 
 ## Learning objectives
 

@@ -53,7 +53,7 @@
       "id": "classical-information",
       "summary": "Separate bits, probabilities, amplitudes and the limits of one measurement.",
       "difficulty": "Beginner",
-      "title": "Classical and quantum information",
+      "title": "Classical and Quantum Information",
       "module": "foundations",
       "order": 1,
       "prerequisites": [],
@@ -78,7 +78,7 @@
       "id": "math-toolkit",
       "summary": "Build the small mathematical toolkit needed to read quantum states and gates.",
       "difficulty": "Beginner",
-      "title": "The mathematics toolkit",
+      "title": "The Mathematics Toolkit",
       "module": "foundations",
       "order": 2,
       "prerequisites": [
@@ -106,7 +106,7 @@
       "id": "qubits",
       "summary": "Read state notation and turn complex amplitudes into probabilities.",
       "difficulty": "Beginner",
-      "title": "Quantum bits and state notation",
+      "title": "Quantum Bits and State Notation",
       "module": "foundations",
       "order": 3,
       "prerequisites": [
@@ -134,7 +134,7 @@
       "id": "superposition-and-phase",
       "summary": "See how relative phase changes interference and measurement outcomes.",
       "difficulty": "Beginner",
-      "title": "Superposition, phase and interference",
+      "title": "Superposition, Phase and Interference",
       "module": "foundations",
       "order": 5,
       "prerequisites": [
@@ -161,7 +161,7 @@
       "id": "measurement",
       "summary": "Distinguish a single outcome, repeated shots and measurement bases.",
       "difficulty": "Beginner",
-      "title": "Measurement and repeated shots",
+      "title": "Measurement and Repeated Shots",
       "module": "foundations",
       "order": 4,
       "prerequisites": [
@@ -189,7 +189,7 @@
       "id": "quantum-circuit-model",
       "summary": "Read a circuit as time, transformations, measurements and classical outputs.",
       "difficulty": "Beginner",
-      "title": "The quantum circuit model",
+      "title": "The Quantum Circuit Model",
       "module": "gates",
       "order": 6,
       "prerequisites": [
@@ -217,7 +217,7 @@
       "id": "single-qubit-gates",
       "summary": "Apply the basic gates and work out why their order matters.",
       "difficulty": "Beginner",
-      "title": "Single-qubit gates",
+      "title": "Single-Qubit Gates",
       "module": "gates",
       "order": 7,
       "prerequisites": [
@@ -245,7 +245,7 @@
       "id": "phase-and-rotation-gates",
       "summary": "Connect phase shifts and rotation angles to measurable probabilities.",
       "difficulty": "Intermediate",
-      "title": "Phase and rotation gates",
+      "title": "Phase and Rotation Gates",
       "module": "gates",
       "order": 8,
       "prerequisites": [
@@ -273,7 +273,7 @@
       "id": "multi-qubit-states",
       "summary": "Build product states, expand tensor products and count amplitudes as registers grow.",
       "difficulty": "Intermediate",
-      "title": "Multi-qubit states and tensor products",
+      "title": "Multi-Qubit States and Tensor Products",
       "module": "gates",
       "order": 9,
       "prerequisites": [
@@ -301,7 +301,7 @@
       "id": "multi-qubit-circuits",
       "summary": "Use controlled gates, measure circuit resources and debug bit-order conventions.",
       "difficulty": "Intermediate",
-      "title": "Controlled gates, circuit resources and bit ordering",
+      "title": "Controlled Gates, Circuit Resources and Bit Ordering",
       "module": "gates",
       "order": 10,
       "prerequisites": [
@@ -330,7 +330,7 @@
       "id": "density-matrices",
       "summary": "Move from pure statevectors to mixed states, reduced states and local Bloch vectors.",
       "difficulty": "Intermediate",
-      "title": "Density matrices and reduced states",
+      "title": "Density Matrices and Reduced States",
       "module": "entanglement",
       "order": 11,
       "prerequisites": [
@@ -358,7 +358,7 @@
       "id": "entanglement",
       "summary": "Select Bell states, compare Z and X correlations and separate coherence from ordinary correlation.",
       "difficulty": "Intermediate",
-      "title": "Bell states and correlations",
+      "title": "Bell States and Correlations",
       "module": "entanglement",
       "order": 12,
       "prerequisites": [
@@ -386,7 +386,7 @@
       "id": "teleportation",
       "summary": "Trace how entanglement and two classical bits transfer a quantum state.",
       "difficulty": "Intermediate",
-      "title": "Teleportation and classical control",
+      "title": "Teleportation and Classical Control",
       "module": "entanglement",
       "order": 13,
       "prerequisites": [
@@ -413,7 +413,7 @@
       "id": "no-cloning-and-no-signalling",
       "summary": "Use linearity and reduced states to see what entanglement cannot clone, signal or reveal early.",
       "difficulty": "Intermediate",
-      "title": "No-cloning, no-signalling and limits of entanglement",
+      "title": "No-Cloning, No-Signalling and Limits of Entanglement",
       "module": "entanglement",
       "order": 14,
       "prerequisites": [
@@ -441,7 +441,7 @@
       "id": "oracles-and-phase-kickback",
       "summary": "Turn Boolean query rules into reversible circuits and make a helper qubit carry a phase.",
       "difficulty": "Intermediate",
-      "title": "Oracles and phase kickback",
+      "title": "Oracles and Phase Kickback",
       "module": "algorithms",
       "order": 15,
       "prerequisites": [
@@ -499,7 +499,7 @@
       "id": "grover",
       "summary": "Follow a phase oracle and diffusion step to amplify a marked answer.",
       "difficulty": "Intermediate",
-      "title": "Grover search and amplitude amplification",
+      "title": "Grover Search and Amplitude Amplification",
       "module": "algorithms",
       "order": 17,
       "prerequisites": [
@@ -528,7 +528,7 @@
       "id": "observables-and-expectations",
       "summary": "Turn measurement counts into expectation values and small cost estimates.",
       "difficulty": "Intermediate",
-      "title": "Observables, expectations and cost functions",
+      "title": "Observables, Expectations and Cost Functions",
       "module": "algorithms",
       "order": 18,
       "prerequisites": [
@@ -557,7 +557,7 @@
       "id": "qaoa",
       "summary": "Encode a small MaxCut problem and trace a cost and mixer layer.",
       "difficulty": "Advanced",
-      "title": "QAOA and combinatorial optimization",
+      "title": "QAOA and Combinatorial Optimization",
       "module": "algorithms",
       "order": 19,
       "prerequisites": [
@@ -587,7 +587,7 @@
       "id": "vqe",
       "summary": "Estimate an energy and check a variational ansatz against an exact minimum.",
       "difficulty": "Advanced",
-      "title": "VQE and energy estimation",
+      "title": "VQE and Energy Estimation",
       "module": "algorithms",
       "order": 20,
       "prerequisites": [
@@ -617,7 +617,7 @@
       "id": "simulation-and-noise",
       "summary": "Choose a simulation representation and separate exact state, finite shots and noise.",
       "difficulty": "Intermediate",
-      "title": "Simulation foundations",
+      "title": "Simulation Foundations",
       "module": "execution",
       "order": 21,
       "prerequisites": [
@@ -736,7 +736,7 @@
       "id": "aer-and-cirq",
       "summary": "Normalize one circuit across Aer, Cirq and PennyLane and debug a framework mismatch.",
       "difficulty": "Intermediate",
-      "title": "Cross-framework comparison and capstone",
+      "title": "Cross-Framework Comparison and Capstone",
       "module": "execution",
       "order": 25,
       "prerequisites": [

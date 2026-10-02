@@ -23,6 +23,150 @@ import {
   Operation,
 } from "@/lib/lab/types";
 
+type GateCategory = "superposition" | "pauli" | "rotation" | "entangling";
+
+interface GateInfo {
+  name: string;
+  category: GateCategory;
+  description: string;
+  matrix: string;
+  multiQubit?: boolean;
+}
+
+const GATE_INFO: Record<Gate, GateInfo> = {
+  h: {
+    name: "Hadamard",
+    category: "superposition",
+    description: "Creates equal superposition: |0⟩ → (|0⟩+|1⟩)/√2",
+    matrix: "1/√2 [[1, 1], [1, -1]]",
+  },
+  x: {
+    name: "Pauli-X",
+    category: "pauli",
+    description: "Bit-flip / quantum NOT: |0⟩ ↔ |1⟩",
+    matrix: "[[0, 1], [1, 0]]",
+  },
+  y: {
+    name: "Pauli-Y",
+    category: "pauli",
+    description: "Bit and phase flip: |0⟩ → i|1⟩, |1⟩ → -i|0⟩",
+    matrix: "[[0, -i], [i, 0]]",
+  },
+  z: {
+    name: "Pauli-Z",
+    category: "pauli",
+    description: "Phase flip: leaves |0⟩, inverts |1⟩ → -|1⟩",
+    matrix: "[[1, 0], [0, -1]]",
+  },
+  s: {
+    name: "Phase S (√Z)",
+    category: "rotation",
+    description: "Quarter-turn phase shift: π/2 rotation about Z",
+    matrix: "[[1, 0], [0, i]]",
+  },
+  t: {
+    name: "Phase T (∜Z)",
+    category: "rotation",
+    description: "Eighth-turn phase shift: π/4 rotation about Z",
+    matrix: "[[1, 0], [0, e^(iπ/4)]]",
+  },
+  rx: {
+    name: "Rotation X",
+    category: "rotation",
+    description: "Continuous rotation by angle θ around X axis",
+    matrix: "[[cos(θ/2), -i sin(θ/2)], [-i sin(θ/2), cos(θ/2)]]",
+  },
+  ry: {
+    name: "Rotation Y",
+    category: "rotation",
+    description: "Continuous rotation by angle θ around Y axis",
+    matrix: "[[cos(θ/2), -sin(θ/2)], [sin(θ/2), cos(θ/2)]]",
+  },
+  rz: {
+    name: "Rotation Z",
+    category: "rotation",
+    description: "Continuous rotation by angle θ around Z axis",
+    matrix: "[[e^(-iθ/2), 0], [0, e^(iθ/2)]]",
+  },
+  cx: {
+    name: "CNOT (Controlled-X)",
+    category: "entangling",
+    description: "Flips target wire if control wire is |1⟩",
+    matrix: "4×4 Permutation Unitary",
+    multiQubit: true,
+  },
+  cz: {
+    name: "Controlled-Z",
+    category: "entangling",
+    description: "Applies phase-flip if both qubits are |1⟩",
+    matrix: "diag(1, 1, 1, -1)",
+    multiQubit: true,
+  },
+  swap: {
+    name: "SWAP Gate",
+    category: "entangling",
+    description: "Swaps the quantum states of two qubits",
+    matrix: "4×4 Swap Unitary",
+    multiQubit: true,
+  },
+  rzz: {
+    name: "Ising ZZ Rotation",
+    category: "entangling",
+    description: "Two-qubit ZZ interaction by angle θ",
+    matrix: "exp(-i θ/2 Z⊗Z)",
+    multiQubit: true,
+  },
+};
+
+const CATEGORY_STYLES: Record<
+  GateCategory,
+  {
+    title: string;
+    border: string;
+    activeBg: string;
+    hoverBg: string;
+  }
+> = {
+  superposition: {
+    title: "Superposition",
+    border: "border-cyan-500/40",
+    activeBg: "bg-cyan-500/20 border-cyan-500 text-cyan-600 dark:text-cyan-300 font-bold",
+    hoverBg: "hover:border-cyan-500/60 hover:bg-cyan-500/10",
+  },
+  pauli: {
+    title: "Pauli Flips",
+    border: "border-amber-500/40",
+    activeBg: "bg-amber-500/20 border-amber-500 text-amber-600 dark:text-amber-300 font-bold",
+    hoverBg: "hover:border-amber-500/60 hover:bg-amber-500/10",
+  },
+  rotation: {
+    title: "Phase & Rotations",
+    border: "border-violet-500/40",
+    activeBg: "bg-violet-500/20 border-violet-500 text-violet-600 dark:text-violet-300 font-bold",
+    hoverBg: "hover:border-violet-500/60 hover:bg-violet-500/10",
+  },
+  entangling: {
+    title: "Multi-Qubit (2Q)",
+    border: "border-emerald-500/40",
+    activeBg: "bg-emerald-500/20 border-emerald-500 text-emerald-600 dark:text-emerald-300 font-bold",
+    hoverBg: "hover:border-emerald-500/60 hover:bg-emerald-500/10",
+  },
+};
+
+const CATEGORY_GATES: Record<GateCategory, Gate[]> = {
+  superposition: ["h"],
+  pauli: ["x", "y", "z"],
+  rotation: ["s", "t", "rx", "ry", "rz"],
+  entangling: ["cx", "cz", "swap", "rzz"],
+};
+
+const ANGLE_PRESETS = [
+  { label: "π/4", value: (Math.PI / 4).toString() },
+  { label: "π/2", value: (Math.PI / 2).toString() },
+  { label: "π", value: Math.PI.toString() },
+  { label: "2π", value: (2 * Math.PI).toString() },
+];
+
 function GateButton({
   gate,
   selected,
@@ -35,17 +179,30 @@ function GateButton({
   const { attributes, listeners, setNodeRef, isDragging } = useDraggable({
     id: gate,
   });
+  const spec = GATE_INFO[gate];
+  const cat = CATEGORY_STYLES[spec.category];
+  const activeClass = selected
+    ? `${cat.activeBg} ring-2 ring-primary/40`
+    : `bg-card border border-border/80 ${cat.hoverBg} text-foreground`;
+
   return (
     <Button
       ref={setNodeRef}
       {...attributes}
       {...listeners}
       onClick={onClick}
-      variant={selected ? "default" : "outline"}
-      className={`touch-none rounded-md ${isDragging ? "opacity-40" : ""}`}
+      variant="ghost"
+      title={`${spec.name}: ${spec.description}`}
+      className={`touch-none h-9 px-3 font-mono font-medium rounded-md transition-all duration-150 ${activeClass} ${isDragging ? "opacity-40" : ""}`}
       aria-label={`Select or drag ${gate.toUpperCase()} gate`}
     >
-      {gate.toUpperCase()}
+      <span>{gate.toUpperCase()}</span>
+      {spec.multiQubit && (
+        <span className="ml-1 text-[9px] opacity-70">2Q</span>
+      )}
+      {isRotation(gate) && (
+        <span className="ml-0.5 text-[9px] opacity-70">θ</span>
+      )}
     </Button>
   );
 }
@@ -67,20 +224,46 @@ function Cell({
   });
   const here =
     operation && operation.targets.includes(row) ? operation : undefined;
-  const drag = useDraggable({ id: `operation:${column}:${row}`, disabled: !here || here.targets[0] !== row, data: { column, gate: here?.gate } });
+  const drag = useDraggable({
+    id: `operation:${column}:${row}`,
+    disabled: !here || here.targets[0] !== row,
+    data: { column, gate: here?.gate },
+  });
+
+  const isControl = here && here.targets[0] === row && ["cx", "cz"].includes(here.gate);
   const label = here
-    ? here.targets[0] === row && ["cx", "cz"].includes(here.gate)
+    ? isControl
       ? "●"
       : here.gate.toUpperCase()
     : "─";
+
+  const spec = here ? GATE_INFO[here.gate] : undefined;
+  const cat = spec ? CATEGORY_STYLES[spec.category] : undefined;
+
+  let cellClass = "m-1 min-w-14 rounded-md font-mono transition-all duration-200 ";
+  if (isOver) cellClass += "ring-2 ring-primary ";
+
+  if (!here) {
+    cellClass += "text-muted-foreground/30 hover:bg-muted/40 hover:text-foreground";
+  } else if (isControl) {
+    cellClass += "bg-emerald-500/20 text-emerald-500 border border-emerald-500/60 font-bold shadow-sm";
+  } else if (cat) {
+    cellClass += `${cat.activeBg} border shadow-sm`;
+  } else {
+    cellClass += "bg-secondary text-secondary-foreground";
+  }
+
   return (
     <Button
-      ref={node => { setNodeRef(node); drag.setNodeRef(node); }}
+      ref={(node) => {
+        setNodeRef(node);
+        drag.setNodeRef(node);
+      }}
       {...(here?.targets[0] === row ? drag.attributes : {})}
       {...(here?.targets[0] === row ? drag.listeners : {})}
-      variant={here ? "secondary" : "ghost"}
+      variant="ghost"
       onClick={onClick}
-      className={`m-1 min-w-14 rounded-md font-mono ${isOver ? "ring-2 ring-primary" : ""}`}
+      className={cellClass}
       aria-label={`q${row}, step ${column + 1}${here ? `, ${here.gate.toUpperCase()}` : ", empty"}`}
     >
       {label}
@@ -184,23 +367,93 @@ export function CircuitEditor({
             </div>
           )}
         </DragOverlay>
-        <div className="flex flex-wrap gap-2">
-          {gates.map((g) => (
-            <GateButton
-              key={g}
-              gate={g}
-              selected={gate === g}
-              onClick={() => {
-                setGate(g);
-                setPending(null);
-                setMessage("");
-              }}
-            />
-          ))}
+        {/* IBM Quantum Composer-style Categorized Gate Palette */}
+        <div className="space-y-3 rounded-xl border border-border/80 bg-card/60 p-3.5 backdrop-blur-sm shadow-sm">
+          <div className="flex items-center justify-between border-b border-border/50 pb-2">
+            <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+              Quantum Gate Palette (IBM Composer Standard)
+            </span>
+            <span className="text-[11px] text-muted-foreground/80">
+              Drag to wire or click to place
+            </span>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+            {(Object.keys(CATEGORY_GATES) as GateCategory[]).map((catKey) => {
+              const cat = CATEGORY_STYLES[catKey];
+              const catGates = CATEGORY_GATES[catKey];
+              return (
+                <div
+                  key={catKey}
+                  className={`rounded-lg border ${cat.border} bg-background/50 p-2.5 flex flex-col justify-between`}
+                >
+                  <div className="mb-2 flex items-center justify-between">
+                    <span className="text-xs font-semibold text-foreground/90">
+                      {cat.title}
+                    </span>
+                    <span className="text-[10px] text-muted-foreground font-mono">
+                      {catGates.length} {catGates.length === 1 ? "gate" : "gates"}
+                    </span>
+                  </div>
+                  <div className="flex flex-wrap gap-1.5">
+                    {catGates.map((g) => (
+                      <GateButton
+                        key={g}
+                        gate={g}
+                        selected={gate === g}
+                        onClick={() => {
+                          setGate(g);
+                          setPending(null);
+                          setMessage("");
+                        }}
+                      />
+                    ))}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Active Gate Inspection & Parameter Controls */}
+          <div className="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-border/60 bg-muted/20 p-2.5 text-xs">
+            <div className="flex items-center gap-2.5 flex-wrap">
+              <span className="font-semibold text-foreground">
+                Selected: <span className="font-mono text-primary font-bold">{gate.toUpperCase()}</span> ({GATE_INFO[gate]?.name})
+              </span>
+              <span className="text-muted-foreground hidden md:inline">•</span>
+              <span className="text-muted-foreground hidden md:inline">
+                {GATE_INFO[gate]?.description}
+              </span>
+              <span className="font-mono text-[11px] bg-background/80 px-2 py-0.5 rounded border border-border/60 text-muted-foreground">
+                U = {GATE_INFO[gate]?.matrix}
+              </span>
+            </div>
+
+            {(isRotation(gate) || gate === "rzz") && (
+              <div className="flex items-center gap-2">
+                <span className="text-muted-foreground font-medium">θ presets:</span>
+                <div className="flex gap-1">
+                  {ANGLE_PRESETS.map((p) => (
+                    <Button
+                      key={p.label}
+                      type="button"
+                      size="sm"
+                      variant={angle === p.value ? "default" : "outline"}
+                      className="h-6 px-2 text-xs font-mono"
+                      onClick={() => setAngle(p.value)}
+                    >
+                      {p.label}
+                    </Button>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
         </div>
+
         <div className="flex flex-wrap items-end gap-3">
           <div className="space-y-1">
-            <Label htmlFor="angle">Rotation angle (radians)</Label>
+            <Label htmlFor="angle" className="text-xs">Rotation angle θ (radians)</Label>
             <Input
               id="angle"
               type="number"
@@ -209,17 +462,18 @@ export function CircuitEditor({
               max={100}
               value={angle}
               onChange={(e) => setAngle(e.target.value)}
-              className="w-48"
+              className="w-48 h-8 text-xs font-mono"
             />
           </div>
           <Button
             variant="outline"
+            size="sm"
             onClick={() => {
               setPending(null);
               setMessage("");
             }}
           >
-            Cancel selection
+            Cancel wire target
           </Button>
         </div>
         <p className="text-sm text-muted-foreground">

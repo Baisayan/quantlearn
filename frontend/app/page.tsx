@@ -3,13 +3,17 @@ import {
   ArrowRight,
   BookOpen,
   ChartNoAxesCombined,
+  CheckCircle2,
+  ChevronRight,
   FlaskConical,
   Infinity,
   Sparkles,
+  Trophy,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { QuantumSymbol } from "@/components/brand/logo";
 
 const eyebrow = "font-mono text-xs font-semibold uppercase leading-tight tracking-widest";
 
@@ -55,6 +59,59 @@ const heroSignals = [
   { title: "Interactive", subtitle: "lessons", icon: BookOpen },
   { title: "Real quantum", subtitle: "experiments", icon: FlaskConical },
   { title: "Visual results", subtitle: "and progress", icon: ChartNoAxesCombined },
+] as const;
+
+const learningPipeline = [
+  {
+    step: "01",
+    title: "Visual Lessons",
+    subtitle: "Interactive Intuition",
+    description: "Understand superposition, phase kickback, and entanglement through live Bloch spheres and math visuals.",
+    icon: BookOpen,
+    accent: "border-cyan-500/40 text-cyan-600 dark:text-cyan-400 bg-cyan-500/10",
+    badge: "border-cyan-500/30 bg-cyan-500/15 text-cyan-600 dark:text-cyan-300",
+    href: "/learn",
+  },
+  {
+    step: "02",
+    title: "Concept Quizzes",
+    subtitle: "Instant Validation",
+    description: "Solidify your grasp with conceptual MCQs and immediate Socratic explanations after each chapter.",
+    icon: CheckCircle2,
+    accent: "border-amber-500/40 text-amber-600 dark:text-amber-400 bg-amber-500/10",
+    badge: "border-amber-500/30 bg-amber-500/15 text-amber-600 dark:text-amber-300",
+    href: "/learn/superposition-and-phase",
+  },
+  {
+    step: "03",
+    title: "Multi-Engine Lab",
+    subtitle: "Hands-on Composer",
+    description: "Assemble circuits with an IBM-style palette or Python. Simulate on Qiskit Aer, Cirq & PennyLane.",
+    icon: FlaskConical,
+    accent: "border-emerald-500/40 text-emerald-600 dark:text-emerald-400 bg-emerald-500/10",
+    badge: "border-emerald-500/30 bg-emerald-500/15 text-emerald-600 dark:text-emerald-300",
+    href: "/lab",
+  },
+  {
+    step: "04",
+    title: "AI Tutor",
+    subtitle: "24/7 Deep Mentorship",
+    description: "Ask Gemini to diagnose incorrect answers, suggest hints, and break down complex gate matrices.",
+    icon: Sparkles,
+    accent: "border-violet-500/40 text-violet-600 dark:text-violet-400 bg-violet-500/10",
+    badge: "border-violet-500/30 bg-violet-500/15 text-violet-600 dark:text-violet-300",
+    href: "/lab",
+  },
+  {
+    step: "05",
+    title: "Gamified Mastery",
+    subtitle: "Fidelity & Streaks",
+    description: "Track state fidelity, earn XP points, build study streaks, and spot areas needing attention.",
+    icon: Trophy,
+    accent: "border-rose-500/40 text-rose-600 dark:text-rose-400 bg-rose-500/10",
+    badge: "border-rose-500/30 bg-rose-500/15 text-rose-600 dark:text-rose-300",
+    href: "/progress",
+  },
 ] as const;
 
 function CircuitPreview() {
@@ -291,6 +348,97 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Learning Pipeline: How QuantLearn Works */}
+      <section
+        id="learning-pipeline"
+        className="scroll-mt-24 border-b border-border/70 bg-gradient-to-b from-background via-surface-alt/40 to-background py-14 sm:py-18 lg:py-20"
+        aria-labelledby="pipeline-heading"
+      >
+        <div className="mx-auto w-full max-w-7xl px-5 sm:px-8 lg:px-10">
+          <div className="flex flex-col items-center text-center">
+            <p className={`${eyebrow} text-primary`}>The Learning Pipeline</p>
+            <h2
+              id="pipeline-heading"
+              className="mt-3 max-w-2xl text-3xl font-semibold leading-tight tracking-tight sm:text-4xl"
+            >
+              How QuantLearn Rebuilds Your Quantum Intuition
+            </h2>
+            <p className="mt-3.5 max-w-xl text-base leading-7 text-muted-foreground">
+              A continuous 5-step feedback loop designed to take you from abstract theory to confident quantum circuit builder.
+            </p>
+          </div>
+
+          {/* Horizontal Connected Pipeline */}
+          <div className="mt-12 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5 relative">
+            {learningPipeline.map((item, index) => {
+              const Icon = item.icon;
+              return (
+                <div key={item.step} className="group relative flex flex-col">
+                  <Link
+                    href={item.href}
+                    className="flex flex-1 flex-col justify-between rounded-2xl border border-border/80 bg-card/70 p-5 backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:border-primary/50 hover:shadow-lg hover:shadow-primary/5 focus-visible:outline-2 focus-visible:outline-primary"
+                  >
+                    <div>
+                      {/* Step Header */}
+                      <div className="flex items-center justify-between pb-3">
+                        <span className={`inline-flex items-center rounded-md border px-2 py-0.5 font-mono text-[11px] font-bold ${item.badge}`}>
+                          Step {item.step}
+                        </span>
+                        <div className={`flex size-9 items-center justify-center rounded-xl border ${item.accent} transition-transform duration-300 group-hover:scale-110`}>
+                          <Icon className="size-4" strokeWidth={2} />
+                        </div>
+                      </div>
+
+                      <h3 className="mt-2 text-base font-bold tracking-tight text-foreground group-hover:text-primary transition-colors">
+                        {item.title}
+                      </h3>
+                      <p className="font-mono text-[11px] font-medium text-muted-foreground uppercase tracking-wider">
+                        {item.subtitle}
+                      </p>
+
+                      <p className="mt-2.5 text-xs leading-relaxed text-muted-foreground">
+                        {item.description}
+                      </p>
+                    </div>
+
+                    <div className="mt-4 flex items-center gap-1 text-xs font-semibold text-primary opacity-0 transition-opacity duration-200 group-hover:opacity-100">
+                      <span>Explore</span>
+                      <ChevronRight className="size-3.5" />
+                    </div>
+                  </Link>
+
+                  {/* Desktop connector arrow between steps */}
+                  {index < learningPipeline.length - 1 && (
+                    <div
+                      aria-hidden="true"
+                      className="hidden lg:flex absolute -right-3 top-1/2 -translate-y-1/2 z-10 size-6 items-center justify-center rounded-full border border-border/80 bg-card text-muted-foreground/60 shadow-sm"
+                    >
+                      <ChevronRight className="size-3.5" />
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Quick Flow CTA */}
+          <div className="mt-10 flex flex-wrap items-center justify-center gap-4 text-center">
+            <Button asChild size="lg" className="gap-2 shadow-md shadow-primary/20">
+              <Link href="/learn">
+                <span>Start Learning Pipeline with Chapter 1</span>
+                <ArrowRight className="size-4" />
+              </Link>
+            </Button>
+            <Button asChild size="lg" variant="outline" className="gap-2">
+              <Link href="/lab">
+                <span>Jump Straight into Lab</span>
+                <FlaskConical className="size-4" />
+              </Link>
+            </Button>
+          </div>
+        </div>
+      </section>
+
       <section id="problem" className="scroll-mt-24 bg-surface-alt py-14 sm:py-16 lg:py-20" aria-labelledby="problem-heading">
         <div className="mx-auto grid w-full max-w-7xl gap-8 px-5 sm:px-8 lg:grid-cols-5 lg:gap-12 lg:px-10">
           <div className="lg:col-span-2">
@@ -385,8 +533,11 @@ export default function Home() {
       </section>
 
       <footer className="border-t border-border/70 bg-background px-5 py-4 sm:px-8 lg:px-10">
-        <div className="mx-auto flex w-full max-w-6xl gap-3 text-sm text-muted-foreground sm:items-center sm:justify-between">
-          <p>© 2026 QuantLearn. Made by Ved with ❤️.</p>
+        <div className="mx-auto flex w-full max-w-6xl flex-col gap-3 text-sm text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex items-center gap-2">
+            <QuantumSymbol className="size-4.5" />
+            <p>© 2026 QuantLearn. Made by Ved with ❤️.</p>
+          </div>
           <a
             href="https://github.com/Baisayan/quantlearn"
             target="_blank"

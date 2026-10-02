@@ -1,4 +1,4 @@
-# The mathematics toolkit
+# The Mathematics Toolkit
 
 ## Learning objectives
 

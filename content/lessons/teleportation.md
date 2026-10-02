@@ -1,4 +1,4 @@
-# Quantum teleportation
+# Teleportation and Classical Control
 
 ## Learning objectives
 

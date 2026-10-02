@@ -44,10 +44,20 @@ export function AIPanel({
   context,
   label = "Ask Tutor",
   title = "QuantLearn Tutor",
+  onApplyCode,
+  initialQuestion,
+  triggerVariant = "outline",
+  triggerSize = "default",
+  triggerClassName,
 }: {
   context: AIContext;
   label?: string;
   title?: string;
+  onApplyCode?: (code: string) => void;
+  initialQuestion?: string;
+  triggerVariant?: "default" | "outline" | "secondary" | "ghost" | "link";
+  triggerSize?: "default" | "sm" | "lg" | "icon";
+  triggerClassName?: string;
 }) {
   const [open, setOpen] = useState(false);
   const [input, setInput] = useState("");
@@ -80,6 +90,12 @@ export function AIPanel({
   useEffect(() => {
     if (open) end.current?.scrollIntoView({ block: "nearest" });
   }, [messages, pending, open]);
+
+  useEffect(() => {
+    if (open && initialQuestion && messages.length === 0 && !pending) {
+      ask(initialQuestion);
+    }
+  }, [open, initialQuestion]);
 
   async function ask(question: string) {
     if (!question.trim() || controller.current) return;
@@ -139,11 +155,15 @@ export function AIPanel({
     >
       <SheetTrigger asChild>
         <Button
-          variant="outline"
-          className="rounded-md border-violet/30 bg-card text-violet-foreground hover:bg-violet-soft hover:text-violet-foreground"
+          variant={triggerVariant}
+          size={triggerSize}
+          className={
+            triggerClassName ||
+            "rounded-md border-violet/30 bg-card text-violet-foreground hover:bg-violet-soft hover:text-violet-foreground"
+          }
         >
-          <Sparkles className="size-4" aria-hidden="true" />
-          {label}
+          <Sparkles className="size-4 shrink-0" aria-hidden="true" />
+          <span>{label}</span>
         </Button>
       </SheetTrigger>
       <SheetContent className="flex w-full flex-col bg-card p-0 sm:max-w-lg">
@@ -202,6 +222,31 @@ export function AIPanel({
                         ) : (
                           <span>{children}</span>
                         ),
+                      pre: ({ children }) => {
+                        let rawText = "";
+                        if (children && typeof children === "object" && "props" in (children as unknown as Record<string, unknown>)) {
+                          const inner = (children as unknown as { props?: { children?: unknown } }).props?.children;
+                          if (typeof inner === "string") rawText = inner;
+                        }
+                        const isCircuitCode = rawText.includes("QuantumCircuit") || rawText.includes("cirq.") || rawText.includes("qml.");
+                        return (
+                          <div className="relative group my-2">
+                            <pre className="overflow-x-auto rounded-lg bg-secondary/50 p-3 text-xs font-mono">{children}</pre>
+                            {onApplyCode && isCircuitCode && (
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  onApplyCode(rawText.trim());
+                                  setOpen(false);
+                                }}
+                                className="mt-1.5 inline-flex items-center gap-1.5 rounded-md bg-primary px-2.5 py-1 text-xs font-medium text-primary-foreground shadow-sm hover:bg-primary/90 transition-colors"
+                              >
+                                ⚡ Apply to Lab Editor
+                              </button>
+                            )}
+                          </div>
+                        );
+                      },
                     }}
                   >
                     {message.text}

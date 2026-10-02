@@ -1,4 +1,4 @@
-# Cross-framework comparison and capstone
+# Cross-Framework Comparison and Capstone
 
 The final chapter turns three framework lessons into one debugging method. Qiskit Aer, Cirq and PennyLane can represent the same ideal circuit, but they expose wires, state arrays, measurements, seeds and return values differently. A fair comparison first normalizes the logical experiment, then compares exact probabilities, then compares statevectors up to global phase, and only then compares finite samples.
 

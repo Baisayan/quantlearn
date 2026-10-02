@@ -1,4 +1,4 @@
-# Single-qubit gates
+# Single-Qubit Gates
 
 ## Learning objectives
 

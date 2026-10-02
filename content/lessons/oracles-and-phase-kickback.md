@@ -1,4 +1,4 @@
-# Oracles and phase kickback
+# Oracles and Phase Kickback
 
 An oracle is a carefully designed interface to a question. In a quantum algorithm, it is not a mysterious source of answers and it is not a measurement. It is a reversible circuit that marks the answer in a way that later interference can use. This distinction is the bridge from basic gates to algorithms such as Deutsch-Jozsa and Grover search.
 

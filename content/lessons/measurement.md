@@ -1,4 +1,4 @@
-# Measurement and repeated shots
+# Measurement and Repeated Shots
 
 ## Learning objectives
 

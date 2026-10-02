@@ -7,7 +7,7 @@ from qiskit_aer import AerSimulator
 from .models import Circuit
 
 
-def aer(circuit: Circuit, shots: int, seed: int):
+def aer(circuit: Circuit, shots: int, seed: int, noise: bool = False):
     qc = QuantumCircuit(circuit.qubits)
     for op in circuit.operations:
         args = ([op.angle] if op.angle is not None else []) + op.targets
@@ -17,11 +17,22 @@ def aer(circuit: Circuit, shots: int, seed: int):
     simulator = AerSimulator(method='statevector', max_parallel_threads=1)
     state = np.asarray(simulator.run(transpile(exact, simulator), seed_simulator=seed).result().data(0)['statevector'])
     qc.measure_all()
-    counts = simulator.run(transpile(qc, simulator), shots=shots, seed_simulator=seed).result().get_counts()
+    if noise:
+        from qiskit_aer.noise import NoiseModel, depolarizing_error, ReadoutError
+        noise_model = NoiseModel()
+        error_1q = depolarizing_error(0.002, 1)
+        noise_model.add_all_qubit_quantum_error(error_1q, ['h', 'x', 'y', 'z', 's', 't', 'rx', 'ry', 'rz'])
+        error_2q = depolarizing_error(0.015, 2)
+        noise_model.add_all_qubit_quantum_error(error_2q, ['cx', 'cz', 'swap', 'rzz'])
+        readout = ReadoutError([[0.98, 0.02], [0.02, 0.98]])
+        noise_model.add_all_qubit_readout_error(readout)
+        counts = simulator.run(transpile(qc, simulator), shots=shots, seed_simulator=seed, noise_model=noise_model).result().get_counts()
+    else:
+        counts = simulator.run(transpile(qc, simulator), shots=shots, seed_simulator=seed).result().get_counts()
     return state, counts
 
 
-def cirq_engine(circuit: Circuit, shots: int, seed: int):
+def cirq_engine(circuit: Circuit, shots: int, seed: int, noise: bool = False):
     qubits = cirq.LineQubit.range(circuit.qubits)
     qc = cirq.Circuit(cirq.I(q) for q in qubits)
     fixed = {'h': cirq.H, 'x': cirq.X, 'y': cirq.Y, 'z': cirq.Z, 's': cirq.S, 't': cirq.T, 'cx': cirq.CNOT, 'cz': cirq.CZ, 'swap': cirq.SWAP}
@@ -70,7 +81,7 @@ def _reverse_bits(index: int, width: int):
     return int(format(index, f'0{width}b')[::-1], 2)
 
 
-def pennylane_engine(circuit: Circuit, shots: int, seed: int):
+def pennylane_engine(circuit: Circuit, shots: int, seed: int, noise: bool = False):
     """Run the shared circuit with PennyLane's local default.qubit device."""
     exact_device = qml.device('default.qubit', wires=circuit.qubits)
 
@@ -105,12 +116,47 @@ def pennylane_engine(circuit: Circuit, shots: int, seed: int):
 ENGINES = {'aer': aer, 'cirq': cirq_engine, 'pennylane': pennylane_engine}
 
 
-def normalize(state, counts, circuit, engine, shots):
+def normalize(state, counts, circuit, engine, shots, noise: bool = False):
     bloch = []
     for q in range(circuit.qubits):
         pairs = [(i, i | (1 << q)) for i in range(len(state)) if not i & (1 << q)]
         coherence = sum(np.conj(state[a]) * state[b] for a, b in pairs)
         z = sum(abs(state[a]) ** 2 - abs(state[b]) ** 2 for a, b in pairs)
         bloch.append({'qubit': q, 'x': float(2 * coherence.real), 'y': float(2 * coherence.imag), 'z': float(z)})
-    return {'engine': engine, 'shots': shots, 'circuit': circuit.model_dump(exclude_none=True), 'counts': counts,
-            'statevector': [{'basis': format(i, f'0{circuit.qubits}b'), 'real': float(v.real), 'imag': float(v.imag), 'probability': float(abs(v) ** 2)} for i, v in enumerate(state)], 'bloch': bloch}
+
+    # Calculate two-qubit ZZ correlations for entangled pair diagnostics
+    correlations = []
+    for a in range(circuit.qubits):
+        for b in range(a + 1, circuit.qubits):
+            zz = sum(
+                abs(state[k]) ** 2 * (1 if (((k >> a) & 1) == ((k >> b) & 1)) else -1)
+                for k in range(len(state))
+            )
+            correlations.append({'qA': a, 'qB': b, 'zz': float(zz)})
+
+    dim = min(len(state), 8)
+    density_matrix = [
+        {
+            'row': format(r, f'0{circuit.qubits}b'),
+            'col': format(c, f'0{circuit.qubits}b'),
+            'real': float((state[r] * np.conj(state[c])).real),
+            'imag': float((state[r] * np.conj(state[c])).imag),
+        }
+        for r in range(dim)
+        for c in range(dim)
+    ]
+
+    return {
+        'engine': engine,
+        'shots': shots,
+        'noise': noise,
+        'circuit': circuit.model_dump(exclude_none=True),
+        'counts': counts,
+        'statevector': [
+            {'basis': format(i, f'0{circuit.qubits}b'), 'real': float(v.real), 'imag': float(v.imag), 'probability': float(abs(v) ** 2)}
+            for i, v in enumerate(state)
+        ],
+        'bloch': bloch,
+        'correlations': correlations,
+        'densityMatrix': density_matrix,
+    }

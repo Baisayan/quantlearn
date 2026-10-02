@@ -1,4 +1,4 @@
-# Bell states and correlations
+# Bell States and Correlations
 
 ## Learning objectives
 

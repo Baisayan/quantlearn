@@ -18,7 +18,7 @@ load_dotenv(ROOT / 'backend' / '.env')
 CHALLENGES = json.loads((ROOT / 'content/lab/challenges.json').read_text())
 FIXTURES = {c['id']: c for c in json.loads((ROOT / 'content/examples/circuits.json').read_text())['circuits']}
 app = FastAPI(title='QuantLearn Lab', version='1.0.0')
-slots = BoundedSemaphore(2)
+slots = BoundedSemaphore(8)
 
 
 class BodyLimit:
@@ -73,10 +73,10 @@ def execute(request):
         circuit = parse_code(request.code, request.engine) if request.code is not None else request.circuit
     except (ValueError, RecursionError) as exc:
         raise HTTPException(422, str(exc)) from exc
-    if not slots.acquire(blocking=False): raise HTTPException(429, 'The simulator is busy. Try again shortly.')
+    if not slots.acquire(timeout=10.0): raise HTTPException(429, 'The simulator is busy. Try again shortly.')
     try:
-        state, counts = ENGINES[request.engine](circuit, request.shots, request.seed)
-        result = normalize(state, counts, circuit, request.engine, request.shots)
+        state, counts = ENGINES[request.engine](circuit, request.shots, request.seed, noise=request.noise)
+        result = normalize(state, counts, circuit, request.engine, request.shots, noise=request.noise)
         result['energy'] = result['bloch'][0]['z'] + 0.5 * result['bloch'][0]['x'] if circuit.qubits == 1 else None
         result['cutScore'] = sum(v['probability'] for v in result['statevector'] if v['basis'] in ('01', '10')) if circuit.qubits == 2 else None
         return circuit, state, result

@@ -25,7 +25,7 @@ class Operation(BaseModel):
 
 class Circuit(BaseModel):
     model_config = ConfigDict(extra='forbid')
-    qubits: int = Field(ge=1, le=3, strict=True)
+    qubits: int = Field(ge=1, le=5, strict=True)
     operations: list[Operation] = Field(default_factory=list, max_length=48)
 
     @model_validator(mode='after')
@@ -44,6 +44,7 @@ class RunRequest(BaseModel):
     seed: int = Field(default=42, ge=0, le=2147483647, strict=True)
     challengeId: str | None = Field(default=None, max_length=80)
     attemptId: str | None = None
+    noise: bool = False
 
     @model_validator(mode='after')
     def check_source(self):
