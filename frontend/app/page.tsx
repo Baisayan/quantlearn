@@ -16,7 +16,6 @@ import {
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { QuantumSymbol } from "@/components/brand/logo";
 
 const eyebrow = "font-mono text-xs font-semibold uppercase leading-tight tracking-widest";
 
@@ -598,24 +597,6 @@ export default function Home() {
           </div>
         </div>
       </section>
-
-      <footer className="border-t border-border/70 bg-background px-5 py-4 sm:px-8 lg:px-10">
-        <div className="mx-auto flex w-full max-w-6xl flex-col gap-3 text-sm text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
-          <div className="flex items-center gap-2">
-            <QuantumSymbol className="size-4.5" />
-            <p>© 2026 QuantLearn. Made by Ved with ❤️.</p>
-          </div>
-          <a
-            href="https://github.com/Baisayan/quantlearn"
-            target="_blank"
-            rel="noreferrer"
-            className="inline-flex w-fit items-center gap-2 font-medium text-foreground underline-offset-4 transition-colors duration-300 hover:text-primary hover:underline focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-4"
-          >
-            View on GitHub
-            <ArrowRight className="size-4" aria-hidden="true" />
-          </a>
-        </div>
-      </footer>
     </main>
   );
 }
