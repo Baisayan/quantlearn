@@ -283,7 +283,6 @@ function GatePaletteDroppable({
   setMessage,
   angle,
   setAngle,
-  isDraggingCircuitGate,
 }: {
   gate: Gate;
   setGate: (g: Gate) => void;
@@ -291,7 +290,6 @@ function GatePaletteDroppable({
   setMessage: (m: string) => void;
   angle: string;
   setAngle: (a: string) => void;
-  isDraggingCircuitGate: boolean;
 }) {
   const { setNodeRef, isOver } = useDroppable({
     id: "palette-return",
@@ -301,35 +299,17 @@ function GatePaletteDroppable({
   return (
     <div
       ref={setNodeRef}
-      className={`space-y-3 rounded-xl border p-3.5 backdrop-blur-sm shadow-sm transition-all duration-200 ${
-        isOver
-          ? "border-2 border-dashed border-rose-500/80 bg-rose-500/10 ring-4 ring-rose-500/20 dark:bg-rose-950/30"
-          : isDraggingCircuitGate
-          ? "border-2 border-dashed border-amber-500/60 bg-amber-500/5 shadow-md shadow-amber-500/5"
-          : "border-border/80 bg-card/60"
+      className={`space-y-3 rounded-xl border p-3.5 backdrop-blur-sm shadow-sm transition-colors duration-150 ${
+        isOver ? "border-primary/40 bg-card/80" : "border-border/80 bg-card/60"
       }`}
     >
       <div className="flex items-center justify-between border-b border-border/50 pb-2">
-        {isOver ? (
-          <div className="flex items-center gap-2 text-xs font-semibold text-rose-600 dark:text-rose-400 animate-pulse">
-            <span className="text-base leading-none">↩</span>
-            <span>Drop here to remove gate from circuit and return to palette</span>
-          </div>
-        ) : isDraggingCircuitGate ? (
-          <div className="flex items-center gap-2 text-xs font-medium text-amber-600 dark:text-amber-400">
-            <span className="text-base leading-none">↩</span>
-            <span>Drop gate here to put back into palette</span>
-          </div>
-        ) : (
-          <>
-            <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-              Quantum Gate Palette (IBM Composer Standard)
-            </span>
-            <span className="text-[11px] text-muted-foreground/80">
-              Drag to wire or click to place • Drag placed gate back here to remove
-            </span>
-          </>
-        )}
+        <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+          Quantum Gate Palette (IBM Composer Standard)
+        </span>
+        <span className="text-[11px] text-muted-foreground/80">
+          Drag to wire or click to place
+        </span>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
@@ -423,7 +403,6 @@ export function CircuitEditor({
   } | null>(null);
   const [message, setMessage] = useState("");
   const [dragLabel, setDragLabel] = useState<string | null>(null);
-  const [isDraggingCircuitGate, setIsDraggingCircuitGate] = useState(false);
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
     useSensor(KeyboardSensor),
@@ -480,7 +459,6 @@ export function CircuitEditor({
   }
   function dropped(event: DragEndEvent) {
     setDragLabel(null);
-    setIsDraggingCircuitGate(false);
 
     const activeId = String(event.active.id);
     const isFromCircuit = activeId.startsWith("operation:");
@@ -527,32 +505,18 @@ export function CircuitEditor({
         sensors={sensors}
         onDragEnd={dropped}
         onDragStart={(event) => {
-          const isFromCircuit = String(event.active.id).startsWith("operation:");
-          setIsDraggingCircuitGate(isFromCircuit);
           setDragLabel(
             String(event.active.data.current?.gate || event.active.id).toUpperCase(),
           );
         }}
         onDragCancel={() => {
           setDragLabel(null);
-          setIsDraggingCircuitGate(false);
         }}
       >
         <DragOverlay>
           {dragLabel && (
-            <div
-              className={`flex items-center gap-2 rounded-xl border px-4 py-2 text-sm font-medium shadow-xl backdrop-blur-md ${
-                isDraggingCircuitGate
-                  ? "border-amber-500/80 bg-card text-foreground ring-2 ring-amber-500/20"
-                  : "border-primary bg-card text-primary"
-              }`}
-            >
-              <span className="font-mono font-bold">{dragLabel}</span>
-              {isDraggingCircuitGate && (
-                <span className="text-[11px] font-normal text-muted-foreground">
-                  • drop on palette to return
-                </span>
-              )}
+            <div className="rounded-lg border border-primary/60 bg-card/95 px-3.5 py-1.5 font-mono text-sm font-bold text-primary shadow-2xl backdrop-blur-md">
+              {dragLabel}
             </div>
           )}
         </DragOverlay>
@@ -564,7 +528,6 @@ export function CircuitEditor({
           setMessage={setMessage}
           angle={angle}
           setAngle={setAngle}
-          isDraggingCircuitGate={isDraggingCircuitGate}
         />
 
         <div className="flex flex-wrap items-end gap-3">
