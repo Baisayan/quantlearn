@@ -86,33 +86,42 @@ export async function POST(request: Request) {
     const secretKey =
       process.env.SUPABASE_SECRET_KEY ||
       process.env.SUPABASE_SERVICE_ROLE_KEY;
-    if (secretKey && process.env.NEXT_PUBLIC_SUPABASE_URL) {
+    const supabaseUrl =
+      process.env.NEXT_PUBLIC_SUPABASE_URL ||
+      process.env.SUPABASE_URL;
+
+    if (secretKey && supabaseUrl) {
       try {
         const scaledScore = Math.round((score / total) * 10);
-        await fetch(
-          `${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/quiz_attempts`,
+        const postRes = await fetch(
+          `${supabaseUrl}/rest/v1/quiz_attempts`,
           {
             method: "POST",
             headers: {
               apikey: secretKey,
               Authorization: `Bearer ${secretKey}`,
               "Content-Type": "application/json",
-              Prefer: "return=minimal",
+              Prefer: "return=representation",
             },
             body: JSON.stringify({
               id: body.attemptId,
               user_id: auth.claims.sub,
               chapter_id: chapter.id,
-              quiz_version: 2,
+              quiz_version: chapter.quiz.version || 2,
               answers,
               score: scaledScore,
               total: 10,
             }),
           },
         );
-      } catch {
-        // Continue gracefully
+        if (!postRes.ok) {
+          console.error("Failed to insert fallback attempt:", postRes.status, await postRes.text());
+        }
+      } catch (insertErr) {
+        console.error("Error inserting fallback attempt:", insertErr);
       }
+    } else {
+      console.warn("SUPABASE_SECRET_KEY is missing in environment variables. Falling back to local grade result, but attempt cannot be inserted into quiz_attempts without service role key.");
     }
 
     resultData = {
